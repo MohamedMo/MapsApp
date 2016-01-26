@@ -89,17 +89,28 @@ public class Voice extends Activity implements View.OnClickListener, TextToSpeec
             }
         }
 
-        super.onActivityResult(request_code,result_code,i);
+        super.onActivityResult(request_code, result_code, i);
 
         switch (request_code){
 
             case 100: if (result_code == RESULT_OK && i != null){
                 ArrayList<String> result = i.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
                 resultText.setText(result.get(0));
+                respond();
             }
                 break;
         }
 
+    }
+
+    public void respond(){
+
+        if(resultText.getText().toString().equals("hello")){
+
+            Intent i = new Intent(Voice.this, MapsActivity.class);
+            startActivity(i);
+            //speakWords("hi");
+        }
     }
 
 

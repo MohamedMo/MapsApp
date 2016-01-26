@@ -9,6 +9,9 @@
     -->
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.INTERNET" />
+
+
 
     <application
         android:allowBackup="true"
@@ -40,6 +43,7 @@
         </activity>
         <activity android:name=".Voice"></activity>
         <activity android:name=".Directions"></activity>
+        <activity android:name=".GPS_Location"></activity>
     </application>
 
 </manifest>
