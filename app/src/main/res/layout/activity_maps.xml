@@ -75,4 +75,16 @@
         android:layout_marginLeft="0dp"
         android:layout_alignParentTop="true"
         android:layout_marginTop="0dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="@string/empty"
+        android:id="@+id/textView3"
+        android:layout_above="@+id/btnToVoice"
+        android:layout_marginBottom="32dp"
+        android:background="#f8f6f6"
+        android:layout_alignRight="@+id/btnToVoice"
+        android:layout_alignEnd="@+id/btnToVoice" />
 </RelativeLayout>

@@ -5,6 +5,7 @@ import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.os.Bundle;
 import android.speech.RecognizerIntent;
+import android.speech.SpeechRecognizer;
 import android.speech.tts.TextToSpeech;
 import android.view.View;
 import android.widget.Button;
@@ -20,9 +21,11 @@ import java.util.Locale;
  */
 public class Voice extends Activity implements View.OnClickListener, TextToSpeech.OnInitListener {
 
+    private SpeechRecognizer speech;
 
 
    private TextView resultText;
+    private String command;
     //TTS object
     private TextToSpeech myTTS;
     //status check code
@@ -95,8 +98,9 @@ public class Voice extends Activity implements View.OnClickListener, TextToSpeec
 
             case 100: if (result_code == RESULT_OK && i != null){
                 ArrayList<String> result = i.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
-                resultText.setText(result.get(0));
-                respond();
+               // resultText.setText(result.get(0));
+                command = result.get(0);
+               // respond();
             }
                 break;
         }
@@ -105,7 +109,7 @@ public class Voice extends Activity implements View.OnClickListener, TextToSpeec
 
     public void respond(){
 
-        if(resultText.getText().toString().equals("hello")){
+        if(command.toString().equals("hello")){
 
             Intent i = new Intent(Voice.this, MapsActivity.class);
             startActivity(i);

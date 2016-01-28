@@ -1,6 +1,7 @@
 package com.example.mohamed.maps;
 
 import android.Manifest;
+import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -9,11 +10,16 @@ import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.speech.RecognizerIntent;
+import android.speech.tts.TextToSpeech;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -24,22 +30,42 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.vision.barcode.Barcode;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
-public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
+public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, TextToSpeech.OnInitListener {
 
     private GoogleMap mMap;
     private int longi;
     private int lati;
+    private TextView resultText;
+    private String command;
+    //TTS object
+    private TextToSpeech myTTS;
+    //status check code
+    private int MY_DATA_CHECK_CODE = 0;
+   private EditText location_tf;
+    private String location;
+    private Button searchButton;
+    private View v;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
+        resultText = (TextView)findViewById(R.id.textView3);
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+        Intent checkTTSIntent = new Intent();
+        checkTTSIntent.setAction(TextToSpeech.Engine.ACTION_CHECK_TTS_DATA);
+        startActivityForResult(checkTTSIntent, MY_DATA_CHECK_CODE);
+
+
+
+
 
         LocationManager manager = (LocationManager) this.getSystemService((Context.LOCATION_SERVICE));
         LocationListener listener = new LocationListener() {
@@ -94,8 +120,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     public void onSearch(View v){
 
-        EditText location_tf = (EditText)findViewById(R.id.textAddress);
-        String location = location_tf.getText().toString();
+
+
+       location_tf = (EditText)findViewById(R.id.textAddress);
+         location = location_tf.getText().toString();
         List<Address> addressList = null;
         float zoomLevel = (float) 16.0; //This goes up to 21
         if (location != null || !location.equals(""))
@@ -122,8 +150,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         if (v.getId() == R.id.btnToVoice){
 
-            Intent i = new Intent(MapsActivity.this, Voice.class);
-            startActivity(i);
+           // Intent i = new Intent(MapsActivity.this, Voice.class);
+           // startActivity(i);
+            promptSpeechInput();
+
+
         }
     }
 
@@ -143,6 +174,105 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
             Intent i = new Intent(MapsActivity.this, GPS_Location.class);
             startActivity(i);
+        }
+    }
+
+
+    public void promptSpeechInput (){
+
+        Intent i = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+        i.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+        i.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault());
+        i.putExtra(RecognizerIntent.EXTRA_PROMPT, "Say something");
+
+
+        try {
+            startActivityForResult(i, 100);
+        }
+        catch (ActivityNotFoundException a)
+        {
+            Toast.makeText(MapsActivity.this, "Sorry", Toast.LENGTH_LONG).show();
+        }
+    }
+
+
+    public void onActivityResult(int request_code, int result_code, Intent i){
+
+
+        if (request_code == MY_DATA_CHECK_CODE) {
+            if (result_code == TextToSpeech.Engine.CHECK_VOICE_DATA_PASS) {
+                //the user has the necessary data - create the TTS
+                myTTS = new TextToSpeech(this, this);
+            }
+            else {
+                //no data - install it now
+                Intent installTTSIntent = new Intent();
+                installTTSIntent.setAction(TextToSpeech.Engine.ACTION_INSTALL_TTS_DATA);
+                startActivity(installTTSIntent);
+            }
+        }
+
+        super.onActivityResult(request_code, result_code, i);
+
+        switch (request_code){
+
+            case 100: if (result_code == RESULT_OK && i != null){
+                ArrayList<String> result = i.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
+                // resultText.setText(result.get(0));
+                command = result.get(0);
+                resultText.setText(result.get(0));
+                 respond(v);
+            }
+                break;
+        }
+
+    }
+
+    @Override
+    public void onInit(int initStatus) {
+        //check for successful instantiation
+        if (initStatus == TextToSpeech.SUCCESS) {
+            if(myTTS.isLanguageAvailable(Locale.US)==TextToSpeech.LANG_AVAILABLE)
+                myTTS.setLanguage(Locale.US);
+        }
+        else if (initStatus == TextToSpeech.ERROR) {
+            Toast.makeText(this, "Sorry! Text To Speech failed...", Toast.LENGTH_LONG).show();
+        }
+    }
+
+    private void speakWords(String speech) {
+
+        //speak straight away
+        myTTS.speak(speech, TextToSpeech.QUEUE_FLUSH, null);
+    }
+
+    public void respond(View v){
+
+        if(command.toString().equals("hello")){
+            speakWords("hi");
+        }
+        if(command.toString().equals("where am I")){
+            speakWords("how would I know");
+        }
+        if(command.toString().contains("go"))
+        {
+            speakWords("Yes sir");
+            String parts[] = command.split(" ");
+            String loc = parts[1];
+            location_tf = (EditText)findViewById(R.id.textAddress);
+            location_tf.setText(loc);
+            onSearch(v);
+
+        }
+
+        if(command.toString().equals("zoom in")){
+            speakWords("ok");
+            mMap.moveCamera(CameraUpdateFactory.zoomIn());
+        }
+        if(command.toString().equals("zoom out")){
+
+            speakWords("say please next time");
+            mMap.moveCamera(CameraUpdateFactory.zoomOut());
         }
     }
 
