@@ -5,6 +5,7 @@ import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
@@ -27,6 +28,8 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.Polyline;
+import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.gms.vision.barcode.Barcode;
 
 import java.io.IOException;
@@ -49,6 +52,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private String location;
     private Button searchButton;
     private View v;
+    private ArrayList<LatLng> points; //added
+    Polyline line; //added
+    LatLng latLng;
+    float zoomLevel = (float) 16.0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,7 +69,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         Intent checkTTSIntent = new Intent();
         checkTTSIntent.setAction(TextToSpeech.Engine.ACTION_CHECK_TTS_DATA);
         startActivityForResult(checkTTSIntent, MY_DATA_CHECK_CODE);
-
+        points = new ArrayList<LatLng>(); //added
 
 
 
@@ -72,10 +79,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             @Override
             public void onLocationChanged(Location location) {
 
-                float zoomLevel = (float) 16.0; //This goes up to 21
-                LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
-                mMap.addMarker(new MarkerOptions().position(latLng).title("Marker"));
-                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoomLevel));
+                 //This goes up to 21
+                 latLng = new LatLng(location.getLatitude(), location.getLongitude());
+              //  mMap.addMarker(new MarkerOptions().position(latLng).title("Marker"));
+               // mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoomLevel));
+                points.add(latLng); //added
+
+                redrawLine(); //added
 
             }
 
@@ -91,6 +101,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
             @Override
             public void onProviderDisabled(String provider) {
+
+
 
             }
         };
@@ -112,10 +124,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
 
-        // Add a marker in Sydney and move the camera
-        LatLng sydney = new LatLng(-34, 151);
-        mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
-      //  mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+
     }
 
     public void onSearch(View v){
@@ -253,19 +262,30 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
         if(command.toString().equals("where am I")){
             speakWords("how would I know");
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoomLevel));
         }
+
+        if(command.toString().equals("go")){
+
+            speakWords("go where");
+        }
+
         if(command.toString().contains("go"))
         {
             speakWords("Yes sir");
-            String parts[] = command.split(" ");
-            String loc = parts[1];
+            String seperate =  "\\s*\\bgo\\b\\s*";
+            command = command.replaceAll(seperate, "");
+
+         //   String parts[] = command.split(" ");
+          //  String loc = parts[1];
+
             location_tf = (EditText)findViewById(R.id.textAddress);
-            location_tf.setText(loc);
+            location_tf.setText(command);
             onSearch(v);
 
         }
 
-        if(command.toString().equals("zoom in")){
+        if(command.toString().equals("zoom in")) {
             speakWords("ok");
             mMap.moveCamera(CameraUpdateFactory.zoomIn());
         }
@@ -274,6 +294,28 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             speakWords("say please next time");
             mMap.moveCamera(CameraUpdateFactory.zoomOut());
         }
+
+        else{
+          //  speakWords("please repeat that");
+        }
     }
+
+    private void redrawLine(){
+
+        mMap.clear();  //clears all Markers and Polylines
+
+        PolylineOptions options = new PolylineOptions().width(5).color(Color.BLUE).geodesic(true);
+        for (int i = 0; i < points.size(); i++) {
+            LatLng point = points.get(i);
+            options.add(point);
+        }
+       // addMarker(); //add Marker in current position
+        mMap.addMarker(new MarkerOptions().position(latLng).title("You are here"));
+
+        line = mMap.addPolyline(options); //add Polyline
+    }
+
+
+
 
 }
