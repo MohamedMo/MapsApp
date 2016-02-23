@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="New Text"
+        android:id="@+id/placeOfInterestView"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Shopping"
+        android:id="@+id/btnShopping"
+        android:onClick="onBtnShop"
+        android:layout_marginTop="45dp"
+        android:layout_below="@+id/placeOfInterestView"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <Button
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Bar"
+        android:id="@+id/btnBar"
+        android:onClick="onBtnBar"
+        android:layout_alignTop="@+id/btnShopping"
+        android:layout_toRightOf="@+id/btnShopping"
+        android:layout_toEndOf="@+id/btnShopping" />
+
+    <Button
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="GYM"
+        android:id="@+id/btnGym"
+        android:onClick="onBtnGym"
+        android:layout_alignTop="@+id/btnBar"
+        android:layout_toRightOf="@+id/btnBar"
+        android:layout_toEndOf="@+id/btnBar" />
+
+    <ListView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/listView"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/btnGym" />
+
+</RelativeLayout>

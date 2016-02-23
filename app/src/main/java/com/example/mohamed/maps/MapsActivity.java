@@ -11,11 +11,11 @@ import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.os.Bundle;
 import android.speech.RecognizerIntent;
 import android.speech.tts.TextToSpeech;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
-import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -30,7 +30,6 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
-import com.google.android.gms.vision.barcode.Barcode;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -172,6 +171,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         if (v.getId() == R.id.btnToDirections){
 
             Intent i = new Intent(MapsActivity.this, Directions.class);
+            startActivity(i);
+        }
+    }
+
+    public void onPOFClick (View v){
+
+        if (v.getId() == R.id.btnPOF){
+
+            Intent i = new Intent(MapsActivity.this, PlaceOfInterest.class);
             startActivity(i);
         }
     }

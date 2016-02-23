@@ -87,4 +87,14 @@
         android:background="#f8f6f6"
         android:layout_alignRight="@+id/btnToVoice"
         android:layout_alignEnd="@+id/btnToVoice" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="POF"
+        android:id="@+id/btnPOF"
+        android:layout_above="@+id/textView3"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:onClick="onPOFClick" />
 </RelativeLayout>

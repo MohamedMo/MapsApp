@@ -12,8 +12,6 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
 
-
-
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -42,9 +40,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".Voice"></activity>
-        <activity android:name=".Directions"></activity>
-        <activity android:name=".GPS_Location"></activity>
+        <activity android:name=".Voice" />
+        <activity android:name=".Directions" />
+        <activity android:name=".GPS_Location" />
+        <activity android:name=".PlaceOfInterest" />
     </application>
 
 </manifest>
