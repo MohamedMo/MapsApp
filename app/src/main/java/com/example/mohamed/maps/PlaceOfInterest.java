@@ -1,10 +1,11 @@
 package com.example.mohamed.maps;
 
-import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.text.Html;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
@@ -29,7 +30,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 /**
  * Created by Mohamed on 22/02/2016.
  */
-public class PlaceOfInterest extends Activity {
+public class PlaceOfInterest extends MainActivity {
 
     private static final String urlLink ="https://maps.googleapis.com/maps/api/directions/xml?origin=Pelterstreet&destination=Pelterstreet&mode=walking&key=AIzaSyC2MMB-7iqMzrccgD9voZHiGf2nY093Jlg";
 
@@ -43,7 +44,10 @@ public class PlaceOfInterest extends Activity {
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.place_of_interest);
+        LayoutInflater inflater = (LayoutInflater) this
+                .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View contentView = inflater.inflate(R.layout.place_of_interest, null, false);
+        mDrawer.addView(contentView, 0);
         File dir = new File(this.getFilesDir() + "/Users/Mohamed/AndroidStudioProjects");
         dir.mkdirs(); //create folders where write files
       xmlFile = new File(dir, "NearMe.xml");

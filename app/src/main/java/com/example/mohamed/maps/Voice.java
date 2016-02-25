@@ -1,12 +1,13 @@
 package com.example.mohamed.maps;
 
-import android.app.Activity;
 import android.content.ActivityNotFoundException;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.speech.RecognizerIntent;
 import android.speech.SpeechRecognizer;
 import android.speech.tts.TextToSpeech;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -19,7 +20,7 @@ import java.util.Locale;
 /**
  * Created by Mohamed on 23/01/2016.
  */
-public class Voice extends Activity implements View.OnClickListener, TextToSpeech.OnInitListener {
+public class Voice extends MainActivity implements View.OnClickListener, TextToSpeech.OnInitListener {
 
     private SpeechRecognizer speech;
 
@@ -35,7 +36,10 @@ public class Voice extends Activity implements View.OnClickListener, TextToSpeec
     @Override
     protected void onCreate (Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.voice);
+        LayoutInflater inflater = (LayoutInflater) this
+                .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View contentView = inflater.inflate(R.layout.voice, null, false);
+        mDrawer.addView(contentView, 0);
         resultText = (TextView)findViewById(R.id.textViewResult);
 
         //get a reference to the button element listed in the XML layout

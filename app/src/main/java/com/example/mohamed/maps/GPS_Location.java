@@ -1,23 +1,19 @@
 package com.example.mohamed.maps;
 
-import android.Manifest;
-import android.app.Activity;
 import android.content.Context;
-import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
-import android.net.wifi.p2p.WifiP2pManager;
 import android.os.Bundle;
-import android.support.v4.app.ActivityCompat;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
 
 /**
  * Created by Mohamed on 25/01/2016.
  */
-public class GPS_Location extends Activity implements LocationListener {
+public class GPS_Location extends MainActivity implements LocationListener {
 
     private double latitude;
     private double longitude;
@@ -25,8 +21,10 @@ public class GPS_Location extends Activity implements LocationListener {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.gps_location);
-
+        LayoutInflater inflater = (LayoutInflater) this
+                .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View contentView = inflater.inflate(R.layout.gps_location, null, false);
+        mDrawer.addView(contentView, 0);
         LocationManager locationManager = (LocationManager)this.getSystemService(Context.LOCATION_SERVICE);
 
 
