@@ -92,6 +92,7 @@ public class PlaceOfInterest extends Activity {
 
         System.out.println(URL);
 
+
         //  File xmlFile = new File("DirectionsList.xml");
 
         try {
@@ -153,11 +154,11 @@ public class PlaceOfInterest extends Activity {
                     Element eElement = (Element) nNode;
 
                     POF.add(eElement.getElementsByTagName("name")
-                                    .item(0).getTextContent()
+                                    .item(0).getTextContent() + "  " + eElement.getElementsByTagName("vicinity").item(0).getTextContent()
                     );
-                    POF.add(eElement.getElementsByTagName("vicinity")
-                                    .item(0).getTextContent()
-                    );
+//                    POF.add(eElement.getElementsByTagName("vicinity")
+//                                    .item(0).getTextContent()
+//                    );
                 }
             }
         } catch (Exception e) {
