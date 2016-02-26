@@ -84,7 +84,7 @@ public class MapsActivity extends MainActivity implements OnMapReadyCallback, Te
                  //This goes up to 21
                  latLng = new LatLng(location.getLatitude(), location.getLongitude());
               //  mMap.addMarker(new MarkerOptions().position(latLng).title("Marker"));
-               // mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoomLevel));
+                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoomLevel));
                 points.add(latLng); //added
 
                 redrawLine(); //added
@@ -119,7 +119,7 @@ public class MapsActivity extends MainActivity implements OnMapReadyCallback, Te
             // for ActivityCompat#requestPermissions for more details.
             return;
         }
-        manager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, listener);
+        manager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, listener);
     }
 
     @Override
