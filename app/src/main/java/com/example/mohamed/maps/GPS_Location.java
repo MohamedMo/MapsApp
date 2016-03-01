@@ -131,6 +131,8 @@ getCompleteAddressString();
 
 
         TextView addressText = (TextView)findViewById(R.id.textViewAddress);
+        TextView cityText = (TextView)findViewById(R.id.textViewCity);
+        TextView postcodeText = (TextView)findViewById(R.id.textViewPostCode);
         String s = "ff";
         geocoder = new Geocoder(this, Locale.getDefault());
 
@@ -141,13 +143,15 @@ getCompleteAddressString();
         }
 //
         String Address = addresses.get(0).getAddressLine(0).toString(); // If any additional address line present than only, check with max available address lines by getMaxAddressLineIndex()
-        String city = addresses.get(0).getLocality();
-        String state = addresses.get(0).getAdminArea();
-        String country = addresses.get(0).getCountryName();
-        String postalCode = addresses.get(0).getPostalCode();
-        String knownName = addresses.get(0).getFeatureName();
+        String city = addresses.get(0).getLocality().toString();
+    //    String state = addresses.get(0).getAdminArea().toString();
+     //   String country = addresses.get(0).getCountryName().toString();
+        String postalCode = addresses.get(0).getPostalCode().toString();
+     //   String knownName = addresses.get(0).getFeatureName().toString();
 
         addressText.setText(Address);
+        cityText.setText(city);
+        postcodeText.setText(postalCode);
 
 
     }

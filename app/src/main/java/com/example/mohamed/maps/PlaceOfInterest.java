@@ -1,14 +1,21 @@
 package com.example.mohamed.maps;
 
+import android.Manifest;
 import android.content.Context;
+import android.content.pm.PackageManager;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.StrictMode;
+import android.support.v4.app.ActivityCompat;
 import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -41,6 +48,8 @@ public class PlaceOfInterest extends MainActivity {
     private static ArrayList<String> POFplace = new ArrayList<String>();
     private static ArrayAdapter<String> adapter;
    private File xmlFile;
+    private double latitude = 0.0;
+    private double longitude = 0.0;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,12 +60,81 @@ public class PlaceOfInterest extends MainActivity {
         File dir = new File(this.getFilesDir() + "/Users/Mohamed/AndroidStudioProjects");
         dir.mkdirs(); //create folders where write files
       xmlFile = new File(dir, "NearMe.xml");
+
+
+
+
+
+        LocationManager manager = (LocationManager) this.getSystemService((Context.LOCATION_SERVICE));
+        LocationListener listener = new LocationListener() {
+            @Override
+            public void onLocationChanged(Location location) {
+
+                //This goes up to 21
+                //   latLng = new LatLng(location.getLatitude(), location.getLongitude());
+                //  mMap.addMarker(new MarkerOptions().position(latLng).title("Marker"));
+                // mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoomLevel));
+                latitude = location.getLatitude();
+                longitude = location.getLongitude();
+
+
+
+                TextView longi = (TextView)findViewById(R.id.textViewLong);
+                TextView lati = (TextView)findViewById(R.id.textViewLat);
+                String doubleLong = Double.toString(longitude);
+                String doubleLat = Double.toString(latitude);
+                longi.setText(doubleLong);
+                lati.setText(doubleLat);
+
+
+
+
+
+            }
+
+            @Override
+            public void onStatusChanged(String provider, int status, Bundle extras) {
+
+            }
+
+            @Override
+            public void onProviderEnabled(String provider) {
+
+            }
+
+            @Override
+            public void onProviderDisabled(String provider) {
+
+
+            }
+        };
+
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
+        }
+        manager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, listener);
     }
 
 
     private String getCurrentLocation() {
-        String Longitude = "-0.066720";
-        String Latitude = "51.526974";
+    //    String Longitude = "-0.066720";
+      //  String Latitude = "51.526974";
+//        String Longitude = Double.toString(longitude);
+//        String Latitude = Double.toString(latitude);
+
+        TextView longi = (TextView)findViewById(R.id.textViewLong);
+        TextView lati = (TextView)findViewById(R.id.textViewLat);
+
+        String Longitude = longi.getText().toString();
+        String Latitude = lati.getText().toString();
+
         return String.format("location=%s,%s&radius=500&", Latitude, Longitude);
     }
 

@@ -60,8 +60,9 @@
         android:layout_height="wrap_content"
         android:id="@+id/textAddress"
         android:layout_alignParentTop="true"
-        android:layout_toRightOf="@+id/buttonSearch"
-        android:layout_toEndOf="@+id/buttonSearch" />
+        android:layout_toRightOf="@+id/textView3"
+        android:layout_toEndOf="@+id/textView3"
+        android:layout_marginTop="60dp" />
 
     <Button
         style="?android:attr/buttonStyleSmall"
@@ -71,10 +72,9 @@
         android:id="@+id/buttonSearch"
         android:layout_gravity="right"
         android:onClick="onSearch"
+        android:layout_alignTop="@+id/textAddress"
         android:layout_alignParentLeft="true"
-        android:layout_marginLeft="0dp"
-        android:layout_alignParentTop="true"
-        android:layout_marginTop="0dp" />
+        android:layout_alignParentStart="true" />
 
     <TextView
         android:layout_width="wrap_content"

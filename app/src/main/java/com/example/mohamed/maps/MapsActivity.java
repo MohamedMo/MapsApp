@@ -47,7 +47,7 @@ public class MapsActivity extends MainActivity implements OnMapReadyCallback, Te
     private TextToSpeech myTTS;
     //status check code
     private int MY_DATA_CHECK_CODE = 0;
-   private EditText location_tf;
+    private EditText location_tf;
     private String location;
     private Button searchButton;
     private View v;
@@ -63,17 +63,17 @@ public class MapsActivity extends MainActivity implements OnMapReadyCallback, Te
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View contentView = inflater.inflate(R.layout.activity_maps, null, false);
         mDrawer.addView(contentView, 0);
-        resultText = (TextView)findViewById(R.id.textView3);
+        resultText = (TextView) findViewById(R.id.textView3);
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+
+
         Intent checkTTSIntent = new Intent();
         checkTTSIntent.setAction(TextToSpeech.Engine.ACTION_CHECK_TTS_DATA);
         startActivityForResult(checkTTSIntent, MY_DATA_CHECK_CODE);
         points = new ArrayList<LatLng>(); //added
-
-
 
 
         LocationManager manager = (LocationManager) this.getSystemService((Context.LOCATION_SERVICE));
@@ -81,9 +81,9 @@ public class MapsActivity extends MainActivity implements OnMapReadyCallback, Te
             @Override
             public void onLocationChanged(Location location) {
 
-                 //This goes up to 21
-                 latLng = new LatLng(location.getLatitude(), location.getLongitude());
-              //  mMap.addMarker(new MarkerOptions().position(latLng).title("Marker"));
+                //This goes up to 21
+                latLng = new LatLng(location.getLatitude(), location.getLongitude());
+                //  mMap.addMarker(new MarkerOptions().position(latLng).title("Marker"));
                 mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoomLevel));
                 points.add(latLng); //added
 
@@ -105,7 +105,6 @@ public class MapsActivity extends MainActivity implements OnMapReadyCallback, Te
             public void onProviderDisabled(String provider) {
 
 
-
             }
         };
 
@@ -125,6 +124,17 @@ public class MapsActivity extends MainActivity implements OnMapReadyCallback, Te
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
+        }
+        mMap.setMyLocationEnabled(true);
 
 
     }
@@ -327,6 +337,14 @@ public class MapsActivity extends MainActivity implements OnMapReadyCallback, Te
     }
 
 
-
+/*include:
+    1. Favourites for PlaceOfInterest
+    2. Favourites for routes.
+    3. Implement TFL API (Bus and Train) including time
+    4. Use database for reviews of POF (add ratings)
+    5. Fix Directions (View it on map)
+    6. Get voice turn by turn navigation to work
+    7. Reminders to change routes for TFL
+*/
 
 }

@@ -55,4 +55,24 @@
         android:layout_alignParentStart="true"
         android:layout_below="@+id/btnGym" />
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="0"
+        android:id="@+id/textViewLat"
+        android:layout_below="@+id/placeOfInterestView"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="0"
+        android:id="@+id/textViewLong"
+        android:layout_below="@+id/placeOfInterestView"
+        android:layout_alignLeft="@+id/btnGym"
+        android:layout_alignStart="@+id/btnGym" />
+
 </RelativeLayout>
