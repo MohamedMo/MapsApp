@@ -345,6 +345,7 @@ public class MapsActivity extends MainActivity implements OnMapReadyCallback, Te
     5. Fix Directions (View it on map)
     6. Get voice turn by turn navigation to work
     7. Reminders to change routes for TFL
+
 */
 
 }
