@@ -8,9 +8,12 @@
         android:layout_height="wrap_content"
         android:text="@string/empty"
         android:id="@+id/textViewDirectionsList"
-        android:layout_centerVertical="true"
+        android:layout_marginBottom="69dp"
+        android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentStart="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
 
     <EditText
         android:layout_width="wrap_content"
@@ -49,10 +52,32 @@
         android:layout_height="wrap_content"
         android:text="Read Text"
         android:id="@+id/btnReadText"
-        android:layout_alignParentBottom="true"
+        android:singleLine="true"
+        android:onClick="onReadText"
+        android:layout_below="@+id/directionsSearchBtn"
         android:layout_alignLeft="@+id/directionsSearchBtn"
         android:layout_alignStart="@+id/directionsSearchBtn"
-        android:layout_marginBottom="64dp"
-        android:singleLine="true"
-        android:onClick="onReadText" />
+        android:layout_marginTop="25dp" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Previous"
+        android:id="@+id/btnPrev"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginLeft="29dp"
+        android:layout_marginStart="29dp"
+        android:onClick="btnPreviousClick" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Next   "
+        android:id="@+id/btnNext"
+        android:layout_alignParentBottom="true"
+        android:layout_toRightOf="@+id/btnReadText"
+        android:layout_toEndOf="@+id/btnReadText"
+        android:onClick="btnNextClick" />
 </RelativeLayout>

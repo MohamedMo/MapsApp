@@ -1,10 +1,7 @@
 package com.example.mohamed.maps;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
-import android.nfc.Tag;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.speech.RecognizerIntent;
@@ -21,18 +18,12 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
-import org.xmlpull.v1.XmlPullParser;
-import org.xmlpull.v1.XmlPullParserException;
-import org.xmlpull.v1.XmlPullParserFactory;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
@@ -52,6 +43,7 @@ public class Directions extends Activity implements View.OnClickListener, TextTo
     private TextToSpeech myTTS;
     //status check code
     private int MY_DATA_CHECK_CODE = 0;
+    private int position = 0;
 
     private static String StartingLocation;
     private static String EndingLocation;
@@ -119,15 +111,42 @@ public class Directions extends Activity implements View.OnClickListener, TextTo
         String finishingPos = end.getText().toString();
         getDirections(startingPos, finishingPos, method);
         String finalDirections = "<html>";
-        for(String s : Directions)
-            finalDirections = finalDirections + s + "<p>";
-        finalDirections = finalDirections + "</html>";
-        String result = Html.fromHtml(finalDirections).toString();
+//        for(String s : Directions)
+//            finalDirections = finalDirections + s + "<p>";
+//        finalDirections = finalDirections + "</html>";
+//        String result = Html.fromHtml(finalDirections).toString();
+//        resultDirections.setText(result);
+
+        //Directions.get(1);
+        String result = Html.fromHtml(Directions.get(1)).toString();
         resultDirections.setText(result);
 
 
-
         }
+
+    public void btnPreviousClick (View v){
+        TextView resultDirections = (TextView)findViewById(R.id.textViewDirectionsList);
+        if(position > 0){
+            position--;
+            String result = Html.fromHtml(Directions.get(position)).toString();
+            resultDirections.setText(result);
+            // show the data here
+        }
+    }
+
+    public void btnNextClick(View v) {
+
+        TextView resultDirections = (TextView)findViewById(R.id.textViewDirectionsList);
+
+
+        if (position < Directions.size() - 1){
+            position++;
+            String result = Html.fromHtml(Directions.get(position)).toString();
+            resultDirections.setText(result);
+            // show the data here
+        }
+
+    }
 
 
     public void onReadText (View v){

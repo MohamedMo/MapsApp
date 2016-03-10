@@ -99,6 +99,11 @@ public class MainActivity extends AppCompatActivity {
                 Intent intent2 = new Intent(this, PlaceOfInterest.class);
                 this.startActivity(intent2);
                 break;
+            case R.id.nav_fourth_fragment:
+                Intent intent3 = new Intent(this, Bus.class);
+                this.startActivity(intent3);
+                break;
+
 
         }
 

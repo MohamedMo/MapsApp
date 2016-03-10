@@ -45,6 +45,7 @@
         <activity android:name=".Directions" />
         <activity android:name=".GPS_Location" />
         <activity android:name=".PlaceOfInterest" />
+        <activity android:name=".Bus" />
     </application>
 
 </manifest>
