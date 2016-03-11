@@ -5,7 +5,7 @@
 
     <ListView
         android:layout_width="wrap_content"
-        android:layout_height="219dp"
-        android:id="@+id/listView2"
+        android:layout_height="257dp"
+        android:id="@+id/listView3"
         android:layout_gravity="bottom" />
 </LinearLayout>
