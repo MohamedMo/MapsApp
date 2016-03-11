@@ -8,6 +8,13 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapFragment;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -19,10 +26,11 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
 
+
 /**
  * Created by Mohamed on 10/03/2016.
  */
-public class Bus extends MainActivity {
+public class Bus extends MainActivity implements OnMapReadyCallback {
 
 
     public static final String api_key = "8b06798f5abf775a2973fc9d9970674d";
@@ -32,6 +40,8 @@ public class Bus extends MainActivity {
     static String json = "";
     private ArrayList<String> listItems = new ArrayList<String>();
     private static ArrayAdapter<String> adapter;
+    float zoomLevel = (float) 16.0;
+    LatLng latLng;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +50,10 @@ public class Bus extends MainActivity {
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View contentView = inflater.inflate(R.layout.bus_transport, null, false);
         mDrawer.addView(contentView, 0);
+
+
+        MapFragment mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.fragment);
+        mapFragment.getMapAsync(this);
 
         getNearby();
 
@@ -126,5 +140,14 @@ public class Bus extends MainActivity {
         }
 
 
+    }
+
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        googleMap.addMarker(new MarkerOptions()
+                .position(new LatLng(0, 0))
+                .title("Marker"));
+        latLng = new LatLng(51.5072, 0.1275);
+        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoomLevel));
     }
 }

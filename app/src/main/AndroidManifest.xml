@@ -40,13 +40,13 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".MainActivity"/>
+        <activity android:name=".MainActivity" />
         <activity android:name=".Voice" />
         <activity android:name=".Directions" />
         <activity android:name=".GPS_Location" />
         <activity android:name=".PlaceOfInterest" />
         <activity android:name=".Bus" />
-        <activity android:name=".Trains"/>
+        <activity android:name=".Trains" />
     </application>
 
 </manifest>
