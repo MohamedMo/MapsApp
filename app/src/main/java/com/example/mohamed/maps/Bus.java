@@ -1,10 +1,12 @@
 package com.example.mohamed.maps;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
@@ -39,9 +41,12 @@ public class Bus extends MainActivity implements OnMapReadyCallback {
     static JSONObject jObj = null;
     static String json = "";
     private ArrayList<String> listItems = new ArrayList<String>();
+    private ArrayList<String> localityItems = new ArrayList<String>();
     private static ArrayAdapter<String> adapter;
     float zoomLevel = (float) 16.0;
     LatLng latLng;
+    private ListView myList;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,10 +57,37 @@ public class Bus extends MainActivity implements OnMapReadyCallback {
         mDrawer.addView(contentView, 0);
 
 
-        MapFragment mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.fragment);
+
+
+        final MapFragment mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.fragment);
         mapFragment.getMapAsync(this);
 
+        myList = (ListView)
+                findViewById(R.id.listView2);
+        myList.setOnItemClickListener(new android.widget.AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+
+                String item = (String) myList.getItemAtPosition(position);
+                String localities = localityItems.get(position);
+
+
+
+                Intent anotherActivityIntent = new Intent(Bus.this, listViewHolder.class);
+                anotherActivityIntent.putExtra("name", item);
+                anotherActivityIntent.putExtra("local", localities);
+                startActivity(anotherActivityIntent);
+
+
+
+
+                System.out.println(item);
+            }
+        });
+
         getNearby();
+
 
     }
 
@@ -117,9 +149,13 @@ public class Bus extends MainActivity implements OnMapReadyCallback {
             for (int i = 0; i < jsonMainNode.length(); i++) {
                 JSONObject jsonChildNode = jsonMainNode.getJSONObject(i);
                 String name = jsonChildNode.optString("name");
+                String locality = jsonChildNode.optString("locality");
 
                 String outPut = name;
                 listItems.add(outPut);
+                localityItems.add(locality);
+
+
 
 
             }
@@ -130,7 +166,7 @@ public class Bus extends MainActivity implements OnMapReadyCallback {
                     this,
                     android.R.layout.simple_list_item_1,
                     listItems);
-            ListView myList = (ListView)
+             myList = (ListView)
                     findViewById(R.id.listView2);
             myList.setAdapter(adapter);
 
@@ -141,6 +177,8 @@ public class Bus extends MainActivity implements OnMapReadyCallback {
 
 
     }
+
+
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
