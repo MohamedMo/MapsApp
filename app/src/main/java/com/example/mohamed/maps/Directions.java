@@ -14,6 +14,11 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapFragment;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.LatLng;
+
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -27,6 +32,7 @@ import java.io.PrintWriter;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -35,7 +41,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 /**
  * Created by Mohamed on 24/01/2016.
  */
-public class Directions extends Activity implements View.OnClickListener, TextToSpeech.OnInitListener{
+public class Directions extends Activity implements View.OnClickListener, TextToSpeech.OnInitListener, OnMapReadyCallback {
 
 
     private TextView resultText;
@@ -51,6 +57,7 @@ public class Directions extends Activity implements View.OnClickListener, TextTo
     private static String URL;
     String method = "driving";
     private static ArrayList<String> Directions = new ArrayList<String>();
+    private static ArrayList<String> DirectionssPolylines = new ArrayList<String>();
     private static final String urlLink ="https://maps.googleapis.com/maps/api/directions/xml?origin=Pelterstreet&destination=Pelterstreet&mode=walking&key=AIzaSyC2MMB-7iqMzrccgD9voZHiGf2nY093Jlg";
     private TextView textViewList;
     private static final String TAG = "Demo";
@@ -60,6 +67,7 @@ public class Directions extends Activity implements View.OnClickListener, TextTo
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.directions);
+
         //get a reference to the button element listed in the XML layout
         Button speakButton = (Button)findViewById(R.id.btnReadText);
         //listen for clicks
@@ -69,6 +77,10 @@ public class Directions extends Activity implements View.OnClickListener, TextTo
         Intent checkTTSIntent = new Intent();
         checkTTSIntent.setAction(TextToSpeech.Engine.ACTION_CHECK_TTS_DATA);
         startActivityForResult(checkTTSIntent, MY_DATA_CHECK_CODE);
+
+        final MapFragment mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.fragment2);
+        mapFragment.getMapAsync(this);
+
     }
     public void onActivityResult(int request_code, int result_code, Intent i){
 
@@ -253,6 +265,22 @@ public class Directions extends Activity implements View.OnClickListener, TextTo
                     Directions.add(eElement
                             .getElementsByTagName("html_instructions").item(0)
                             .getTextContent());
+                    DirectionssPolylines.add(eElement
+                            .getElementsByTagName("points").item(0)
+                            .getTextContent());
+
+
+                    for (int i=0;i<DirectionssPolylines.size();i++){
+
+                        String polyline = "";
+                       polyline = DirectionssPolylines.get(i);
+                        List<LatLng> list = decodePoly(polyline);
+                        System.out.println(list);
+                    }
+
+
+
+
                 }
             }
         } catch (Exception e) {
@@ -262,6 +290,48 @@ public class Directions extends Activity implements View.OnClickListener, TextTo
         if (Directions.isEmpty()){
             Directions.add("No data returned");
         }
+
+
     }
 
+
+
+    private List<LatLng> decodePoly(String encoded) {
+
+        List<LatLng> poly = new ArrayList<LatLng>();
+        int index = 0, len = encoded.length();
+        int lat = 0, lng = 0;
+
+        while (index < len) {
+            int b, shift = 0, result = 0;
+            do {
+                b = encoded.charAt(index++) - 63;
+                result |= (b & 0x1f) << shift;
+                shift += 5;
+            } while (b >= 0x20);
+            int dlat = ((result & 1) != 0 ? ~(result >> 1) : (result >> 1));
+            lat += dlat;
+
+            shift = 0;
+            result = 0;
+            do {
+                b = encoded.charAt(index++) - 63;
+                result |= (b & 0x1f) << shift;
+                shift += 5;
+            } while (b >= 0x20);
+            int dlng = ((result & 1) != 0 ? ~(result >> 1) : (result >> 1));
+            lng += dlng;
+
+            LatLng p = new LatLng((((double) lat / 1E5)),
+                    (((double) lng / 1E5)));
+            poly.add(p);
+        }
+
+        return poly;
+    }
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+
+
+    }
 }

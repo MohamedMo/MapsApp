@@ -42,10 +42,11 @@
         android:layout_height="wrap_content"
         android:text="Search"
         android:id="@+id/directionsSearchBtn"
-        android:layout_below="@+id/endLocation"
-        android:layout_centerHorizontal="true"
         android:layout_marginTop="27dp"
-        android:onClick="onDirectionsClick" />
+        android:onClick="onDirectionsClick"
+        android:layout_below="@+id/endLocation"
+        android:layout_toRightOf="@+id/btnPrev"
+        android:layout_toEndOf="@+id/btnPrev" />
 
     <Button
         android:layout_width="wrap_content"
@@ -54,10 +55,11 @@
         android:id="@+id/btnReadText"
         android:singleLine="true"
         android:onClick="onReadText"
-        android:layout_below="@+id/directionsSearchBtn"
-        android:layout_alignLeft="@+id/directionsSearchBtn"
-        android:layout_alignStart="@+id/directionsSearchBtn"
-        android:layout_marginTop="25dp" />
+        android:layout_alignTop="@+id/directionsSearchBtn"
+        android:layout_toRightOf="@+id/directionsSearchBtn"
+        android:layout_toEndOf="@+id/directionsSearchBtn"
+        android:layout_marginLeft="59dp"
+        android:layout_marginStart="59dp" />
 
     <Button
         android:layout_width="wrap_content"
@@ -76,8 +78,22 @@
         android:layout_height="wrap_content"
         android:text="Next   "
         android:id="@+id/btnNext"
+        android:onClick="btnNextClick"
         android:layout_alignParentBottom="true"
-        android:layout_toRightOf="@+id/btnReadText"
-        android:layout_toEndOf="@+id/btnReadText"
-        android:onClick="btnNextClick" />
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginRight="42dp"
+        android:layout_marginEnd="42dp" />
+
+    <fragment
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:name="com.google.android.gms.maps.MapFragment"
+        android:id="@+id/fragment2"
+        android:layout_alignBottom="@+id/textViewDirectionsList"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/directionsSearchBtn" />
 </RelativeLayout>

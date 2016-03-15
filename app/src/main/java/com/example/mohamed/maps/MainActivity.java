@@ -107,6 +107,10 @@ public class MainActivity extends AppCompatActivity {
                 Intent intent4 = new Intent(this, Trains.class);
                 this.startActivity(intent4);
                 break;
+            case R.id.directions:
+                Intent intent5 = new Intent(this, Directions.class);
+                this.startActivity(intent5);
+                break;
 
 
         }

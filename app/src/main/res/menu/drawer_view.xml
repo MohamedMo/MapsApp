@@ -6,6 +6,10 @@
             android:icon="@drawable/ic_one"
             android:title="Map Page" />
         <item
+            android:id="@+id/directions"
+            android:icon="@drawable/ic_two"
+            android:title="Directions" />
+        <item
             android:id="@+id/nav_second_fragment"
             android:icon="@drawable/ic_two"
             android:title="GPS Tracker" />
