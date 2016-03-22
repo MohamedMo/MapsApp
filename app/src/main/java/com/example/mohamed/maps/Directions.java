@@ -2,6 +2,7 @@ package com.example.mohamed.maps;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.speech.RecognizerIntent;
@@ -18,6 +19,8 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Polyline;
+import com.google.android.gms.maps.model.PolylineOptions;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -62,6 +65,10 @@ public class Directions extends Activity implements View.OnClickListener, TextTo
     private TextView textViewList;
     private static final String TAG = "Demo";
     public static final String GoogleAPIKey = "AIzaSyC2MMB-7iqMzrccgD9voZHiGf2nY093Jlg";
+    List<LatLng> list;
+    Polyline line; //added
+    LatLng latLng;
+    GoogleMap mMap;
 
 
     protected void onCreate(Bundle savedInstanceState) {
@@ -114,7 +121,7 @@ public class Directions extends Activity implements View.OnClickListener, TextTo
 
     public void onDirectionsClick(View v)  {
 
-        System.out.println("hello");
+        //System.out.println("hello");
 
         EditText start = (EditText)findViewById(R.id.startLocation);
         EditText end = (EditText)findViewById(R.id.endLocation);
@@ -192,8 +199,13 @@ public class Directions extends Activity implements View.OnClickListener, TextTo
     }
 
     public void getDirections(String start, String end, String method) {
-        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
 
+
+        ArrayList<LatLng> point1 = null;
+        PolylineOptions options = new PolylineOptions().width(5).color(Color.BLUE).geodesic(true);
+        List<LatLng> points = new ArrayList<LatLng>();
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        PolylineOptions polyLineOptions = null;
         StrictMode.setThreadPolicy(policy);
         Directions = new ArrayList<String>();
         try {
@@ -252,7 +264,7 @@ public class Directions extends Activity implements View.OnClickListener, TextTo
                     + doc.getDocumentElement().getNodeName());
             NodeList nList = doc.getElementsByTagName("step");
 
-            System.out.println(nList.getLength());
+          //  System.out.println(nList.getLength());
 
             for (int temp = 0; temp < nList.getLength(); temp++) {
 
@@ -269,19 +281,37 @@ public class Directions extends Activity implements View.OnClickListener, TextTo
                             .getElementsByTagName("points").item(0)
                             .getTextContent());
 
+                    }
 
-                    for (int i=0;i<DirectionssPolylines.size();i++){
+                    for (int i=0;i<DirectionssPolylines.size();i++) {
 
                         String polyline = "";
-                       polyline = DirectionssPolylines.get(i);
-                        List<LatLng> list = decodePoly(polyline);
-                        System.out.println(list);
+                        polyline = DirectionssPolylines.get(i);
+
+                        list = decodePoly(polyline);
+                    }
+
+                    for(int j=0;j<list.size();j++){
+                        LatLng posisi = new LatLng(list.get(j).latitude,list.get(j).longitude);
+                       // point1.add(posisi);
+                        options.add(posisi);
+
+                       // System.out.println(posisi);
+                      //  googleMap.addMarker(new MarkerOptions().position(posisi));
+                       // mMap.addMarker(new MarkerOptions().position(posisi).title("You are here"));
                     }
 
 
+                 //   System.out.println(latlng.toString());
+                line = mMap.addPolyline(options);
+                  //  mMap.addPolyline(polyLineOptions);
+               //     ArrayList<LatLng> points = null;
 
 
-                }
+
+
+
+
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -291,6 +321,10 @@ public class Directions extends Activity implements View.OnClickListener, TextTo
             Directions.add("No data returned");
         }
 
+
+
+
+       // googleMap.addPolyline(polyLineOptions);
 
     }
 
@@ -332,6 +366,6 @@ public class Directions extends Activity implements View.OnClickListener, TextTo
     @Override
     public void onMapReady(GoogleMap googleMap) {
 
-
+        mMap = googleMap;
     }
 }
