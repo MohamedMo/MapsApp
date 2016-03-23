@@ -15,9 +15,13 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.CameraPosition;
+import com.google.android.gms.maps.model.Circle;
+import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
@@ -87,6 +91,9 @@ public class Directions extends Activity implements View.OnClickListener, TextTo
 
         final MapFragment mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.fragment2);
         mapFragment.getMapAsync(this);
+
+        mMap.getUiSettings().setMyLocationButtonEnabled(true);
+
 
     }
     public void onActivityResult(int request_code, int result_code, Intent i){
@@ -302,15 +309,33 @@ public class Directions extends Activity implements View.OnClickListener, TextTo
                     }
 
 
+
+
                  //   System.out.println(latlng.toString());
                 line = mMap.addPolyline(options);
                   //  mMap.addPolyline(polyLineOptions);
                //     ArrayList<LatLng> points = null;
 
+                LatLng startcam = new LatLng(list.get(0).latitude,list.get(0).longitude);
+
+              //  mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(startcam, 16));
 
 
+                CameraPosition cameraPosition = new CameraPosition.Builder()
+                        .target(startcam) // Sets the center of the map to
+                        .zoom(20)                   // Sets the zoom
+                        .bearing(0) // Sets the orientation of the camera to east
+                        .tilt(60)    // Sets the tilt of the camera to 30 degrees
+                        .build();    // Creates a CameraPosition from the builder
+                mMap.animateCamera(CameraUpdateFactory.newCameraPosition(
+                        cameraPosition));
 
 
+                Circle circle = mMap.addCircle(new CircleOptions()
+                        .center(startcam)
+                        .radius(20)
+                        .strokeColor(Color.RED)
+                        .fillColor(Color.TRANSPARENT));
 
             }
         } catch (Exception e) {
@@ -320,7 +345,6 @@ public class Directions extends Activity implements View.OnClickListener, TextTo
         if (Directions.isEmpty()){
             Directions.add("No data returned");
         }
-
 
 
 
@@ -367,5 +391,6 @@ public class Directions extends Activity implements View.OnClickListener, TextTo
     public void onMapReady(GoogleMap googleMap) {
 
         mMap = googleMap;
+
     }
 }
