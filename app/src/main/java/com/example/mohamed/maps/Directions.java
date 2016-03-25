@@ -134,8 +134,12 @@ public class Directions extends Activity implements View.OnClickListener, TextTo
 
                     if (distance[0] > circles.get(i).getRadius()) {
                         Toast.makeText(getBaseContext(), "Outside", Toast.LENGTH_LONG).show();
+
                     } else {
                         Toast.makeText(getBaseContext(), "Inside", Toast.LENGTH_LONG).show();
+
+                        String result = Html.fromHtml(Directions.get(1)).toString();
+                        speakWords(result);
                     }
                 }
 
