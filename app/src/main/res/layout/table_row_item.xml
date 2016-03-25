@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TableRow xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="?android:attr/listPreferredItemHeight"
+    android:focusable="true"
+    android:focusableInTouchMode="false"
+    android:clickable="true"
+    android:background="@android:drawable/list_selector_background"
+    android:padding="5dip" >
+
+    <TextView
+        android:id="@+id/cell_1"
+        android:textStyle="bold"
+        android:text="Time"
+        android:textColor="#000"
+        android:textSize="18dip"
+
+    />
+    <TextView
+        android:id="@+id/cell_N"
+        android:textStyle="bold"
+        android:text="Origin"
+        android:textColor="#000"
+        android:textSize="18dip"
+
+    />
+</TableRow>

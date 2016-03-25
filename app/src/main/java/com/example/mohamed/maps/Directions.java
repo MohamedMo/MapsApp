@@ -1,12 +1,19 @@
 package com.example.mohamed.maps;
 
+import android.Manifest;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.speech.RecognizerIntent;
 import android.speech.tts.TextToSpeech;
+import android.support.v4.app.ActivityCompat;
 import android.text.Html;
 import android.util.Log;
 import android.view.View;
@@ -23,6 +30,8 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.Circle;
 import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 
@@ -73,6 +82,8 @@ public class Directions extends Activity implements View.OnClickListener, TextTo
     Polyline line; //added
     LatLng latLng;
     GoogleMap mMap;
+    Marker now;
+    private static ArrayList<Circle> circles = new ArrayList<Circle>();
 
 
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,10 +103,77 @@ public class Directions extends Activity implements View.OnClickListener, TextTo
         final MapFragment mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.fragment2);
         mapFragment.getMapAsync(this);
 
-        mMap.getUiSettings().setMyLocationButtonEnabled(true);
+       // mMap.getUiSettings().setMyLocationButtonEnabled(true);
 
 
+
+
+
+
+
+
+        LocationManager manager = (LocationManager) this.getSystemService((Context.LOCATION_SERVICE));
+        LocationListener listener = new LocationListener() {
+            @Override
+            public void onLocationChanged(Location location) {
+
+                if(now!=null){
+                    now.remove();
+                }
+
+                //This goes up to 21
+                latLng = new LatLng(location.getLatitude(), location.getLongitude());
+                //  mMap.addMarker(new MarkerOptions().position(latLng).title("Marker"));
+              //  mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoomLevel));
+              now =  mMap.addMarker(new MarkerOptions().position(latLng).title("You are here"));
+
+                float[] distance = new float[2];
+                for (int i = 0; i < circles.size(); i++) {
+                    Location.distanceBetween(now.getPosition().latitude, now.getPosition().longitude,
+                            circles.get(i).getCenter().latitude, circles.get(i).getCenter().longitude, distance);
+
+                    if (distance[0] > circles.get(i).getRadius()) {
+                        Toast.makeText(getBaseContext(), "Outside", Toast.LENGTH_LONG).show();
+                    } else {
+                        Toast.makeText(getBaseContext(), "Inside", Toast.LENGTH_LONG).show();
+                    }
+                }
+
+                //   redrawLine(); //added
+
+            }
+
+            @Override
+            public void onStatusChanged(String provider, int status, Bundle extras) {
+
+            }
+
+            @Override
+            public void onProviderEnabled(String provider) {
+
+            }
+
+            @Override
+            public void onProviderDisabled(String provider) {
+
+
+            }
+        };
+
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
+        }
+        manager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, listener);
     }
+
+
     public void onActivityResult(int request_code, int result_code, Intent i){
 
 
@@ -288,37 +366,35 @@ public class Directions extends Activity implements View.OnClickListener, TextTo
                             .getElementsByTagName("points").item(0)
                             .getTextContent());
 
-                    }
+                }
 
-                    for (int i=0;i<DirectionssPolylines.size();i++) {
+                for (int i = 0; i < DirectionssPolylines.size(); i++) {
 
-                        String polyline = "";
-                        polyline = DirectionssPolylines.get(i);
+                    String polyline = "";
+                    polyline = DirectionssPolylines.get(i);
 
-                        list = decodePoly(polyline);
-                    }
+                    list = decodePoly(polyline);
+                }
 
-                    for(int j=0;j<list.size();j++){
-                        LatLng posisi = new LatLng(list.get(j).latitude,list.get(j).longitude);
-                       // point1.add(posisi);
-                        options.add(posisi);
+                for (int j = 0; j < list.size(); j++) {
+                    LatLng posisi = new LatLng(list.get(j).latitude, list.get(j).longitude);
+                    // point1.add(posisi);
+                    options.add(posisi);
 
-                       // System.out.println(posisi);
-                      //  googleMap.addMarker(new MarkerOptions().position(posisi));
-                       // mMap.addMarker(new MarkerOptions().position(posisi).title("You are here"));
-                    }
-
-
+                    // System.out.println(posisi);
+                    //  googleMap.addMarker(new MarkerOptions().position(posisi));
+                    // mMap.addMarker(new MarkerOptions().position(posisi).title("You are here"));
+                }
 
 
-                 //   System.out.println(latlng.toString());
+                //   System.out.println(latlng.toString());
                 line = mMap.addPolyline(options);
-                  //  mMap.addPolyline(polyLineOptions);
-               //     ArrayList<LatLng> points = null;
+                //  mMap.addPolyline(polyLineOptions);
+                //     ArrayList<LatLng> points = null;
 
-                LatLng startcam = new LatLng(list.get(0).latitude,list.get(0).longitude);
+                LatLng startcam = new LatLng(list.get(0).latitude, list.get(0).longitude);
 
-              //  mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(startcam, 16));
+                //  mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(startcam, 16));
 
 
                 CameraPosition cameraPosition = new CameraPosition.Builder()
@@ -331,11 +407,13 @@ public class Directions extends Activity implements View.OnClickListener, TextTo
                         cameraPosition));
 
 
-                Circle circle = mMap.addCircle(new CircleOptions()
+                circles.add(mMap.addCircle(new CircleOptions()
                         .center(startcam)
                         .radius(20)
                         .strokeColor(Color.RED)
-                        .fillColor(Color.TRANSPARENT));
+                        .fillColor(Color.TRANSPARENT)));
+
+
 
             }
         } catch (Exception e) {
