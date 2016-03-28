@@ -17,7 +17,6 @@ import android.support.v4.app.ActivityCompat;
 import android.text.Html;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -83,6 +82,8 @@ public class Directions extends Activity implements View.OnClickListener, TextTo
     LatLng latLng;
     GoogleMap mMap;
     Marker now;
+    private double latitude = 0.0;
+    private double longitude = 0.0;
     private static ArrayList<Circle> circles = new ArrayList<Circle>();
 
 
@@ -91,9 +92,9 @@ public class Directions extends Activity implements View.OnClickListener, TextTo
         setContentView(R.layout.directions);
 
         //get a reference to the button element listed in the XML layout
-        Button speakButton = (Button)findViewById(R.id.btnReadText);
+        //Button speakButton = (Button)findViewById(R.id.btnReadText);
         //listen for clicks
-        speakButton.setOnClickListener(this);
+       // speakButton.setOnClickListener(this);
 
         //check for TTS data
         Intent checkTTSIntent = new Intent();
@@ -117,6 +118,12 @@ public class Directions extends Activity implements View.OnClickListener, TextTo
             @Override
             public void onLocationChanged(Location location) {
 
+                latitude = location.getLatitude();
+                longitude = location.getLongitude();
+
+
+
+
                 if(now!=null){
                     now.remove();
                 }
@@ -138,10 +145,16 @@ public class Directions extends Activity implements View.OnClickListener, TextTo
                     } else {
                         Toast.makeText(getBaseContext(), "Inside", Toast.LENGTH_LONG).show();
 
-                        String result = Html.fromHtml(Directions.get(1)).toString();
+                        String result = Html.fromHtml(Directions.get(i)).toString();
                         speakWords(result);
                     }
                 }
+
+
+
+
+
+
 
                 //   redrawLine(); //added
 
@@ -210,6 +223,9 @@ public class Directions extends Activity implements View.OnClickListener, TextTo
 
     public void onDirectionsClick(View v)  {
 
+
+
+        mMap.clear();
         //System.out.println("hello");
 
         EditText start = (EditText)findViewById(R.id.startLocation);
@@ -257,7 +273,14 @@ public class Directions extends Activity implements View.OnClickListener, TextTo
     }
 
 
-    public void onReadText (View v){
+    public void onBtnStart (View v){
+
+
+        String currentLocation = Double.toString(latitude) + "," + Double.toString(longitude);
+        EditText end = (EditText)findViewById(R.id.endLocation);
+        String finishingPos = end.getText().toString();
+        getDirections(currentLocation,finishingPos,method);
+
 
     }
 
@@ -417,9 +440,9 @@ public class Directions extends Activity implements View.OnClickListener, TextTo
 
                 CameraPosition cameraPosition = new CameraPosition.Builder()
                         .target(startcam) // Sets the center of the map to
-                        .zoom(20)                   // Sets the zoom
+                        .zoom(15)                   // Sets the zoom
                         .bearing(0) // Sets the orientation of the camera to east
-                        .tilt(60)    // Sets the tilt of the camera to 30 degrees
+                        .tilt(40)    // Sets the tilt of the camera to 30 degrees
                         .build();    // Creates a CameraPosition from the builder
                 mMap.animateCamera(CameraUpdateFactory.newCameraPosition(
                         cameraPosition));

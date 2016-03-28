@@ -22,7 +22,8 @@
             <TabWidget
                 android:id="@android:id/tabs"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"></TabWidget>
+                android:layout_height="wrap_content"
+                android:background="#757575"></TabWidget>
 
             <FrameLayout
                 android:id="@android:id/tabcontent"
@@ -112,8 +113,7 @@
         android:text="0"
         android:id="@+id/textViewLong"
         android:layout_below="@+id/placeOfInterestView"
-        android:layout_alignLeft="@+id/btnGym"
-        android:layout_alignStart="@+id/btnGym" />
+        />
 
     <Space
         android:layout_width="20px"

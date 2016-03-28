@@ -167,45 +167,45 @@ public class MapsActivity extends MainActivity implements OnMapReadyCallback, Te
 
     }
 
-    public void onBtnVoiceClick (View v){
-
-        if (v.getId() == R.id.btnToVoice){
-
-           // Intent i = new Intent(MapsActivity.this, Voice.class);
-           // startActivity(i);
-            promptSpeechInput();
-
-
-        }
-    }
-
-    public void onBtnDirectionsClick (View v){
-
-        if (v.getId() == R.id.btnToDirections){
-
-            Intent i = new Intent(MapsActivity.this, Directions.class);
-            startActivity(i);
-        }
-    }
-
-    public void onPOFClick (View v){
-
-        if (v.getId() == R.id.btnPOF){
-
-            Intent i = new Intent(MapsActivity.this, PlaceOfInterest.class);
-            startActivity(i);
-        }
-    }
-
-
-    public void onBtnGPS (View v){
-
-        if (v.getId() == R.id.btnGPS){
-
-            Intent i = new Intent(MapsActivity.this, GPS_Location.class);
-            startActivity(i);
-        }
-    }
+//    public void onBtnVoiceClick (View v){
+//
+//        if (v.getId() == R.id.btnToVoice){
+//
+//           // Intent i = new Intent(MapsActivity.this, Voice.class);
+//           // startActivity(i);
+//            promptSpeechInput();
+//
+//
+//        }
+//    }
+//
+//    public void onBtnDirectionsClick (View v){
+//
+//        if (v.getId() == R.id.btnToDirections){
+//
+//            Intent i = new Intent(MapsActivity.this, Directions.class);
+//            startActivity(i);
+//        }
+//    }
+//
+//    public void onPOFClick (View v){
+//
+//        if (v.getId() == R.id.btnPOF){
+//
+//            Intent i = new Intent(MapsActivity.this, PlaceOfInterest.class);
+//            startActivity(i);
+//        }
+//    }
+//
+//
+//    public void onBtnGPS (View v){
+//
+//        if (v.getId() == R.id.btnGPS){
+//
+//            Intent i = new Intent(MapsActivity.this, GPS_Location.class);
+//            startActivity(i);
+//        }
+//    }
 
 
     public void promptSpeechInput (){

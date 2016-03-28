@@ -41,19 +41,19 @@
         android:layout_height="wrap_content"
         android:text="Search"
         android:id="@+id/directionsSearchBtn"
-        android:layout_marginTop="27dp"
+        android:layout_marginTop="32dp"
         android:onClick="onDirectionsClick"
         android:layout_below="@+id/endLocation"
-        android:layout_toRightOf="@+id/btnPrev"
-        android:layout_toEndOf="@+id/btnPrev" />
+        android:layout_alignRight="@+id/btnPrev"
+        android:layout_alignEnd="@+id/btnPrev" />
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Read Text"
-        android:id="@+id/btnReadText"
+        android:id="@+id/btnStart"
         android:singleLine="true"
-        android:onClick="onReadText"
+        android:onClick="onBtnStart"
         android:layout_alignTop="@+id/directionsSearchBtn"
         android:layout_toRightOf="@+id/directionsSearchBtn"
         android:layout_toEndOf="@+id/directionsSearchBtn"
