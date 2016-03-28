@@ -9,12 +9,12 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.support.v4.app.ActivityCompat;
-import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.TabHost;
 import android.widget.TextView;
 
 import org.w3c.dom.Document;
@@ -50,8 +50,13 @@ public class PlaceOfInterest extends MainActivity {
    private File xmlFile;
     private double latitude = 0.0;
     private double longitude = 0.0;
+    TabHost tabHost;
+
+
 
     protected void onCreate(Bundle savedInstanceState) {
+
+
         super.onCreate(savedInstanceState);
         LayoutInflater inflater = (LayoutInflater) this
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -62,8 +67,47 @@ public class PlaceOfInterest extends MainActivity {
       xmlFile = new File(dir, "NearMe.xml");
 
 
+        final TabHost host = (TabHost)findViewById(R.id.tabHost);
 
 
+        host.setup();
+
+
+        //Tab 1
+        TabHost.TabSpec spec = host.newTabSpec("Shopping");
+        spec.setContent(R.id.listViewShop);
+        spec.setIndicator("Shopping");
+        host.addTab(spec);
+
+        //Tab 2
+        spec = host.newTabSpec("Bar");
+        spec.setContent(R.id.listViewBar);
+        spec.setIndicator("Bar");
+        host.addTab(spec);
+
+        //Tab 3
+        spec = host.newTabSpec("Gym");
+        spec.setContent(R.id.listViewGym);
+        spec.setIndicator("Gym");
+        host.addTab(spec);
+
+        host.setOnTabChangedListener(new TabHost.OnTabChangeListener() {
+            @Override
+            public void onTabChanged(String arg0) {
+
+
+                if (host.getCurrentTab() == 0){
+                    getNearby("shopping_mall");
+
+                }
+                if (host.getCurrentTab() == 1){
+                    getNearby("bar");
+                }
+                if (host.getCurrentTab() == 2){
+                    getNearby("gym");
+                }
+            }
+        });
 
         LocationManager manager = (LocationManager) this.getSystemService((Context.LOCATION_SERVICE));
         LocationListener listener = new LocationListener() {
@@ -123,6 +167,8 @@ public class PlaceOfInterest extends MainActivity {
     }
 
 
+
+
     private String getCurrentLocation() {
     //    String Longitude = "-0.066720";
       //  String Latitude = "51.526974";
@@ -143,14 +189,28 @@ public class PlaceOfInterest extends MainActivity {
     public void onBtnShop(View v)  {
 
    getNearby("shopping_mall");
-
+        adapter=new
+                ArrayAdapter<String>(
+                this,
+                android.R.layout.simple_list_item_1,
+                POF);
+        ListView myList=(ListView)
+                findViewById(R.id.listViewShop);
+        myList.setAdapter(adapter);
 
     }
 
     public void onBtnBar(View v)  {
 
         getNearby("bar");
-
+        adapter=new
+                ArrayAdapter<String>(
+                this,
+                android.R.layout.simple_list_item_1,
+                POF);
+        ListView myList=(ListView)
+                findViewById(R.id.listViewBar);
+        myList.setAdapter(adapter);
 
     }
 
@@ -201,7 +261,47 @@ public class PlaceOfInterest extends MainActivity {
         }
 
 
-        displayResults();
+        if (type.equalsIgnoreCase("shopping_mall")){
+
+            displayResults();
+            adapter=new
+                    ArrayAdapter<String>(
+                    this,
+                    android.R.layout.simple_list_item_1,
+                    POF);
+            ListView myList=(ListView)
+                    findViewById(R.id.listViewShop);
+            myList.setAdapter(adapter);
+        }
+
+
+        if (type.equalsIgnoreCase("bar")){
+
+            displayResults();
+            adapter=new
+                    ArrayAdapter<String>(
+                    this,
+                    android.R.layout.simple_list_item_1,
+                    POF);
+            ListView myList=(ListView)
+                    findViewById(R.id.listViewBar);
+            myList.setAdapter(adapter);
+        }
+
+
+        if (type.equalsIgnoreCase("gym")){
+
+            displayResults();
+            adapter=new
+                    ArrayAdapter<String>(
+                    this,
+                    android.R.layout.simple_list_item_1,
+                    POF);
+            ListView myList=(ListView)
+                    findViewById(R.id.listViewGym);
+            myList.setAdapter(adapter);
+        }
+
 
     }
 
@@ -252,21 +352,12 @@ public class PlaceOfInterest extends MainActivity {
 
       //  TextView resultPOF = (TextView)findViewById(R.id.placeOfInterestView);
         //resultPOF.setText(builder.toString());
-        String finalDirections = "<html>";
-        for(String s : POF)
-            finalDirections = finalDirections + s;
-        finalDirections = finalDirections + "</html>";
-        String result = Html.fromHtml(finalDirections).toString();
+
         //resultDirections.setText(result);
        // resultPOF.setText(result);
-        adapter=new
-                ArrayAdapter<String>(
-                this,
-                android.R.layout.simple_list_item_1,
-                POF);
-        ListView myList=(ListView)
-                findViewById(R.id.listView);
-        myList.setAdapter(adapter);
+
+
+
 
 
     }

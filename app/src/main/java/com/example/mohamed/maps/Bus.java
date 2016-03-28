@@ -12,7 +12,6 @@ import android.widget.ListView;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -59,8 +58,8 @@ public class Bus extends MainActivity implements OnMapReadyCallback {
 
 
 
-        final MapFragment mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.fragment);
-        mapFragment.getMapAsync(this);
+     // //  final MapFragment mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.fragment);
+      //  mapFragment.getMapAsync(this);
 
         myList = (ListView)
                 findViewById(R.id.listView2);
@@ -168,6 +167,8 @@ public class Bus extends MainActivity implements OnMapReadyCallback {
                     listItems);
              myList = (ListView)
                     findViewById(R.id.listView2);
+
+
             myList.setAdapter(adapter);
 
 

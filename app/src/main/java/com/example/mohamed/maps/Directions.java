@@ -351,6 +351,20 @@ public class Directions extends Activity implements View.OnClickListener, TextTo
             doc.getDocumentElement().normalize();
             System.out.println("Root element :"
                     + doc.getDocumentElement().getNodeName());
+
+
+
+
+
+            NodeList nodeList = doc.getElementsByTagName("route");
+            for (int i = 0; i < nodeList.getLength(); i++) {
+                Node node = nodeList.item(i);
+
+
+
+
+            }
+
             NodeList nList = doc.getElementsByTagName("step");
 
           //  System.out.println(nList.getLength());
