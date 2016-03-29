@@ -39,6 +39,11 @@ public class Status extends MainActivity {
         spec.setIndicator("This Weekend");
         host.addTab(spec);
 
+
+
+
+   //     final ListView lv = (ListView) findViewById(R.id.listViewStatus);
+
     }
 
 }

@@ -37,102 +37,358 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
 
-                    android:orientation="vertical">
-
-
-
-
+                    android:orientation="vertical"
+                    android:weightSum="1">
 
 
                     <TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_marginTop="10dp">
+                        android:layout_width="fill_parent"
+                        android:layout_height="fill_parent">
 
                         <TableRow
-                            android:background="#607D8B"
-                            android:padding="5dp">
+                            android:layout_width="fill_parent"
+                            android:layout_height="fill_parent">
+                    <TextView
+                        android:layout_width="178dp"
+                        android:layout_height="40dp"
+                        android:textAppearance="?android:attr/textAppearanceLarge"
+                        android:text="Bakerloo"
+                        android:gravity="center"
+                        android:id="@+id/textView7"
+                        android:background="#73300e"
+                        android:textColor="#ffffff" />
+
                             <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:text="Version" />
+                                android:layout_width="178dp"
+                                android:layout_height="40dp"
+                                android:textAppearance="?android:attr/textAppearanceLarge"
+                                android:text="Good Service"
+                              android:textSize="20dp"
+                                android:id="@+id/statusBakerloo"
+                                android:background="#ffffff"
+                                android:gravity="center"
+                                android:textColor="#000000" />
+
+                        </TableRow>
+
+
+                        <TableRow
+                            android:layout_width="fill_parent"
+                            android:layout_height="fill_parent">
+
+                    <TextView
+                        android:layout_width="178dp"
+                        android:layout_height="40dp"
+                        android:textAppearance="?android:attr/textAppearanceLarge"
+                        android:text="Central"
+                        android:gravity="center"
+                        android:id="@+id/textView8"
+
+                        android:textColor="#ffffff"
+                        android:background="#e81212" />
+
                             <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:text="Version Name" />
+                                android:layout_width="178dp"
+                                android:layout_height="40dp"
+                                android:textAppearance="?android:attr/textAppearanceLarge"
+                                android:text="Good Service"
+                                android:id="@+id/statusCentral"
+                                android:gravity="center"
+                                android:textSize="20dp"
+                                android:textColor="#000000"
+                                android:background="#ffffff" />
+
+                        </TableRow>
+
+
+
+                        <TableRow
+                            android:layout_width="fill_parent"
+                            android:layout_height="fill_parent">
+
+                    <TextView
+                        android:layout_width="178dp"
+                        android:layout_height="40dp"
+                        android:textAppearance="?android:attr/textAppearanceLarge"
+                        android:text="Circle"
+                        android:gravity="center"
+                        android:id="@+id/textView9"
+                        android:textColor="#ffffff"
+                        android:background="#fcd822" />
+
+
                             <TextView
-                                android:layout_width="wrap_content"
+                                android:layout_width="178dp"
+                                android:layout_height="40dp"
+                                android:textAppearance="?android:attr/textAppearanceLarge"
+                                android:text="Good Service"
+                                android:id="@+id/statusCircle"
+                                android:gravity="center"
+                                android:textColor="#000000"
+                                android:textSize="20dp"
+                                android:background="#ffffff" />
+
+                        </TableRow>
+
+
+                        <TableRow
+                            android:layout_width="fill_parent"
+                            android:layout_height="fill_parent">
+
+
+                    <TextView
+                        android:layout_width="178dp"
+                        android:layout_height="40dp"
+                        android:textAppearance="?android:attr/textAppearanceLarge"
+                        android:text="District"
+                        android:id="@+id/textView10"
+                        android:gravity="center"
+                        android:textColor="#ffffff"
+                        android:background="#30762e" />
+
+                            <TextView
+                                android:layout_width="178dp"
+                                android:layout_height="40dp"
+                                android:textAppearance="?android:attr/textAppearanceLarge"
+                                android:text="Good Service"
+                                android:id="@+id/statusDistrict"
+                                android:gravity="center"
+                                android:textSize="20dp"
+                                android:textColor="#000000"
+                                android:background="#ffffff" />
+
+                        </TableRow>
+
+
+
+                        <TableRow
+                            android:layout_width="fill_parent"
+                            android:layout_height="fill_parent">
+
+                    <TextView
+                        android:layout_width="178dp"
+                        android:layout_height="50dp"
+                        android:textColor="#ffffff"
+
+                        android:gravity="center"
+                        android:textAppearance="?android:attr/textAppearanceLarge"
+                        android:text="Hammersmith"
+                        android:id="@+id/textView11"
+                        android:background="#f08484" />
+
+                            <TextView
+                                android:layout_width="178dp"
+                                android:layout_height="50dp"
+                                android:textAppearance="?android:attr/textAppearanceLarge"
+                                android:text="Good Service"
+                                android:id="@+id/statusHam"
+                                android:gravity="center"
+                                android:textColor="#000000"
+                                android:textSize="20dp"
+                                android:background="#ffffff" />
+
+                        </TableRow>
+
+
+
+                        <TableRow
+                            android:layout_width="fill_parent"
+                            android:layout_height="fill_parent">
+
+                    <TextView
+                        android:layout_width="178dp"
+                        android:layout_height="40dp"
+                        android:gravity="center"
+                        android:textColor="#ffffff"
+                        android:textAppearance="?android:attr/textAppearanceLarge"
+                        android:text="Jubilee"
+                        android:id="@+id/textView12"
+
+                        android:background="#979595" />
+
+                            <TextView
+                                android:layout_width="178dp"
+                                android:layout_height="40dp"
+                                android:textAppearance="?android:attr/textAppearanceLarge"
+                                android:text="Good Service"
+                                android:id="@+id/statusJubilee"
+                                android:gravity="center"
+                                android:textColor="#000000"
+                                android:textSize="20dp"
+                                android:background="#ffffff" />
+                        </TableRow>
+
+
+                        <TableRow
+                            android:layout_width="fill_parent"
+                            android:layout_height="fill_parent">
+
+                    <TextView
+                        android:layout_width="178dp"
+                        android:layout_height="40dp"
+                        android:textColor="#ffffff"
+                        android:gravity="center"
+                        android:textAppearance="?android:attr/textAppearanceLarge"
+                        android:text="Metropolitan"
+                        android:id="@+id/textView13"
+
+                        android:background="#933690" />
+
+                            <TextView
+                                android:layout_width="178dp"
+                                android:layout_height="40dp"
+                                android:textAppearance="?android:attr/textAppearanceLarge"
+                                android:text="Good Service"
+                                android:id="@+id/statusMet"
+                                android:gravity="center"
+                                android:textColor="#000000"
+                                android:background="#ffffff"
+                                android:textSize="20dp"/>
+
+                        </TableRow>
+
+
+                        <TableRow
+                            android:layout_width="fill_parent"
+                            android:layout_height="fill_parent">
+
+                    <TextView
+                        android:layout_width="178dp"
+                        android:layout_height="40dp"
+                        android:textColor="#ffffff"
+                        android:gravity="center"
+                        android:textAppearance="?android:attr/textAppearanceLarge"
+                        android:text="Northern"
+                        android:id="@+id/textView14"
+
+                        android:background="#0d0909" />
+
+
+                            <TextView
+                                android:layout_width="178dp"
+                                android:layout_height="40dp"
+                                android:textAppearance="?android:attr/textAppearanceLarge"
+                                android:text="Good Service"
+                                android:id="@+id/statusNorthern"
+                                android:gravity="center"
+                                android:textSize="20dp"
+                                android:textColor="#000000"
+                                android:background="#ffffff" />
+
+                        </TableRow>
+
+
+                        <TableRow
+                            android:layout_width="fill_parent"
+                            android:layout_height="fill_parent">
+
+                    <TextView
+                        android:layout_width="178dp"
+                        android:layout_height="40dp"
+                        android:textColor="#ffffff"
+                        android:gravity="center"
+                        android:textAppearance="?android:attr/textAppearanceLarge"
+                        android:text="Piccadilly"
+                        android:id="@+id/textView15"
+
+                        android:background="#3447d0" />
+
+
+                            <TextView
+                                android:layout_width="178dp"
+                                android:layout_height="40dp"
+                                android:textAppearance="?android:attr/textAppearanceLarge"
+                                android:text="Good Service"
+                                android:id="@+id/statusPic"
+                                android:gravity="center"
+                                android:textSize="20dp"
+                                android:textColor="#000000"
+                                android:background="#ffffff" />
+                        </TableRow>
+
+
+                        <TableRow
+                            android:layout_width="fill_parent"
+                            android:layout_height="fill_parent">
+
+                    <TextView
+                        android:layout_width="178dp"
+                        android:layout_height="wrap_content"
+                        android:textColor="#ffffff"
+                        android:gravity="center"
+                        android:textAppearance="?android:attr/textAppearanceLarge"
+                        android:text="Victoria"
+                        android:id="@+id/textView16"
+
+                        android:background="#18b5ea" />
+
+                            <TextView
+                                android:layout_width="178dp"
                                 android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:text="API Level" />
+                                android:textAppearance="?android:attr/textAppearanceLarge"
+                                android:text="Good Service"
+                                android:id="@+id/statusVictoria"
+                                android:gravity="center"
+                                android:textSize="20dp"
+                                android:textColor="#000000"
+                                android:background="#ffffff" />
+                        </TableRow>
+
+
+                        <TableRow
+                            android:layout_width="fill_parent"
+                            android:layout_height="fill_parent">
+                    <TextView
+                        android:layout_width="178dp"
+                        android:layout_height="wrap_content"
+                        android:textColor="#ffffff"
+                        android:gravity="center"
+                        android:textAppearance="?android:attr/textAppearanceLarge"
+                        android:text="Waterloo &amp; City"
+                        android:id="@+id/textView18"
+
+                        android:background="#81f1db" />
+
+                            <TextView
+                                android:layout_width="178dp"
+                                android:layout_height="wrap_content"
+                                android:textAppearance="?android:attr/textAppearanceLarge"
+                                android:text="Good Service"
+                                android:id="@+id/statusWater"
+                                android:gravity="center"
+                                android:textSize="20dp"
+                                android:textColor="#000000"
+                                android:background="#ffffff" />
                         </TableRow>
 
                         <TableRow
-                            android:background="#ECEFF1"
-                            android:padding="5dp">
+                            android:layout_width="fill_parent"
+                            android:layout_height="fill_parent">
+
+                    <TextView
+                        android:layout_width="178dp"
+                        android:layout_height="wrap_content"
+                        android:textColor="#ffffff"
+                        android:gravity="center"
+                        android:textAppearance="?android:attr/textAppearanceLarge"
+                        android:text="DLR"
+                        android:id="@+id/textView20"
+
+                        android:background="#38b1c1" />
+
                             <TextView
-                                android:layout_width="wrap_content"
+                                android:layout_width="178dp"
                                 android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:text="5.0" />
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:text="Android Lollipop" />
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:text="21" />
+                                android:textAppearance="?android:attr/textAppearanceLarge"
+                                android:text="Good Service"
+                                android:id="@+id/statusDlr"
+                                android:gravity="center"
+                                android:textColor="#000000"
+                                android:textSize="20dp"
+                                android:background="#ffffff" />
                         </TableRow>
 
-                        <TableRow
-                            android:background="#ECEFF1"
-                            android:padding="5dp">
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:text="4.4" />
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:text="Android Kitkat" />
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:text="19" />
-                        </TableRow>
-                        <TableRow
-                            android:background="#ECEFF1"
-                            android:padding="5dp">
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:text="4.3" />
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:text="Android Jelly Bean" />
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:text="18" />
-                        </TableRow>
-                    </TableLayout>
-
-
-
-
-
+                    </TableLayout>>
                 </LinearLayout>
 
                 <LinearLayout
