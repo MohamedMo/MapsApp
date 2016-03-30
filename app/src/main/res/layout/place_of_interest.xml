@@ -44,6 +44,8 @@
                         android:layout_alignParentLeft="true"
                         android:layout_alignParentStart="true"
                         android:layout_below="@+id/btnGym" />
+
+
                 </LinearLayout>
 
                 <LinearLayout
@@ -59,6 +61,7 @@
                         android:id="@+id/listViewBar"
                         android:layout_alignParentLeft="true"
                         android:layout_alignParentStart="true"
+
                         android:layout_below="@+id/btnGym" />
                 </LinearLayout>
 

@@ -63,7 +63,7 @@
                                 android:layout_height="40dp"
                                 android:textAppearance="?android:attr/textAppearanceLarge"
                                 android:text="Good Service"
-                              android:textSize="20dp"
+                              android:textSize="18dp"
                                 android:id="@+id/statusBakerloo"
                                 android:background="#ffffff"
                                 android:gravity="center"
@@ -94,7 +94,7 @@
                                 android:text="Good Service"
                                 android:id="@+id/statusCentral"
                                 android:gravity="center"
-                                android:textSize="20dp"
+                                android:textSize="18dp"
                                 android:textColor="#000000"
                                 android:background="#ffffff" />
 
@@ -125,7 +125,7 @@
                                 android:id="@+id/statusCircle"
                                 android:gravity="center"
                                 android:textColor="#000000"
-                                android:textSize="20dp"
+                                android:textSize="18dp"
                                 android:background="#ffffff" />
 
                         </TableRow>
@@ -153,7 +153,7 @@
                                 android:text="Good Service"
                                 android:id="@+id/statusDistrict"
                                 android:gravity="center"
-                                android:textSize="20dp"
+                                android:textSize="18dp"
                                 android:textColor="#000000"
                                 android:background="#ffffff" />
 
@@ -184,7 +184,7 @@
                                 android:id="@+id/statusHam"
                                 android:gravity="center"
                                 android:textColor="#000000"
-                                android:textSize="20dp"
+                                android:textSize="18dp"
                                 android:background="#ffffff" />
 
                         </TableRow>
@@ -214,7 +214,7 @@
                                 android:id="@+id/statusJubilee"
                                 android:gravity="center"
                                 android:textColor="#000000"
-                                android:textSize="20dp"
+                                android:textSize="18dp"
                                 android:background="#ffffff" />
                         </TableRow>
 
@@ -243,7 +243,7 @@
                                 android:gravity="center"
                                 android:textColor="#000000"
                                 android:background="#ffffff"
-                                android:textSize="20dp"/>
+                                android:textSize="18dp"/>
 
                         </TableRow>
 
@@ -271,7 +271,7 @@
                                 android:text="Good Service"
                                 android:id="@+id/statusNorthern"
                                 android:gravity="center"
-                                android:textSize="20dp"
+                                android:textSize="18dp"
                                 android:textColor="#000000"
                                 android:background="#ffffff" />
 
@@ -301,7 +301,7 @@
                                 android:text="Good Service"
                                 android:id="@+id/statusPic"
                                 android:gravity="center"
-                                android:textSize="20dp"
+                                android:textSize="18dp"
                                 android:textColor="#000000"
                                 android:background="#ffffff" />
                         </TableRow>
@@ -313,7 +313,7 @@
 
                     <TextView
                         android:layout_width="178dp"
-                        android:layout_height="wrap_content"
+                        android:layout_height="40dp"
                         android:textColor="#ffffff"
                         android:gravity="center"
                         android:textAppearance="?android:attr/textAppearanceLarge"
@@ -324,12 +324,12 @@
 
                             <TextView
                                 android:layout_width="178dp"
-                                android:layout_height="wrap_content"
+                                android:layout_height="40dp"
                                 android:textAppearance="?android:attr/textAppearanceLarge"
                                 android:text="Good Service"
                                 android:id="@+id/statusVictoria"
                                 android:gravity="center"
-                                android:textSize="20dp"
+                                android:textSize="18dp"
                                 android:textColor="#000000"
                                 android:background="#ffffff" />
                         </TableRow>
@@ -340,23 +340,23 @@
                             android:layout_height="fill_parent">
                     <TextView
                         android:layout_width="178dp"
-                        android:layout_height="wrap_content"
+                        android:layout_height="40dp"
                         android:textColor="#ffffff"
                         android:gravity="center"
                         android:textAppearance="?android:attr/textAppearanceLarge"
-                        android:text="Waterloo &amp; City"
+                        android:text="Waterloo"
                         android:id="@+id/textView18"
 
                         android:background="#81f1db" />
 
                             <TextView
                                 android:layout_width="178dp"
-                                android:layout_height="wrap_content"
+                                android:layout_height="40dp"
                                 android:textAppearance="?android:attr/textAppearanceLarge"
                                 android:text="Good Service"
                                 android:id="@+id/statusWater"
                                 android:gravity="center"
-                                android:textSize="20dp"
+                                android:textSize="18dp"
                                 android:textColor="#000000"
                                 android:background="#ffffff" />
                         </TableRow>
@@ -367,7 +367,7 @@
 
                     <TextView
                         android:layout_width="178dp"
-                        android:layout_height="wrap_content"
+                        android:layout_height="40dp"
                         android:textColor="#ffffff"
                         android:gravity="center"
                         android:textAppearance="?android:attr/textAppearanceLarge"
@@ -378,13 +378,13 @@
 
                             <TextView
                                 android:layout_width="178dp"
-                                android:layout_height="wrap_content"
+                                android:layout_height="40dp"
                                 android:textAppearance="?android:attr/textAppearanceLarge"
                                 android:text="Good Service"
                                 android:id="@+id/statusDlr"
                                 android:gravity="center"
                                 android:textColor="#000000"
-                                android:textSize="20dp"
+                                android:textSize="18dp"
                                 android:background="#ffffff" />
                         </TableRow>
 
@@ -397,6 +397,13 @@
                     android:layout_height="match_parent"
 
                     android:orientation="vertical">
+
+
+
+                    <ListView
+                        android:id="@+id/List2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"></ListView>
 
 
                 </LinearLayout>

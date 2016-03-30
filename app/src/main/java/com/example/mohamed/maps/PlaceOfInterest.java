@@ -189,13 +189,8 @@ public class PlaceOfInterest extends MainActivity {
     public void onBtnShop(View v)  {
 
    getNearby("shopping_mall");
-        adapter=new
-                ArrayAdapter<String>(
-                this,
-                android.R.layout.simple_list_item_1,
-                POF);
-        ListView myList=(ListView)
-                findViewById(R.id.listViewShop);
+        adapter=new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, POF);
+        ListView myList=(ListView) findViewById(R.id.listViewShop);
         myList.setAdapter(adapter);
 
     }
@@ -264,42 +259,58 @@ public class PlaceOfInterest extends MainActivity {
         if (type.equalsIgnoreCase("shopping_mall")){
 
             displayResults();
-            adapter=new
-                    ArrayAdapter<String>(
-                    this,
-                    android.R.layout.simple_list_item_1,
-                    POF);
-            ListView myList=(ListView)
-                    findViewById(R.id.listViewShop);
+
+            adapter = new ListAdapter(this, R.layout.custom_listview, POF);
+            ListView myList=(ListView) findViewById(R.id.listViewShop);
             myList.setAdapter(adapter);
+            myList.setClickable(true);
+
+
+//            adapter = new ArrayAdapter<String>( this,android.R.layout.simple_list_item_1, POF);
+//            ListView myList=(ListView) findViewById(R.id.listViewShop);
+//            myList.setAdapter(adapter);
         }
 
 
         if (type.equalsIgnoreCase("bar")){
 
             displayResults();
-            adapter=new
-                    ArrayAdapter<String>(
-                    this,
-                    android.R.layout.simple_list_item_1,
-                    POF);
-            ListView myList=(ListView)
-                    findViewById(R.id.listViewBar);
+
+
+            adapter = new ListAdapter(this, R.layout.custom_listview, POF);
+            ListView myList=(ListView) findViewById(R.id.listViewBar);
             myList.setAdapter(adapter);
+            myList.setClickable(true);
+
+//            adapter=new
+//                    ArrayAdapter<String>(
+//                    this,
+//                    android.R.layout.simple_list_item_1,
+//                    POF);
+//            ListView myList=(ListView)
+//                    findViewById(R.id.listViewBar);
+//            myList.setAdapter(adapter);
         }
 
 
         if (type.equalsIgnoreCase("gym")){
 
             displayResults();
-            adapter=new
-                    ArrayAdapter<String>(
-                    this,
-                    android.R.layout.simple_list_item_1,
-                    POF);
-            ListView myList=(ListView)
-                    findViewById(R.id.listViewGym);
+
+
+            adapter = new ListAdapter(this, R.layout.custom_listview, POF);
+            ListView myList=(ListView) findViewById(R.id.listViewGym);
+
             myList.setAdapter(adapter);
+            myList.setClickable(true);
+//            adapter=new
+//                    ArrayAdapter<String>(
+//                    this,
+//                    android.R.layout.simple_list_item_1,
+//                    POF);
+//            ListView myList=(ListView)
+//                    findViewById(R.id.listViewGym);
+//            myList.setAdapter(adapter);
         }
 
 

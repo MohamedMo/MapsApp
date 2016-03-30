@@ -17,7 +17,7 @@ public class Status extends MainActivity {
         super.onCreate(savedInstanceState);
         LayoutInflater inflater = (LayoutInflater) this
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View contentView = inflater.inflate(R.layout.train_transport, null, false);
+        View contentView = inflater.inflate(R.layout.train_status, null, false);
         mDrawer.addView(contentView, 0);
 
 
@@ -29,15 +29,17 @@ public class Status extends MainActivity {
 
         //Tab 1
         TabHost.TabSpec spec = host.newTabSpec("Now");
-        spec.setContent(R.id.listViewShop);
+        spec.setContent(R.id.statusBakerloo);
         spec.setIndicator("Now");
         host.addTab(spec);
 
         //Tab 2
         spec = host.newTabSpec("This Weekend");
-        spec.setContent(R.id.listViewBar);
+       spec.setContent(R.id.List2);
         spec.setIndicator("This Weekend");
         host.addTab(spec);
+
+
 
 
 
