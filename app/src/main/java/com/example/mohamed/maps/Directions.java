@@ -512,4 +512,9 @@ public class Directions extends Activity implements View.OnClickListener, TextTo
         mMap = googleMap;
 
     }
+
+
+
+
+
 }

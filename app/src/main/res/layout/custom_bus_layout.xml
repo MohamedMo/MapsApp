@@ -1,0 +1,50 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="6dp"
+    android:focusable="false"
+    >
+
+
+
+    <TextView
+        android:id="@+id/stepNo"
+        android:layout_width="320dp"
+        android:layout_height="40dp"
+        android:layout_weight="0"
+        android:singleLine="false"
+        android:layout_gravity="center"
+        android:textSize="14sp"
+        android:clickable="false"
+        android:focusable="false"
+        android:textIsSelectable="false" />
+
+    <TextView
+        android:id="@+id/journeyBusText"
+        android:layout_width="320dp"
+        android:layout_height="40dp"
+        android:layout_gravity="center"
+        android:layout_weight="0"
+        android:singleLine="false"
+        android:textSize="14sp"
+        android:clickable="false"
+        android:focusable="false"
+        android:textIsSelectable="false" />
+
+
+    <TextView
+        android:id="@+id/timeDuration"
+        android:layout_width="320dp"
+        android:layout_height="40dp"
+        android:layout_gravity="center"
+        android:layout_weight="0"
+        android:singleLine="false"
+        android:textSize="14sp"
+        android:clickable="false"
+        android:focusable="false"
+
+        android:textIsSelectable="false" />
+
+</LinearLayout>
+

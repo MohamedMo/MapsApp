@@ -2,6 +2,7 @@ package com.example.mohamed.maps;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
@@ -12,6 +13,7 @@ import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TabHost;
@@ -45,13 +47,16 @@ public class PlaceOfInterest extends MainActivity {
     private static String URL;
     private static final String TAG = "Demo";
     private static ArrayList<String> POF = new ArrayList<String>();
+    private static ArrayList<String> Photos = new ArrayList<String>();
     private static ArrayList<String> POFplace = new ArrayList<String>();
+    private static ArrayList<String> photosLink = new ArrayList<String>();
     private static ArrayAdapter<String> adapter;
    private File xmlFile;
     private double latitude = 0.0;
     private double longitude = 0.0;
     TabHost tabHost;
-
+    private String urlphoto;
+    private ListView listy;
 
 
     protected void onCreate(Bundle savedInstanceState) {
@@ -164,22 +169,47 @@ public class PlaceOfInterest extends MainActivity {
             return;
         }
         manager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, listener);
+
+
+
+
+
+
+      listy=(ListView) findViewById(R.id.listViewBar);
+        listy.setOnItemClickListener(new android.widget.AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+
+                String item = (String) listy.getItemAtPosition(position);
+               // String urls = photosLink.get(position);
+
+
+                Intent anotherActivityIntent = new Intent(PlaceOfInterest.this, listViewHolder.class);
+                anotherActivityIntent.putExtra("name", item);
+              //  anotherActivityIntent.putExtra("urls", urls);
+                startActivity(anotherActivityIntent);
+
+
+                System.out.println(item);
+            }
+        });
     }
 
 
 
 
     private String getCurrentLocation() {
-    //    String Longitude = "-0.066720";
-      //  String Latitude = "51.526974";
+        String Longitude = "-0.066720";
+       String Latitude = "51.526974";
 //        String Longitude = Double.toString(longitude);
 //        String Latitude = Double.toString(latitude);
 
         TextView longi = (TextView)findViewById(R.id.textViewLong);
         TextView lati = (TextView)findViewById(R.id.textViewLat);
 
-        String Longitude = longi.getText().toString();
-        String Latitude = lati.getText().toString();
+      //  String Longitude = longi.getText().toString();
+       // String Latitude = lati.getText().toString();
 
         return String.format("location=%s,%s&radius=500&", Latitude, Longitude);
     }
@@ -214,6 +244,33 @@ public class PlaceOfInterest extends MainActivity {
         getNearby("gym");
 
 
+    }
+
+
+    public void getPhotos(String ref){
+
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+
+        StrictMode.setThreadPolicy(policy);
+
+        POF = new ArrayList<String>();
+        urlphoto = String
+                .format("https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=%s&key=%s",
+                       ref, GoogleAPIKey);
+
+
+        photosLink.add(urlphoto);
+
+    //    System.out.println(urlphoto);
+//        try {
+//            ImageView i = (ImageView)findViewById(R.id.image1);
+//            Bitmap bitmap = BitmapFactory.decodeStream((InputStream) new URL(urlphoto).getContent());
+//            i.setImageBitmap(bitmap);
+//        } catch (MalformedURLException e) {
+//            e.printStackTrace();
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
     }
 
 
@@ -260,10 +317,16 @@ public class PlaceOfInterest extends MainActivity {
 
             displayResults();
 
+
+//            for(int i = 0; i<Photos.size();i++){
+//                getPhotos(Photos.get(i));
+//            }
+
+
             adapter = new ListAdapter(this, R.layout.custom_listview, POF);
             ListView myList=(ListView) findViewById(R.id.listViewShop);
             myList.setAdapter(adapter);
-            myList.setClickable(true);
+       //     myList.setClickable(true);
 
 
 //            adapter = new ArrayAdapter<String>( this,android.R.layout.simple_list_item_1, POF);
@@ -276,11 +339,13 @@ public class PlaceOfInterest extends MainActivity {
 
             displayResults();
 
-
-            adapter = new ListAdapter(this, R.layout.custom_listview, POF);
+//            for(int i = 0; i<Photos.size();i++){
+//                getPhotos(Photos.get(i));
+//            }
+            adapter = new ListAdapter(this, R.layout.custom_listview, POF );
             ListView myList=(ListView) findViewById(R.id.listViewBar);
             myList.setAdapter(adapter);
-            myList.setClickable(true);
+       //     myList.setClickable(true);
 
 //            adapter=new
 //                    ArrayAdapter<String>(
@@ -297,12 +362,14 @@ public class PlaceOfInterest extends MainActivity {
 
             displayResults();
 
-
-            adapter = new ListAdapter(this, R.layout.custom_listview, POF);
+//            for(int i = 0; i<Photos.size();i++){
+//                getPhotos(Photos.get(i));
+//            }
+            adapter = new ListAdapter(this, R.layout.custom_listview, POF );
             ListView myList=(ListView) findViewById(R.id.listViewGym);
 
             myList.setAdapter(adapter);
-            myList.setClickable(true);
+         //   myList.setClickable(true);
 //            adapter=new
 //                    ArrayAdapter<String>(
 //                    this,
@@ -349,6 +416,17 @@ public class PlaceOfInterest extends MainActivity {
                     POF.add(eElement.getElementsByTagName("name")
                                     .item(0).getTextContent() + "  " + eElement.getElementsByTagName("vicinity").item(0).getTextContent()
                     );
+
+
+
+                 //   Photos.add(eElement.getElementsByTagName("photo_reference").item(0).getTextContent());
+
+
+                 //  urlphoto = eElement.getElementsByTagName("photo_reference").item(0).getTextContent();
+                  //  Photos.add(urlphoto);
+
+                 //   System.out.println(urlphoto);
+                 //   getPhotos(Photos.get(1));
 //                    POF.add(eElement.getElementsByTagName("vicinity")
 //                                    .item(0).getTextContent()
 //                    );

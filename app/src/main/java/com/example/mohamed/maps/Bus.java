@@ -38,6 +38,7 @@ public class Bus extends MainActivity implements OnMapReadyCallback {
     public static final String app_key = "91a0f395";
     private static String URL = "http://transportapi.com/v3/uk/bus/stops/near.json?lat=51.527789&lon=-0.102323&page=3&rpp=10&api_key=d9307fd91b0247c607e098d5effedc97&app_id=03bf8009";
     static JSONObject jObj = null;
+    private String newURL;
     static String json = "";
     private ArrayList<String> listItems = new ArrayList<String>();
     private ArrayList<String> localityItems = new ArrayList<String>();
@@ -87,7 +88,7 @@ public class Bus extends MainActivity implements OnMapReadyCallback {
 
         getNearby();
 
-
+getJourney();
     }
 
 
@@ -178,6 +179,134 @@ public class Bus extends MainActivity implements OnMapReadyCallback {
 
 
     }
+
+
+
+
+
+    public void getJourney() {
+
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+
+        StrictMode.setThreadPolicy(policy);
+
+        newURL = "http://transportapi.com/v3/uk/public/journey/from/Bethnal%20green/to/Brixton.json?app_id=03bf8009&app_key=d9307fd91b0247c607e098d5effedc97&modes=bus&region=tfl";
+        System.out.println(newURL);
+        String result = null;
+
+
+        try {
+            java.net.URL url = new URL(newURL);
+            URLConnection con = url.openConnection();
+            InputStream is = con.getInputStream();
+
+
+            BufferedReader br = new BufferedReader(new InputStreamReader(is));
+            StringBuilder sc = new StringBuilder();
+
+
+            String line = null;
+
+            while ((line = br.readLine()) != null) {
+
+                sc.append(line + "\n");
+
+            }
+
+            result = sc.toString();
+
+
+            br.close();
+            is.close();
+
+
+        } catch (Exception e) {
+
+        }
+
+
+        try {
+//        JSONArray jsonArray = new JSONArray(result);
+//        for(int i =0;i<jsonArray.length();i++){
+//            JSONObject jo = jsonArray.getJSONObject(i);
+//            listItems.add(jo.getString("stops"));
+//        }
+
+
+            JSONObject mainObj = new JSONObject(result);
+            if(mainObj != null){
+                JSONArray list = mainObj.getJSONArray("routes");
+                if(list != null){
+
+                        JSONObject elem = list.getJSONObject(0);
+                        if(elem != null){
+                            JSONArray prods = elem.getJSONArray("route_parts");
+                            if(prods != null){
+                                for(int j = 0; j < prods.length();j++){
+                                    JSONObject innerElem = prods.getJSONObject(j);
+                                    if(innerElem != null){
+                                        String start = innerElem.optString("from_point_name");
+                                        String end = innerElem.optString("to_point_name");
+                                        String duration = innerElem.optString("duration");
+
+                                        String startloc = start;
+                String endloct = end;
+                String durloc = duration;
+
+
+
+                System.out.println(startloc);
+                System.out.println(endloct);
+                System.out.println(durloc);
+                                    }
+                                }
+                            }
+                        }
+
+                }
+            }
+
+
+//            JSONObject jsonResponse = new JSONObject(result);
+//            //JSONObject jsonMainNode = jsonResponse.getJSONObject("routes");
+//
+//
+//            JSONArray  routes = jsonResponse.optJSONArray("routes");
+//            JSONArray  js = jsonMainNode.optJSONArray("route_parts");
+//
+//            for (int i = 0; i < js.length(); i++) {
+//                JSONObject jsonChildNode = js.getJSONObject(i);
+//                String start = jsonChildNode.optString("from_point_name");
+//                String end = jsonChildNode.optString("to_point_name");
+//                String duration = jsonChildNode.optString("duration");
+//
+//                String startloc = start;
+//                String endloct = end;
+//                String durloc = duration;
+//
+//
+//
+//                System.out.println(startloc);
+//                System.out.println(endloct);
+//                System.out.println(durloc);
+//
+//              //  listItems.add(outPut);
+//              //  localityItems.add(end);
+//
+//
+//
+//
+//            }
+
+
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+
+    }
+
 
 
 
