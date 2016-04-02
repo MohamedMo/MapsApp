@@ -42,10 +42,14 @@ public class Bus extends MainActivity implements OnMapReadyCallback {
     static String json = "";
     private ArrayList<String> listItems = new ArrayList<String>();
     private ArrayList<String> localityItems = new ArrayList<String>();
+    private ArrayList<String> journey = new ArrayList<String>();
+    private ArrayList<String> endJourney = new ArrayList<String>();
+    private ArrayList<String> durationArray = new ArrayList<String>();
     private static ArrayAdapter<String> adapter;
     float zoomLevel = (float) 16.0;
     LatLng latLng;
     private ListView myList;
+
 
 
     @Override
@@ -250,9 +254,12 @@ getJourney();
                                         String duration = innerElem.optString("duration");
 
                                         String startloc = start;
-                String endloct = end;
-                String durloc = duration;
+                                         String endloct = end;
+                                         String durloc = duration;
 
+                                        journey.add(startloc);
+                                        endJourney.add(endloct);
+                                        durationArray.add(durloc);
 
 
                 System.out.println(startloc);
@@ -267,6 +274,9 @@ getJourney();
             }
 
 
+            adapter = new BusListAdapter(this, R.layout.custom_bus_layout, journey , endJourney ,durationArray );
+            ListView myList=(ListView) findViewById(R.id.listViewBusJ);
+            myList.setAdapter(adapter);
 //            JSONObject jsonResponse = new JSONObject(result);
 //            //JSONObject jsonMainNode = jsonResponse.getJSONObject("routes");
 //
