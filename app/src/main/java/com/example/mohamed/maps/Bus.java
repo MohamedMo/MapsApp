@@ -8,7 +8,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.TabHost;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -45,6 +48,9 @@ public class Bus extends MainActivity implements OnMapReadyCallback {
     private ArrayList<String> journey = new ArrayList<String>();
     private ArrayList<String> endJourney = new ArrayList<String>();
     private ArrayList<String> durationArray = new ArrayList<String>();
+    private ArrayList<String> busStops = new ArrayList<String>();
+    private static String StartingLocation;
+    private static String EndingLocation;
     private static ArrayAdapter<String> adapter;
     float zoomLevel = (float) 16.0;
     LatLng latLng;
@@ -62,12 +68,29 @@ public class Bus extends MainActivity implements OnMapReadyCallback {
 
 
 
+        final TabHost host = (TabHost)findViewById(R.id.tabHost);
+
+
+        host.setup();
+
+
+        //Tab 1
+        TabHost.TabSpec spec = host.newTabSpec("Search");
+        spec.setContent(R.id.listViewBusJ);
+        spec.setIndicator("Search");
+        host.addTab(spec);
+
+        //Tab 2
+        spec = host.newTabSpec("Near Me");
+        spec.setContent(R.id.listViewNear);
+        spec.setIndicator("Near Me");
+        host.addTab(spec);
 
      // //  final MapFragment mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.fragment);
       //  mapFragment.getMapAsync(this);
 
         myList = (ListView)
-                findViewById(R.id.listView2);
+                findViewById(R.id.listViewNear);
         myList.setOnItemClickListener(new android.widget.AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -77,13 +100,10 @@ public class Bus extends MainActivity implements OnMapReadyCallback {
                 String localities = localityItems.get(position);
 
 
-
                 Intent anotherActivityIntent = new Intent(Bus.this, listViewHolder.class);
                 anotherActivityIntent.putExtra("name", item);
                 anotherActivityIntent.putExtra("local", localities);
                 startActivity(anotherActivityIntent);
-
-
 
 
                 System.out.println(item);
@@ -92,7 +112,7 @@ public class Bus extends MainActivity implements OnMapReadyCallback {
 
         getNearby();
 
-getJourney();
+//getJourney();
     }
 
 
@@ -171,7 +191,7 @@ getJourney();
                     android.R.layout.simple_list_item_1,
                     listItems);
              myList = (ListView)
-                    findViewById(R.id.listView2);
+                    findViewById(R.id.listViewNear);
 
 
             myList.setAdapter(adapter);
@@ -185,16 +205,30 @@ getJourney();
     }
 
 
+public void onBtnSearchBus(View v){
+
+    EditText start = (EditText)findViewById(R.id.startBus);
+    EditText end = (EditText)findViewById(R.id.endBus);
+    //TextView resultDirections = (TextView)findViewById(R.id.textViewDirectionsList);
+    String startingPos = start.getText().toString();
+    String finishingPos = end.getText().toString();
+    getJourney(startingPos, finishingPos);
+}
 
 
-
-    public void getJourney() {
+    public void getJourney(String startbus, String endbus) {
 
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
 
         StrictMode.setThreadPolicy(policy);
 
-        newURL = "http://transportapi.com/v3/uk/public/journey/from/Bethnal%20green/to/Brixton.json?app_id=03bf8009&app_key=d9307fd91b0247c607e098d5effedc97&modes=bus&region=tfl";
+        StartingLocation = startbus;
+        EndingLocation = endbus;
+
+        newURL = String.format("http://transportapi.com/v3/uk/public/journey/from/%s/to/%s.json?app_id=03bf8009&app_key=d9307fd91b0247c607e098d5effedc97&modes=bus&region=tfl",
+                StartingLocation , EndingLocation);
+
+        newURL = newURL.replaceAll(" ", "%20");
         System.out.println(newURL);
         String result = null;
 
@@ -252,14 +286,17 @@ getJourney();
                                         String start = innerElem.optString("from_point_name");
                                         String end = innerElem.optString("to_point_name");
                                         String duration = innerElem.optString("duration");
+                                        String busLine = innerElem.optString("line_name");
 
                                         String startloc = start;
                                          String endloct = end;
                                          String durloc = duration;
+                                        String busL = busLine;
 
                                         journey.add(startloc);
                                         endJourney.add(endloct);
                                         durationArray.add(durloc);
+                                        busStops.add(busL);
 
 
                 System.out.println(startloc);
@@ -274,7 +311,7 @@ getJourney();
             }
 
 
-            adapter = new BusListAdapter(this, R.layout.custom_bus_layout, journey , endJourney ,durationArray );
+            adapter = new BusListAdapter(this, R.layout.custom_bus_layout, journey , endJourney ,durationArray,busStops );
             ListView myList=(ListView) findViewById(R.id.listViewBusJ);
             myList.setAdapter(adapter);
 //            JSONObject jsonResponse = new JSONObject(result);
@@ -312,6 +349,7 @@ getJourney();
 
         } catch (JSONException e) {
             e.printStackTrace();
+            Toast.makeText(Bus.this, "Enter Valid Bus Station", Toast.LENGTH_SHORT).show();
         }
 
 

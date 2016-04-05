@@ -5,23 +5,114 @@
     android:orientation="vertical"
     android:weightSum="1">
 
-    <ListView
-        android:layout_width="wrap_content"
-        android:layout_height="182dp"
-        android:id="@+id/listView2"
-        android:layout_gravity="bottom"
-        android:layout_weight="0.12"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
 
-    <ListView
+
+    <Space
         android:layout_width="wrap_content"
-        android:layout_height="300dp"
-        android:id="@+id/listViewBusJ"
-        android:divider="@null"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_height="120dp"
+        android:id="@+id/space3"/>
+
+
+    <EditText
+        android:layout_width="250dp"
+        android:layout_height="40dp"
+        android:id="@+id/startBus"
+        android:layout_marginTop="40dp"
+        android:layout_gravity="center"
+        android:hint="Start Location"/>
+
+
+
+    <EditText
+        android:layout_width="250dp"
+        android:layout_height="40dp"
+        android:id="@+id/endBus"
+        android:layout_gravity="center"
+        android:layout_marginTop="70dp"
+        android:hint="End Location"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/btnSearchBus"
+        android:onClick="onBtnSearchBus"
+        android:layout_gravity="center"
+        android:layout_alignBottom="@+id/space3"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
+
+
+
+    <TabHost
+        android:id="@+id/tabHost"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/space3"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <TabWidget
+                android:id="@android:id/tabs"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="#757575"></TabWidget>
+
+            <FrameLayout
+                android:id="@android:id/tabcontent"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <LinearLayout
+                    android:id="@+id/SearchBus"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+
+                    android:orientation="vertical">
+
+
+
+                    <ListView
+                        android:layout_width="wrap_content"
+                        android:layout_height="300dp"
+                        android:id="@+id/listViewBusJ"
+                        android:divider="@null"
+                        android:layout_alignParentBottom="true"
+                        android:layout_alignParentLeft="true"
+                        android:layout_alignParentStart="true" />
+
+
+
+
+
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/near"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+
+
+                    <ListView
+                        android:layout_width="wrap_content"
+                        android:layout_height="182dp"
+                        android:id="@+id/listViewNear"
+                        android:layout_gravity="bottom"
+                        android:layout_weight="0.12"
+                      />
+
+                </LinearLayout>
+
+            </FrameLayout>
+        </LinearLayout>
+    </TabHost>
+
 
 
 </RelativeLayout>

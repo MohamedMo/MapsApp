@@ -450,7 +450,7 @@ public class Directions extends Activity implements View.OnClickListener, TextTo
 
                 circles.add(mMap.addCircle(new CircleOptions()
                         .center(startcam)
-                        .radius(20)
+                        .radius(30)
                         .strokeColor(Color.RED)
                         .fillColor(Color.TRANSPARENT)));
 

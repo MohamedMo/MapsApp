@@ -18,12 +18,14 @@ public class BusListAdapter extends ArrayAdapter<String>{
     private ArrayList<String> start;
     private ArrayList<String> end;
     private ArrayList<String> duration;
+    private ArrayList<String> line;
 
-    public BusListAdapter(Context context, int textViewResourceId, ArrayList<String> start , ArrayList<String> end ,ArrayList<String> duration) {
+    public BusListAdapter(Context context, int textViewResourceId, ArrayList<String> start , ArrayList<String> end ,ArrayList<String> duration , ArrayList<String> line) {
         super(context, textViewResourceId, start);
         this.start = start;
         this.end = end;
         this.duration = duration;
+        this.line = line;
     }
 
     /*
@@ -52,6 +54,7 @@ public class BusListAdapter extends ArrayAdapter<String>{
         String i = start.get(position);
         String o = end.get(position);
         String p = duration.get(position);
+        String h = line.get(position);
         if (i != null) {
 
             // This is how you obtain a reference to the TextViews.
@@ -60,6 +63,7 @@ public class BusListAdapter extends ArrayAdapter<String>{
             TextView tt = (TextView) v.findViewById(R.id.stepNo);
             TextView dd = (TextView) v.findViewById(R.id.journeyBusText);
             TextView aa = (TextView) v.findViewById(R.id.timeDuration);
+            TextView gg = (TextView) v.findViewById(R.id.method);
 
 
             // check to see if each individual textview is null.
@@ -71,6 +75,9 @@ public class BusListAdapter extends ArrayAdapter<String>{
            dd.setText(o);
 
            aa.setText(p);
+
+
+            gg.setText("Bus : " + h);
 
 
         }
