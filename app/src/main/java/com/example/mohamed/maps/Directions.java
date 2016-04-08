@@ -1,7 +1,6 @@
 package com.example.mohamed.maps;
 
 import android.Manifest;
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -16,7 +15,9 @@ import android.speech.tts.TextToSpeech;
 import android.support.v4.app.ActivityCompat;
 import android.text.Html;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -56,7 +57,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 /**
  * Created by Mohamed on 24/01/2016.
  */
-public class Directions extends Activity implements View.OnClickListener, TextToSpeech.OnInitListener, OnMapReadyCallback {
+public class Directions extends MainActivity implements View.OnClickListener, TextToSpeech.OnInitListener, OnMapReadyCallback {
 
 
     private TextView resultText;
@@ -70,7 +71,7 @@ public class Directions extends Activity implements View.OnClickListener, TextTo
     private static String EndingLocation;
     private static String TravellingMethod;
     private static String URL;
-    String method = "driving";
+    String method = "walking";
     private static ArrayList<String> Directions = new ArrayList<String>();
     private static ArrayList<String> DirectionssPolylines = new ArrayList<String>();
     private static final String urlLink ="https://maps.googleapis.com/maps/api/directions/xml?origin=Pelterstreet&destination=Pelterstreet&mode=walking&key=AIzaSyC2MMB-7iqMzrccgD9voZHiGf2nY093Jlg";
@@ -80,6 +81,7 @@ public class Directions extends Activity implements View.OnClickListener, TextTo
     List<LatLng> list;
     Polyline line; //added
     LatLng latLng;
+    LatLng test;
     GoogleMap mMap;
     Marker now;
     private double latitude = 0.0;
@@ -89,12 +91,17 @@ public class Directions extends Activity implements View.OnClickListener, TextTo
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.directions);
+      //  setContentView(R.layout.directions);
+        LayoutInflater inflater = (LayoutInflater) this
+                .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View contentView = inflater.inflate(R.layout.directions, null, false);
+        mDrawer.addView(contentView, 0);
 
         //get a reference to the button element listed in the XML layout
         //Button speakButton = (Button)findViewById(R.id.btnReadText);
         //listen for clicks
-       // speakButton.setOnClickListener(this);
+       // speakButton.setO
+       // nClickListener(this);
 
         //check for TTS data
         Intent checkTTSIntent = new Intent();
@@ -118,35 +125,50 @@ public class Directions extends Activity implements View.OnClickListener, TextTo
             @Override
             public void onLocationChanged(Location location) {
 
+
+
+
                 latitude = location.getLatitude();
                 longitude = location.getLongitude();
 
+//                String Longitude = "-0.066720";
+//                String Latitude = "51.526974";
 
 
+                latLng = new LatLng
+                        (latitude, longitude);
 
                 if(now!=null){
                     now.remove();
                 }
 
                 //This goes up to 21
-                latLng = new LatLng(location.getLatitude(), location.getLongitude());
+               // latLng = new LatLng(location.getLatitude(), location.getLongitude());
                 //  mMap.addMarker(new MarkerOptions().position(latLng).title("Marker"));
               //  mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoomLevel));
-              now =  mMap.addMarker(new MarkerOptions().position(latLng).title("You are here"));
+            //  now =  mMap.addMarker(new MarkerOptions().position(test).title("You are here"));
+                now =  mMap.addMarker(new MarkerOptions().position(latLng).title("You are here"));
 
-                float[] distance = new float[2];
-                for (int i = 0; i < circles.size(); i++) {
-                    Location.distanceBetween(now.getPosition().latitude, now.getPosition().longitude,
-                            circles.get(i).getCenter().latitude, circles.get(i).getCenter().longitude, distance);
 
-                    if (distance[0] > circles.get(i).getRadius()) {
-                        Toast.makeText(getBaseContext(), "Outside", Toast.LENGTH_LONG).show();
 
-                    } else {
-                        Toast.makeText(getBaseContext(), "Inside", Toast.LENGTH_LONG).show();
+                if(circles.isEmpty()){
 
-                        String result = Html.fromHtml(Directions.get(i)).toString();
-                        speakWords(result);
+                }
+                else {
+                    float[] distance = new float[2];
+                    for (int i = 0; i < circles.size(); i++) {
+                        Location.distanceBetween(now.getPosition().latitude, now.getPosition().longitude,
+                                circles.get(i).getCenter().latitude, circles.get(i).getCenter().longitude, distance);
+
+                        if (distance[0] > circles.get(i).getRadius()) {
+                            // Toast.makeText(getBaseContext(), "Outside", Toast.LENGTH_LONG).show();
+
+                        } else {
+                            Toast.makeText(getBaseContext(), "Inside", Toast.LENGTH_LONG).show();
+
+                            String result = Html.fromHtml(Directions.get(i)).toString();
+                            speakWords(result);
+                        }
                     }
                 }
 
@@ -230,7 +252,7 @@ public class Directions extends Activity implements View.OnClickListener, TextTo
 
         EditText start = (EditText)findViewById(R.id.startLocation);
         EditText end = (EditText)findViewById(R.id.endLocation);
-       TextView resultDirections = (TextView)findViewById(R.id.textViewDirectionsList);
+      // TextView resultDirections = (TextView)findViewById(R.id.textViewDirectionsList);
         String startingPos = start.getText().toString();
         String finishingPos = end.getText().toString();
         getDirections(startingPos, finishingPos, method);
@@ -243,30 +265,36 @@ public class Directions extends Activity implements View.OnClickListener, TextTo
 
         //Directions.get(1);
         String result = Html.fromHtml(Directions.get(1)).toString();
-        resultDirections.setText(result);
+      //  resultDirections.setText(result);
 
 
         }
 
     public void btnPreviousClick (View v){
-        TextView resultDirections = (TextView)findViewById(R.id.textViewDirectionsList);
+
+//        test = new LatLng
+//                (51.529030, -0.07469);
+     //   TextView resultDirections = (TextView)findViewById(R.id.textViewDirectionsList);
         if(position > 0){
             position--;
             String result = Html.fromHtml(Directions.get(position)).toString();
-            resultDirections.setText(result);
+           // resultDirections.setText(result);
             // show the data here
         }
     }
 
     public void btnNextClick(View v) {
 
-        TextView resultDirections = (TextView)findViewById(R.id.textViewDirectionsList);
+//        test = new LatLng
+//                (51.5281664, -0.0745294);
+
+        //TextView resultDirections = (TextView)findViewById(R.id.textViewDirectionsList);
 
 
         if (position < Directions.size() - 1){
             position++;
             String result = Html.fromHtml(Directions.get(position)).toString();
-            resultDirections.setText(result);
+          //  resultDirections.setText(result);
             // show the data here
         }
 
@@ -284,12 +312,66 @@ public class Directions extends Activity implements View.OnClickListener, TextTo
 
     }
 
+    public void onBtnCycle(View v){
+
+
+        Directions.clear();
+        DirectionssPolylines.clear();
+        mMap.clear();
+
+
+        method = "BICYCLING";
+        EditText start = (EditText)findViewById(R.id.startLocation);
+        EditText end = (EditText)findViewById(R.id.endLocation);
+        // TextView resultDirections = (TextView)findViewById(R.id.textViewDirectionsList);
+        String startingPos = start.getText().toString();
+        String finishingPos = end.getText().toString();
+        getDirections(startingPos, finishingPos, method);
+    }
+
+    public void onBtnDrive(View v){
+
+
+        Directions.clear();
+        DirectionssPolylines.clear();
+        mMap.clear();
+
+
+        method = "DRIVING";
+        EditText start = (EditText)findViewById(R.id.startLocation);
+        EditText end = (EditText)findViewById(R.id.endLocation);
+        // TextView resultDirections = (TextView)findViewById(R.id.textViewDirectionsList);
+        String startingPos = start.getText().toString();
+        String finishingPos = end.getText().toString();
+        getDirections(startingPos, finishingPos, method);
+    }
+
+    public void onWalkBtn(View v){
+
+
+        Directions.clear();
+        DirectionssPolylines.clear();
+        mMap.clear();
+
+
+        Button btn = (Button) findViewById(R.id.walk);
+
+
+        method = "WALKING";
+        EditText start = (EditText)findViewById(R.id.startLocation);
+        EditText end = (EditText)findViewById(R.id.endLocation);
+        // TextView resultDirections = (TextView)findViewById(R.id.textViewDirectionsList);
+        String startingPos = start.getText().toString();
+        String finishingPos = end.getText().toString();
+        getDirections(startingPos, finishingPos, method);
+    }
+
     @Override
     public void onClick(View v) {
         //get the text entered
-        TextView enteredText = (TextView)findViewById(R.id.textViewDirectionsList);
-        String words = enteredText.getText().toString();
-        speakWords(words);
+     //   TextView enteredText = (TextView)findViewById(R.id.textViewDirectionsList);
+     //   String words = enteredText.getText().toString();
+     //   speakWords(words);
     }
 
     private void speakWords(String speech) {
@@ -384,9 +466,9 @@ public class Directions extends Activity implements View.OnClickListener, TextTo
                 Node node = nodeList.item(i);
 
 
-
-
             }
+
+
 
             NodeList nList = doc.getElementsByTagName("step");
 
@@ -459,6 +541,7 @@ public class Directions extends Activity implements View.OnClickListener, TextTo
             }
         } catch (Exception e) {
             e.printStackTrace();
+
         }
 
         if (Directions.isEmpty()){

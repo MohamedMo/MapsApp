@@ -200,10 +200,10 @@ public class PlaceOfInterest extends MainActivity {
 
 
     private String getCurrentLocation() {
-        String Longitude = "-0.066720";
-       String Latitude = "51.526974";
-//        String Longitude = Double.toString(longitude);
-//        String Latitude = Double.toString(latitude);
+     //   String Longitude = "-0.066720";
+     //  String Latitude = "51.526974";
+        String Longitude = Double.toString(longitude);
+        String Latitude = Double.toString(latitude);
 
         TextView longi = (TextView)findViewById(R.id.textViewLong);
         TextView lati = (TextView)findViewById(R.id.textViewLat);

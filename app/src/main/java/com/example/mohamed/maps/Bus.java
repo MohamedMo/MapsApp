@@ -77,6 +77,7 @@ public class Bus extends MainActivity implements OnMapReadyCallback {
         //Tab 1
         TabHost.TabSpec spec = host.newTabSpec("Search");
         spec.setContent(R.id.listViewBusJ);
+
         spec.setIndicator("Search");
         host.addTab(spec);
 

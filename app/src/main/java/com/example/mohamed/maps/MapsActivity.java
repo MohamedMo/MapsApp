@@ -167,17 +167,17 @@ public class MapsActivity extends MainActivity implements OnMapReadyCallback, Te
 
     }
 
-//    public void onBtnVoiceClick (View v){
-//
-//        if (v.getId() == R.id.btnToVoice){
-//
-//           // Intent i = new Intent(MapsActivity.this, Voice.class);
-//           // startActivity(i);
-//            promptSpeechInput();
-//
-//
-//        }
-//    }
+    public void onBtnVoiceClick (View v){
+
+        if (v.getId() == R.id.btnToVoice){
+
+           // Intent i = new Intent(MapsActivity.this, Voice.class);
+           // startActivity(i);
+            promptSpeechInput();
+
+
+        }
+    }
 //
 //    public void onBtnDirectionsClick (View v){
 //
