@@ -35,6 +35,9 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -363,7 +366,7 @@ public class Directions extends MainActivity implements View.OnClickListener, Te
         // TextView resultDirections = (TextView)findViewById(R.id.textViewDirectionsList);
         String startingPos = start.getText().toString();
         String finishingPos = end.getText().toString();
-        getDirections(startingPos, finishingPos, method);
+        getNearby(startingPos, finishingPos, method);
     }
 
     @Override
@@ -396,7 +399,7 @@ public class Directions extends MainActivity implements View.OnClickListener, Te
 
 
         ArrayList<LatLng> point1 = null;
-        PolylineOptions options = new PolylineOptions().width(5).color(Color.BLUE).geodesic(true);
+        PolylineOptions options = new PolylineOptions().width(10).color(Color.BLUE).geodesic(true);
         List<LatLng> points = new ArrayList<LatLng>();
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         PolylineOptions polyLineOptions = null;
@@ -510,6 +513,7 @@ public class Directions extends MainActivity implements View.OnClickListener, Te
                 }
 
 
+
                 //   System.out.println(latlng.toString());
                 line = mMap.addPolyline(options);
                 //  mMap.addPolyline(polyLineOptions);
@@ -524,7 +528,7 @@ public class Directions extends MainActivity implements View.OnClickListener, Te
                         .target(startcam) // Sets the center of the map to
                         .zoom(15)                   // Sets the zoom
                         .bearing(0) // Sets the orientation of the camera to east
-                        .tilt(40)    // Sets the tilt of the camera to 30 degrees
+                        .tilt(60)    // Sets the tilt of the camera to 30 degrees
                         .build();    // Creates a CameraPosition from the builder
                 mMap.animateCamera(CameraUpdateFactory.newCameraPosition(
                         cameraPosition));
@@ -551,6 +555,136 @@ public class Directions extends MainActivity implements View.OnClickListener, Te
 
 
        // googleMap.addPolyline(polyLineOptions);
+
+    }
+
+
+    public void getNearby(String start, String end, String method) {
+
+        JSONObject leg = null;
+        ArrayList<LatLng> point1 = null;
+        PolylineOptions options = new PolylineOptions().width(10).color(Color.BLUE).geodesic(true);
+        List<LatLng> points = new ArrayList<LatLng>();
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        PolylineOptions polyLineOptions = null;
+        StrictMode.setThreadPolicy(policy);
+        Directions = new ArrayList<String>();
+        try {
+            start = start.replaceAll("\\s", "");
+            end = end.replaceAll("\\s", "");
+            method = method.replaceAll("\\s", "");
+        } catch (Exception e) {
+
+        }
+
+        StartingLocation = start;
+        EndingLocation = end;
+        TravellingMethod = method.toLowerCase();
+
+        URL = String
+                .format("https://maps.googleapis.com/maps/api/directions/json?origin=%s&destination=%s&mode=%s&alternatives=true&key=%s",
+                        StartingLocation, EndingLocation, TravellingMethod,
+                        GoogleAPIKey);
+        System.out.println(URL);
+        String result = null;
+
+
+        try {
+            java.net.URL url = new URL(URL);
+            URLConnection con = url.openConnection();
+            InputStream is = con.getInputStream();
+
+
+            BufferedReader br = new BufferedReader(new InputStreamReader(is));
+            StringBuilder sc = new StringBuilder();
+
+
+            String line = null;
+
+            while ((line = br.readLine()) != null) {
+
+                sc.append(line + "\n");
+
+            }
+
+            result = sc.toString();
+
+
+            br.close();
+            is.close();
+
+
+        } catch (Exception e) {
+
+        }
+
+
+        try {
+
+
+
+//        JSONArray jsonArray = new JSONArray(result);
+//        for(int i =0;i<jsonArray.length();i++){
+//            JSONObject jo = jsonArray.getJSONObject(i);
+//            listItems.add(jo.getString("stops"));
+//        }
+            JSONObject jsonObject = new JSONObject(result);
+
+// routesArray contains ALL routes
+            JSONArray routesArray = jsonObject.getJSONArray("routes");
+
+
+
+            for(int i =0;i<routesArray.length();i++){
+
+                Routes routeNum = new Routes();
+                // Grab the first route
+                JSONObject route = routesArray.getJSONObject(i);
+
+                // Take all legs from the route
+                JSONArray legs = route.getJSONArray("legs");
+// Grab first leg
+               leg = legs.getJSONObject(0);
+
+                JSONObject durationObject = leg.getJSONObject("duration");
+                String duration = durationObject.getString("text");
+                routeNum.setDuration(duration);
+
+                JSONObject distanceObject = leg.getJSONObject("distance");
+                String distance = distanceObject.getString("text");
+                routeNum.setDistance(distance);
+
+                System.out.println(duration);
+                System.out.println(distance);
+// Take all legs from the route
+                JSONArray steps = leg.getJSONArray("steps");
+
+
+                System.out.println("steps size= " + steps.length());
+
+                for(int h = 0;h<steps.length();h++) {
+
+
+                    JSONObject step = steps.getJSONObject(h);
+                    String instruc = step.getString("html_instructions");
+
+                    System.out.println(instruc);
+                }
+
+            }
+
+
+
+
+
+
+
+
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
 
     }
 

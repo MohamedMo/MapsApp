@@ -16,7 +16,7 @@
         android:layout_marginLeft="0dp"
         android:layout_alignParentTop="true" />
 
-    <EditText
+    <SearchView
         android:id="@+id/textAddress"
         android:layout_width="300dip"
         android:layout_height="30dip"
@@ -26,19 +26,21 @@
         android:inputType="text"
         android:background="@drawable/rounded_edittext"
         android:layout_below="@+id/textView3"
-        android:layout_centerHorizontal="true"></EditText>
+        android:layout_centerHorizontal="true"
+        android:onClick="onSearch"></SearchView>
 
 
-    <Button
-        style="?android:attr/buttonStyleSmall"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Search"
-        android:id="@+id/buttonSearch"
-        android:layout_gravity="right"
-        android:onClick="onSearch"
-        android:layout_below="@+id/textAddress"
-        android:layout_centerHorizontal="true" />
+    <!--<Button-->
+        <!--style="?android:attr/buttonStyleSmall"-->
+        <!--android:layout_width="80dp"-->
+        <!--android:layout_height="40dp"-->
+        <!--android:text="Search"-->
+        <!--android:id="@+id/buttonSearch"-->
+        <!--android:layout_gravity="right"-->
+        <!--android:onClick="onSearch"-->
+        <!--android:layout_below="@+id/textAddress"-->
+        <!--android:layout_centerHorizontal="true" -->
+        <!--android:background="@drawable/layout_bg"/>-->
 
     <TextView
         android:layout_width="wrap_content"
@@ -50,14 +52,13 @@
         android:background="#f8f6f6"
         android:layout_centerHorizontal="true" />
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="New Button"
-        android:id="@+id/btnToVoice"
-        android:layout_below="@+id/buttonSearch"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:onClick="onBtnVoiceClick" />
+    <!--<Button-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:text="New Button"-->
+        <!--android:id="@+id/btnToVoice"-->
+        <!--android:layout_alignParentRight="true"-->
+        <!--android:layout_alignParentEnd="true"-->
+        <!--android:onClick="onBtnVoiceClick" />-->
 
 </RelativeLayout>
