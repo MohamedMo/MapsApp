@@ -14,9 +14,8 @@ public class Routes {
     private String duration;
     private String distance;
     private ArrayList<String> instructions;
-    private ArrayList<String> polyline;
-    private ArrayList<String> circles;
     private List<LatLng> list;
+    private String summary;
 
 
 
@@ -49,19 +48,20 @@ public class Routes {
         this.instructions = instructions;
     }
 
-    public ArrayList<String> getPolyline() {
-        return polyline;
+
+    public List<LatLng> getList() {
+        return list;
     }
 
-    public void setPolyline(ArrayList<String> polyline) {
-        this.polyline = polyline;
+    public void setList(List<LatLng> list) {
+        this.list = list;
     }
 
-    public ArrayList<String> getCircles() {
-        return circles;
+    public String getSummary() {
+        return summary;
     }
 
-    public void setCircles(ArrayList<String> circles) {
-        this.circles = circles;
+    public void setSummary(String summary) {
+        this.summary = summary;
     }
 }

@@ -19,12 +19,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.Circle;
@@ -90,6 +90,8 @@ public class Directions extends MainActivity implements View.OnClickListener, Te
     private double latitude = 0.0;
     private double longitude = 0.0;
     private static ArrayList<Circle> circles = new ArrayList<Circle>();
+   private ArrayList<Routes>routeList;
+    private DirectionsAdapter adapter;
 
 
     protected void onCreate(Bundle savedInstanceState) {
@@ -99,7 +101,7 @@ public class Directions extends MainActivity implements View.OnClickListener, Te
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View contentView = inflater.inflate(R.layout.directions, null, false);
         mDrawer.addView(contentView, 0);
-
+        routeList = new ArrayList<Routes>();
         //get a reference to the button element listed in the XML layout
         //Button speakButton = (Button)findViewById(R.id.btnReadText);
         //listen for clicks
@@ -111,8 +113,8 @@ public class Directions extends MainActivity implements View.OnClickListener, Te
         checkTTSIntent.setAction(TextToSpeech.Engine.ACTION_CHECK_TTS_DATA);
         startActivityForResult(checkTTSIntent, MY_DATA_CHECK_CODE);
 
-        final MapFragment mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.fragment2);
-        mapFragment.getMapAsync(this);
+       // final MapFragment mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.fragment2);
+      //  mapFragment.getMapAsync(this);
 
        // mMap.getUiSettings().setMyLocationButtonEnabled(true);
 
@@ -354,7 +356,7 @@ public class Directions extends MainActivity implements View.OnClickListener, Te
 
         Directions.clear();
         DirectionssPolylines.clear();
-        mMap.clear();
+   //     mMap.clear();
 
 
         Button btn = (Button) findViewById(R.id.walk);
@@ -561,6 +563,7 @@ public class Directions extends MainActivity implements View.OnClickListener, Te
 
     public void getNearby(String start, String end, String method) {
 
+        Routes routeNum;
         JSONObject leg = null;
         ArrayList<LatLng> point1 = null;
         PolylineOptions options = new PolylineOptions().width(10).color(Color.BLUE).geodesic(true);
@@ -637,12 +640,17 @@ public class Directions extends MainActivity implements View.OnClickListener, Te
 
             for(int i =0;i<routesArray.length();i++){
 
-                Routes routeNum = new Routes();
+                routeNum = new Routes();
                 // Grab the first route
                 JSONObject route = routesArray.getJSONObject(i);
 
+                String summary = route.getString("summary");
+                routeNum.setSummary(summary);
+                System.out.println("summary = " + summary);
+
                 // Take all legs from the route
                 JSONArray legs = route.getJSONArray("legs");
+
 // Grab first leg
                leg = legs.getJSONObject(0);
 
@@ -668,10 +676,48 @@ public class Directions extends MainActivity implements View.OnClickListener, Te
                     JSONObject step = steps.getJSONObject(h);
                     String instruc = step.getString("html_instructions");
 
+                    JSONObject lines = step.getJSONObject("polyline");
+                    String poly = lines.getString("points");
+
+                    System.out.println(poly);
+
+
+                    Directions.add(instruc);
+                    DirectionssPolylines.add(poly);
+
+
+
+
+
                     System.out.println(instruc);
                 }
 
+
+                for (int p = 0; p < DirectionssPolylines.size(); p++) {
+
+                    String polyline = "";
+                    polyline = DirectionssPolylines.get(p);
+
+                    list = decodePoly(polyline);
+
+                }
+
+                routeNum.setInstructions(Directions);
+                routeNum.setList(list);
+                routeList.add(routeNum);
+
+               // System.out.println(routeNum);
+
+                System.out.println("routes=");
+
+
+
+                adapter = new DirectionsAdapter(this, R.layout.directions_list_view,routeList );
+                ListView myList=(ListView) findViewById(R.id.listViewDir);
+                myList.setAdapter(adapter);
+
             }
+
 
 
 
