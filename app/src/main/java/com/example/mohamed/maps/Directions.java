@@ -17,6 +17,7 @@ import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -92,6 +93,7 @@ public class Directions extends MainActivity implements View.OnClickListener, Te
     private static ArrayList<Circle> circles = new ArrayList<Circle>();
    private ArrayList<Routes>routeList;
     private DirectionsAdapter adapter;
+    private ListView myList;
 
 
     protected void onCreate(Bundle savedInstanceState) {
@@ -122,6 +124,32 @@ public class Directions extends MainActivity implements View.OnClickListener, Te
 
 
 
+        ListView directionsList = (ListView)
+                findViewById(R.id.listViewDir);
+
+        directionsList.setOnItemClickListener(new android.widget.AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+
+                ArrayList<String> instruct = new ArrayList<String>();
+
+                instruct = routeList.get(position).getInstructions();
+                System.out.println(instruct);
+                // String item = (String) finalMyList.getItemAtPosition(position);
+                //  String localities = localityItems.get(position);
+
+
+                Intent anotherActivityIntent = new Intent(Directions.this, MapHolder.class);
+                // anotherActivityIntent.putExtra("name", item);
+                anotherActivityIntent.putExtra("instruct", instruct);
+
+                startActivity(anotherActivityIntent);
+
+
+
+            }
+        });
 
 
 
@@ -564,6 +592,7 @@ public class Directions extends MainActivity implements View.OnClickListener, Te
     public void getNearby(String start, String end, String method) {
 
         Routes routeNum;
+
         JSONObject leg = null;
         ArrayList<LatLng> point1 = null;
         PolylineOptions options = new PolylineOptions().width(10).color(Color.BLUE).geodesic(true);
@@ -641,12 +670,13 @@ public class Directions extends MainActivity implements View.OnClickListener, Te
             for(int i =0;i<routesArray.length();i++){
 
                 routeNum = new Routes();
+                ArrayList<String> inst = new ArrayList<>();
                 // Grab the first route
                 JSONObject route = routesArray.getJSONObject(i);
 
                 String summary = route.getString("summary");
                 routeNum.setSummary(summary);
-                System.out.println("summary = " + summary);
+              //  System.out.println("summary = " + summary);
 
                 // Take all legs from the route
                 JSONArray legs = route.getJSONArray("legs");
@@ -662,31 +692,32 @@ public class Directions extends MainActivity implements View.OnClickListener, Te
                 String distance = distanceObject.getString("text");
                 routeNum.setDistance(distance);
 
-                System.out.println(duration);
-                System.out.println(distance);
+              //  System.out.println(duration);
+            //    System.out.println(distance);
 // Take all legs from the route
                 JSONArray steps = leg.getJSONArray("steps");
 
 
-                System.out.println("steps size= " + steps.length());
+              //  System.out.println("steps size= " + steps.length());
 
                 for(int h = 0;h<steps.length();h++) {
 
 
                     JSONObject step = steps.getJSONObject(h);
                     String instruc = step.getString("html_instructions");
+                    String reformattedInstruc = Html.fromHtml(instruc).toString();
 
                     JSONObject lines = step.getJSONObject("polyline");
                     String poly = lines.getString("points");
 
-                    System.out.println(poly);
+              //      System.out.println(poly);
 
 
-                    Directions.add(instruc);
+
+                    inst.add(reformattedInstruc);
                     DirectionssPolylines.add(poly);
 
-
-
+                    routeNum.setInstructions(inst);
 
 
                     System.out.println(instruc);
@@ -702,19 +733,23 @@ public class Directions extends MainActivity implements View.OnClickListener, Te
 
                 }
 
-                routeNum.setInstructions(Directions);
+
                 routeNum.setList(list);
                 routeList.add(routeNum);
 
                // System.out.println(routeNum);
 
-                System.out.println("routes=");
+             //   System.out.println("routes=");
+               // System.out.println(routeList.get(0).getInstructions());
 
 
 
                 adapter = new DirectionsAdapter(this, R.layout.directions_list_view,routeList );
                 ListView myList=(ListView) findViewById(R.id.listViewDir);
                 myList.setAdapter(adapter);
+
+
+
 
             }
 
@@ -731,6 +766,7 @@ public class Directions extends MainActivity implements View.OnClickListener, Te
             e.printStackTrace();
         }
 
+        System.out.println(routeList.get(0).getInstructions());
 
     }
 

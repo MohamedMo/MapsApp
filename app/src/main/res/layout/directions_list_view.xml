@@ -76,16 +76,16 @@
                 android:id="@+id/distance"
                 />
 
-            <Button
-                android:layout_width="190dp"
-                android:layout_height="30dp"
-                android:id="@+id/btnNavigate"
-                android:layout_marginTop="20dp"
-                android:layout_marginLeft="90dp"
-                android:background="@drawable/layout_bg"
-                android:focusable="true"
+            <!--<Button-->
+                <!--android:layout_width="190dp"-->
+                <!--android:layout_height="30dp"-->
+                <!--android:id="@+id/btnNavigate"-->
+                <!--android:layout_marginTop="20dp"-->
+                <!--android:layout_marginLeft="90dp"-->
+                <!--android:background="@drawable/layout_bg"-->
+                <!--android:focusable="true"-->
 
-                android:text="Start Navigation" />
+                <!--android:text="Start Navigation" />-->
 
 
 

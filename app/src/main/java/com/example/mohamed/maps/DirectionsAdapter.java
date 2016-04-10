@@ -7,7 +7,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -57,15 +56,7 @@ public class DirectionsAdapter extends ArrayAdapter<Routes> {
         }
 
 
-        Button navigate = (Button) v.findViewById(R.id.btnNavigate);
-        navigate.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                final int position = mListView.getPositionForView((View) v.getParent());
 
-                routes.get(position);
-
-            }
-        });
 
 		/*
 		 * Recall that the variable position is sent in as an argument to this method.
