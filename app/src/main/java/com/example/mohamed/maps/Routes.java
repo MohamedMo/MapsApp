@@ -1,9 +1,8 @@
 package com.example.mohamed.maps;
 
-import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.PolylineOptions;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by Mohamed on 09/04/2016.
@@ -14,8 +13,9 @@ public class Routes {
     private String duration;
     private String distance;
     private ArrayList<String> instructions;
-    private List<LatLng> list;
+    private ArrayList<String> list;
     private String summary;
+    private PolylineOptions options;
 
 
 
@@ -49,13 +49,6 @@ public class Routes {
     }
 
 
-    public List<LatLng> getList() {
-        return list;
-    }
-
-    public void setList(List<LatLng> list) {
-        this.list = list;
-    }
 
     public String getSummary() {
         return summary;
@@ -63,5 +56,21 @@ public class Routes {
 
     public void setSummary(String summary) {
         this.summary = summary;
+    }
+
+    public ArrayList<String> getList() {
+        return list;
+    }
+
+    public void setList(ArrayList<String> list) {
+        this.list = list;
+    }
+
+    public PolylineOptions getOptions() {
+        return options;
+    }
+
+    public void setOptions(PolylineOptions options) {
+        this.options = options;
     }
 }

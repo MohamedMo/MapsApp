@@ -24,12 +24,9 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.Circle;
-import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -133,8 +130,10 @@ public class Directions extends MainActivity implements View.OnClickListener, Te
 
 
                 ArrayList<String> instruct = new ArrayList<String>();
+                ArrayList<String> lines = new ArrayList<String>();
 
                 instruct = routeList.get(position).getInstructions();
+                lines = routeList.get(position).getList();
                 System.out.println(instruct);
                 // String item = (String) finalMyList.getItemAtPosition(position);
                 //  String localities = localityItems.get(position);
@@ -142,7 +141,11 @@ public class Directions extends MainActivity implements View.OnClickListener, Te
 
                 Intent anotherActivityIntent = new Intent(Directions.this, MapHolder.class);
                 // anotherActivityIntent.putExtra("name", item);
+              //  Bundle bundle=new Bundle();
+              //  bundle.putSerializable("object", (Serializable) lines);
+              //  anotherActivityIntent.putExtra("bundle", bundle);
                 anotherActivityIntent.putExtra("instruct", instruct);
+                anotherActivityIntent.putExtra("lines" , lines);
 
                 startActivity(anotherActivityIntent);
 
@@ -397,6 +400,7 @@ public class Directions extends MainActivity implements View.OnClickListener, Te
         String startingPos = start.getText().toString();
         String finishingPos = end.getText().toString();
         getNearby(startingPos, finishingPos, method);
+        getDirections(startingPos, finishingPos, method);
     }
 
     @Override
@@ -532,6 +536,11 @@ public class Directions extends MainActivity implements View.OnClickListener, Te
                     list = decodePoly(polyline);
                 }
 
+
+              //  System.out.println("list = " + list);
+                System.out.println("list size = " + list.size());
+
+//
                 for (int j = 0; j < list.size(); j++) {
                     LatLng posisi = new LatLng(list.get(j).latitude, list.get(j).longitude);
                     // point1.add(posisi);
@@ -541,38 +550,38 @@ public class Directions extends MainActivity implements View.OnClickListener, Te
                     //  googleMap.addMarker(new MarkerOptions().position(posisi));
                     // mMap.addMarker(new MarkerOptions().position(posisi).title("You are here"));
                 }
-
-
-
-                //   System.out.println(latlng.toString());
-                line = mMap.addPolyline(options);
-                //  mMap.addPolyline(polyLineOptions);
-                //     ArrayList<LatLng> points = null;
-
-                LatLng startcam = new LatLng(list.get(0).latitude, list.get(0).longitude);
-
-                //  mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(startcam, 16));
-
-
-                CameraPosition cameraPosition = new CameraPosition.Builder()
-                        .target(startcam) // Sets the center of the map to
-                        .zoom(15)                   // Sets the zoom
-                        .bearing(0) // Sets the orientation of the camera to east
-                        .tilt(60)    // Sets the tilt of the camera to 30 degrees
-                        .build();    // Creates a CameraPosition from the builder
-                mMap.animateCamera(CameraUpdateFactory.newCameraPosition(
-                        cameraPosition));
-
-
-                circles.add(mMap.addCircle(new CircleOptions()
-                        .center(startcam)
-                        .radius(30)
-                        .strokeColor(Color.RED)
-                        .fillColor(Color.TRANSPARENT)));
-
-
-
-            }
+//
+//
+//
+//                //   System.out.println(latlng.toString());
+//                line = mMap.addPolyline(options);
+//                //  mMap.addPolyline(polyLineOptions);
+//                //     ArrayList<LatLng> points = null;
+//
+//                LatLng startcam = new LatLng(list.get(0).latitude, list.get(0).longitude);
+//
+//                //  mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(startcam, 16));
+//
+//
+//                CameraPosition cameraPosition = new CameraPosition.Builder()
+//                        .target(startcam) // Sets the center of the map to
+//                        .zoom(15)                   // Sets the zoom
+//                        .bearing(0) // Sets the orientation of the camera to east
+//                        .tilt(60)    // Sets the tilt of the camera to 30 degrees
+//                        .build();    // Creates a CameraPosition from the builder
+//                mMap.animateCamera(CameraUpdateFactory.newCameraPosition(
+//                        cameraPosition));
+//
+//
+//                circles.add(mMap.addCircle(new CircleOptions()
+//                        .center(startcam)
+//                        .radius(30)
+//                        .strokeColor(Color.RED)
+//                        .fillColor(Color.TRANSPARENT)));
+//
+//
+//
+           }
         } catch (Exception e) {
             e.printStackTrace();
 
@@ -671,6 +680,8 @@ public class Directions extends MainActivity implements View.OnClickListener, Te
 
                 routeNum = new Routes();
                 ArrayList<String> inst = new ArrayList<>();
+                ArrayList<String> routelines = new ArrayList<>();
+                List<LatLng> routepointLines = new ArrayList<>();
                 // Grab the first route
                 JSONObject route = routesArray.getJSONObject(i);
 
@@ -708,33 +719,62 @@ public class Directions extends MainActivity implements View.OnClickListener, Te
                     String reformattedInstruc = Html.fromHtml(instruc).toString();
 
                     JSONObject lines = step.getJSONObject("polyline");
-                    String poly = lines.getString("points");
+                    routelines.add(lines.getString("points"));
 
-              //      System.out.println(poly);
+
 
 
 
                     inst.add(reformattedInstruc);
-                    DirectionssPolylines.add(poly);
+//                    routelines.add(poly);
+
+//
+//                    for (int p = 0; p < routelines.size(); p++) {
+//
+//                        String polyline;
+//                        polyline = routelines.get(p);
+//
+//                        routepointLines = decodePoly(polyline);
+//                      //  System.out.println("Route pass data = " + routepointLines);
+//
+//
+//                    }
+//
+//
+//                    for (int j = 0; j < routepointLines.size(); j++) {
+//                    LatLng posisi = new LatLng(routepointLines.get(j).latitude, routepointLines.get(j).longitude);
+//                        if (point1 != null) {
+//                            point1.add(posisi);
+//                        }
+//
+//                    }
+//                    System.out.println(point1);
+
+
+//ut.println("routepointlines = " + routepointLines.size());
+
+
 
                     routeNum.setInstructions(inst);
 
+                  //  System.out.println(routelines);
+                    routeNum.setList(routelines);
 
-                    System.out.println(instruc);
+                   // System.out.println("json routes = " + routepointLines);
                 }
 
+           //     System.out.println("Route lines size = " + routelines.size());
 
-                for (int p = 0; p < DirectionssPolylines.size(); p++) {
-
-                    String polyline = "";
-                    polyline = DirectionssPolylines.get(p);
-
-                    list = decodePoly(polyline);
-
-                }
+               // System.out.println("Route pass data end = " + routepointLines);
 
 
-                routeNum.setList(list);
+                //System.out.println("Route polyline size = " + routepointLines.size());
+              //  System.out.println("Route pass data = " + routepointLines);
+                //System.out.println(list);
+
+
+
+                System.out.println(routelines);
                 routeList.add(routeNum);
 
                // System.out.println(routeNum);
@@ -747,7 +787,6 @@ public class Directions extends MainActivity implements View.OnClickListener, Te
                 adapter = new DirectionsAdapter(this, R.layout.directions_list_view,routeList );
                 ListView myList=(ListView) findViewById(R.id.listViewDir);
                 myList.setAdapter(adapter);
-
 
 
 
@@ -766,7 +805,7 @@ public class Directions extends MainActivity implements View.OnClickListener, Te
             e.printStackTrace();
         }
 
-        System.out.println(routeList.get(0).getInstructions());
+      //  System.out.println(routeList.get(0).getInstructions());
 
     }
 
