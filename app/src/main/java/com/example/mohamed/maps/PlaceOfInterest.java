@@ -19,11 +19,13 @@ import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TabHost;
 import android.widget.TextView;
-import android.widget.Toast;
 
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
@@ -99,14 +101,22 @@ public class PlaceOfInterest extends MainActivity implements OnMapReadyCallback{
                                        int pos, long arg3) {
                 String Text = parent.getSelectedItem().toString();
                 if (Text.equals("shopping")) {
+                    mMap.clear();
+                    arrayOfPlaces.clear();
                   getNear("shopping_mall");
+                    addmarkers(120);
 
 
                 } else if (Text.equals("bar")) {
-                    Toast.makeText(PlaceOfInterest.this, "bar",
-                            Toast.LENGTH_LONG).show();
+                    mMap.clear();
+                    arrayOfPlaces.clear();
+                    getNear("bar");
+                    addmarkers(30);
 
                 } else if (Text.equals("gym")) {
+                    arrayOfPlaces.clear();
+                    getNear("gym");
+                    addmarkers(240);
 
                 } else if (Text.equals("restuarant")) {
 
@@ -611,18 +621,30 @@ public class PlaceOfInterest extends MainActivity implements OnMapReadyCallback{
 
         //  System.out.println(routeList.get(0).getInstructions());
 
-        addmarkers();
+      //  addmarkers();
 
     }
 
 
-    public void addmarkers(){
+    public void addmarkers(float hue){
 
         for(int i = 0;i<arrayOfPlaces.size();i++){
 
             LatLng latLng = new LatLng(arrayOfPlaces.get(i).getLat(),arrayOfPlaces.get(i).getLng());
             String name = arrayOfPlaces.get(i).getName();
-            mMap.addMarker(new MarkerOptions().position(latLng).title(name));
+            String vicinity = arrayOfPlaces.get(i).getVicinity();
+            mMap.addMarker(new MarkerOptions().position(latLng).title(name).snippet(vicinity).icon(BitmapDescriptorFactory.defaultMarker(hue)));
+
+            CameraPosition cameraPosition = new CameraPosition.Builder()
+                    .target(latLng) // Sets the center of the map to
+                    .zoom(14)                   // Sets the zoom
+                    .bearing(0) // Sets the orientation of the camera to east
+                    .tilt(0)    // Sets the tilt of the camera to 30 degrees
+                    .build();    // Creates a CameraPosition from the builder
+            mMap.animateCamera(CameraUpdateFactory.newCameraPosition(
+                    cameraPosition));
+
+
         }
 
     }

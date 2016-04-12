@@ -103,18 +103,6 @@
         android:layout_alignParentEnd="true" />
 
 
-
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="0"
-        android:id="@+id/textViewLat"
-        android:layout_below="@+id/placeOfInterestView"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
-
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -122,6 +110,14 @@
         android:text="0"
         android:id="@+id/textViewLong"
         android:layout_below="@+id/placeOfInterestView"
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="0"
+        android:id="@+id/textViewLat"
         />
 
     <Space
@@ -139,7 +135,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/spinner"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="0dp"
         android:entries="@array/pof_array"
         android:layout_alignTop="@+id/fragment"
         android:layout_toRightOf="@+id/textViewLat"
@@ -147,7 +143,7 @@
 
     <fragment
         android:layout_width="match_parent"
-        android:layout_height="400dp"
+        android:layout_height="500dp"
         android:name="com.google.android.gms.maps.MapFragment"
         android:id="@+id/mapPOF"
         android:layout_alignParentLeft="true"
