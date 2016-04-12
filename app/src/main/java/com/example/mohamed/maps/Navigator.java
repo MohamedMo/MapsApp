@@ -144,6 +144,15 @@ String Longitude;
                 latLng = new LatLng
                         (latitude, longitude);
 
+                CameraPosition cameraPosition = new CameraPosition.Builder()
+                        .target(latLng) // Sets the center of the map to
+                        .zoom(20)                   // Sets the zoom
+                        .bearing(bear) // Sets the orientation of the camera to east
+                        .tilt(90)    // Sets the tilt of the camera
+                        .build();    // Creates a CameraPosition from the builder
+                mMap.animateCamera(CameraUpdateFactory.newCameraPosition(
+                        cameraPosition));
+
                 if(now!=null){
                     now.remove();
                 }
@@ -535,14 +544,14 @@ String Longitude;
                 //     ArrayList<LatLng> points = null;
                 double lo = Double.parseDouble(Longitude);
                 double la = Double.parseDouble(Latitude);
-                LatLng startcam = new LatLng(latitude, longitude);
-            //    LatLng startcam = new LatLng(list.get(0).latitude, list.get(0).longitude);
-
+              //  LatLng startcam = new LatLng(latitude, longitude);
+                LatLng startcam = new LatLng(list.get(0).latitude, list.get(0).longitude);
+                LatLng begin = new LatLng(latitude, longitude);
                 //  mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(startcam, 16));
 
 
                 CameraPosition cameraPosition = new CameraPosition.Builder()
-                        .target(startcam) // Sets the center of the map to
+                        .target(begin) // Sets the center of the map to
                         .zoom(20)                   // Sets the zoom
                         .bearing(0) // Sets the orientation of the camera to east
                         .tilt(90)    // Sets the tilt of the camera

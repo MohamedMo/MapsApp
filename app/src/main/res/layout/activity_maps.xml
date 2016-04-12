@@ -56,7 +56,7 @@
 
     <fragment
         android:layout_width="600dp"
-        android:layout_height="270dp"
+        android:layout_height="320dp"
         android:name="com.google.android.gms.maps.StreetViewPanoramaFragment"
         android:id="@+id/street"
 
