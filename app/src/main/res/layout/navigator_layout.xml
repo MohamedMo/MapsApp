@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+
+    <!--<TextView-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:text="@string/empty"-->
+    <!--android:id="@+id/textViewDirectionsList"-->
+    <!--android:layout_alignParentLeft="true"-->
+    <!--android:layout_alignParentStart="true"-->
+    <!--android:layout_above="@+id/btnPrev"-->
+    <!--android:layout_alignParentRight="true"-->
+    <!--android:layout_alignParentEnd="true" />-->
+
+
+
+    <!--<Button-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:text="Search"-->
+    <!--android:id="@+id/directionsSearchBtn"-->
+    <!--android:layout_marginTop="32dp"-->
+    <!--android:onClick="onDirectionsClick"-->
+    <!--android:layout_below="@+id/endLocation"-->
+    <!--android:layout_alignRight="@+id/btnPrev"-->
+    <!--android:layout_alignEnd="@+id/btnPrev" />-->
+
+
+
+    <!--<Button-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:text="Previous"-->
+    <!--android:id="@+id/btnPrev"-->
+    <!--android:layout_alignParentBottom="true"-->
+    <!--android:layout_alignParentLeft="true"-->
+    <!--android:layout_alignParentStart="true"-->
+    <!--android:layout_marginLeft="29dp"-->
+    <!--android:layout_marginStart="29dp"-->
+    <!--android:onClick="btnPreviousClick" />-->
+
+    <!--<Button-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:text="Next   "-->
+    <!--android:id="@+id/btnNext"-->
+    <!--android:onClick="btnNextClick"-->
+    <!--android:layout_alignParentBottom="true"-->
+    <!--android:layout_alignParentRight="true"-->
+    <!--android:layout_alignParentEnd="true"-->
+    <!--android:layout_marginRight="42dp"-->
+    <!--android:layout_marginEnd="42dp" />-->
+
+    <!--<fragment-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="400dp"-->
+    <!--android:name="com.google.android.gms.maps.MapFragment"-->
+    <!--android:id="@+id/fragment2"-->
+
+    <!--android:layout_marginTop="200dp"-->
+    <!--android:layout_alignParentLeft="true"-->
+    <!--android:layout_alignParentStart="true"-->
+    <!--android:layout_alignParentRight="true"-->
+    <!--android:layout_alignParentEnd="true"-->
+    <!--/>-->
+
+
+
+
+    <ImageView
+        android:layout_width="400dp"
+        android:layout_height="120dp"
+        android:id="@+id/image"
+        android:src="@drawable/image"
+        android:layout_marginTop="52dp"
+        android:scaleType="fitXY"
+        />
+
+    <LinearLayout
+        android:layout_width="400dp"
+        android:layout_height="120dp"
+        android:orientation="vertical"
+        android:layout_marginTop="52dp"
+        android:gravity="center"
+        android:background="#F24A4383"
+        >
+
+
+
+
+        <EditText
+            android:layout_width="300dp"
+
+
+            android:layout_height="wrap_content"
+            android:paddingTop="10dp"
+            android:id="@+id/endLocation"
+            android:layout_below="@+id/startLocation"
+            android:hint="Destination"
+            android:textColor="#FFFFFF"
+            android:layout_marginLeft="30dp"
+            android:textColorHint="#FEFDFD"
+            android:background="@android:color/transparent"
+
+            />
+
+
+        <LinearLayout
+            android:layout_width="180dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:padding="6dp"
+
+            android:background="@drawable/layout_bg"
+            android:layout_gravity="center_horizontal">
+
+
+            <Button
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:id="@+id/walk"
+                android:background="@drawable/walk_white"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="40dp"
+                style="?android:attr/borderlessButtonStyle"
+
+
+                android:onClick="onWalkBtn" />
+
+            <Button
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:id="@+id/cycling"
+                android:background="@drawable/bike_white"
+                android:layout_marginRight="40dp"
+                style="?android:attr/borderlessButtonStyle"
+
+                android:onClick="onBtnCycle" />
+
+            <Button
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:id="@+id/driving"
+                android:background="@drawable/white_car"
+
+                style="?android:attr/borderlessButtonStyle"
+                android:onClick="onBtnDrive" />
+
+
+        </LinearLayout>
+
+
+
+
+
+
+
+
+
+    </LinearLayout>
+
+    <fragment
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:name="com.google.android.gms.maps.MapFragment"
+        android:id="@+id/navigatorMap"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_below="@+id/image"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentBottom="true" />
+
+    <!--<ImageView-->
+    <!--android:id="@+id/imageView1"-->
+    <!--android:layout_width="500dp"-->
+    <!--android:layout_height="100dp"-->
+    <!--android:layout_marginTop="50dp"-->
+    <!--android:scaleType="fitXY"-->
+    <!--android:background="@android:color/transparent"-->
+    <!--android:src="@drawable/image" />-->
+    <!--<Space-->
+    <!--android:layout_width="20px"-->
+    <!--android:layout_height="20px"-->
+    <!--android:layout_above="@+id/textViewDirectionsList"-->
+    <!--android:layout_alignParentLeft="true"-->
+    <!--android:layout_alignParentStart="true"-->
+    <!--android:layout_marginBottom="23dp"-->
+    <!--android:layout_alignParentRight="true"-->
+    <!--android:layout_alignParentEnd="true"-->
+    <!--android:id="@+id/space" />-->
+</RelativeLayout>

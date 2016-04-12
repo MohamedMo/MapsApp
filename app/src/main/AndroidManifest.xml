@@ -49,6 +49,7 @@
         <activity android:name=".Trains" />
         <activity android:name=".Status" />
         <activity android:name=".MapHolder" />
+        <activity android:name=".Navigator" />
         <activity
             android:name=".listViewHolder"
             android:label="@string/title_activity_list_view_holder"

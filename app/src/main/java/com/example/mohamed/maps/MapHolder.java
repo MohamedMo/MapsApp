@@ -195,6 +195,8 @@ public class MapHolder extends MainActivity implements OnMapReadyCallback {
 
         line = mMap.addPolyline(options);
 
+
+
         LatLng startcam = new LatLng(poly.get(0).latitude, poly.get(0).longitude);
 
         //  mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(startcam, 16));
@@ -202,9 +204,9 @@ public class MapHolder extends MainActivity implements OnMapReadyCallback {
 
         CameraPosition cameraPosition = new CameraPosition.Builder()
                 .target(startcam) // Sets the center of the map to
-                .zoom(15)                   // Sets the zoom
+                .zoom(14)                   // Sets the zoom
                 .bearing(0) // Sets the orientation of the camera to east
-                .tilt(60)    // Sets the tilt of the camera to 30 degrees
+                .tilt(0)    // Sets the tilt of the camera to 30 degrees
                 .build();    // Creates a CameraPosition from the builder
         mMap.animateCamera(CameraUpdateFactory.newCameraPosition(
                 cameraPosition));

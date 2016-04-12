@@ -115,6 +115,10 @@ public class MainActivity extends AppCompatActivity {
                 Intent intent6 = new Intent(this, Status.class);
                 this.startActivity(intent6);
                 break;
+            case R.id.nav_seventh_fragment:
+                Intent intent7 = new Intent(this, Navigator.class);
+                this.startActivity(intent7);
+                break;
 
 
         }

@@ -25,6 +25,9 @@ import android.widget.Toast;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.OnStreetViewPanoramaReadyCallback;
+import com.google.android.gms.maps.StreetViewPanorama;
+import com.google.android.gms.maps.StreetViewPanoramaFragment;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -36,9 +39,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-public class MapsActivity extends MainActivity implements OnMapReadyCallback, TextToSpeech.OnInitListener {
+public class MapsActivity extends MainActivity implements OnMapReadyCallback, TextToSpeech.OnInitListener, OnStreetViewPanoramaReadyCallback{
 
     private GoogleMap mMap;
+    private StreetViewPanorama panorama;
     private int longi;
     private int lati;
     private TextView resultText;
@@ -54,7 +58,7 @@ public class MapsActivity extends MainActivity implements OnMapReadyCallback, Te
     private ArrayList<LatLng> points; //added
     Polyline line; //added
     LatLng latLng;
-    float zoomLevel = (float) 16.0;
+    float zoomLevel = (float) 14.0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,10 +74,18 @@ public class MapsActivity extends MainActivity implements OnMapReadyCallback, Te
         mapFragment.getMapAsync(this);
 
 
+        StreetViewPanoramaFragment streetViewPanoramaFragment =
+                (StreetViewPanoramaFragment) getFragmentManager()
+                        .findFragmentById(R.id.street);
+        streetViewPanoramaFragment.getStreetViewPanoramaAsync(this);
+
+
         Intent checkTTSIntent = new Intent();
         checkTTSIntent.setAction(TextToSpeech.Engine.ACTION_CHECK_TTS_DATA);
         startActivityForResult(checkTTSIntent, MY_DATA_CHECK_CODE);
         points = new ArrayList<LatLng>(); //added
+
+
 
 
         LocationManager manager = (LocationManager) this.getSystemService((Context.LOCATION_SERVICE));
@@ -139,6 +151,9 @@ public class MapsActivity extends MainActivity implements OnMapReadyCallback, Te
 
     }
 
+
+
+
     public void onSearch(View v){
 
 
@@ -160,6 +175,7 @@ public class MapsActivity extends MainActivity implements OnMapReadyCallback, Te
             LatLng latLng = new LatLng(address.getLatitude(), address.getLongitude());
             mMap.addMarker(new MarkerOptions().position(latLng).title("Marker"));
             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoomLevel));
+            panorama.setPosition(latLng);
 
         }
 
@@ -334,6 +350,13 @@ public class MapsActivity extends MainActivity implements OnMapReadyCallback, Te
         mMap.addMarker(new MarkerOptions().position(latLng).title("You are here"));
 
         line = mMap.addPolyline(options); //add Polyline
+    }
+
+    @Override
+    public void onStreetViewPanoramaReady(StreetViewPanorama streetViewPanorama) {
+
+        panorama = streetViewPanorama;
+        panorama.setPosition(new LatLng(-33.87365, 151.20689));
     }
 
 

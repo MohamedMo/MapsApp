@@ -29,5 +29,9 @@
             android:id="@+id/nav_sixth_fragment"
             android:icon="@drawable/ic_three"
             android:title="Train Status" />
+        <item
+            android:id="@+id/nav_seventh_fragment"
+            android:icon="@drawable/ic_three"
+            android:title="Navigator" />
     </group>
 </menu>
