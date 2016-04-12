@@ -1,93 +1,94 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
 
 
 
-    <TabHost
-        android:id="@+id/tabHost"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@+id/space2"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true">
+    <!--<TabHost-->
+        <!--android:id="@+id/tabHost"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:layout_below="@+id/space2"-->
+        <!--android:layout_alignParentRight="true"-->
+        <!--android:layout_alignParentEnd="true">-->
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
+        <!--<LinearLayout-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="match_parent"-->
+            <!--android:orientation="vertical">-->
 
-            <TabWidget
-                android:id="@android:id/tabs"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="#757575"></TabWidget>
+            <!--<TabWidget-->
+                <!--android:id="@android:id/tabs"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:background="#757575"></TabWidget>-->
 
-            <FrameLayout
-                android:id="@android:id/tabcontent"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
+            <!--<FrameLayout-->
+                <!--android:id="@android:id/tabcontent"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="match_parent">-->
 
-                <LinearLayout
-                    android:id="@+id/Shopping"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                <!--<LinearLayout-->
+                    <!--android:id="@+id/Shopping"-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="match_parent"-->
 
-                    android:orientation="vertical">
-
-
-
-
-                    <ListView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:id="@+id/listViewShop"
-                        android:layout_alignParentLeft="true"
-                        android:layout_alignParentStart="true"
-                        android:clickable="true"
-                        android:layout_below="@+id/btnGym" />
+                    <!--android:orientation="vertical">-->
 
 
 
-                </LinearLayout>
 
-                <LinearLayout
-                    android:id="@+id/Bar"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    <!--<ListView-->
+                        <!--android:layout_width="wrap_content"-->
+                        <!--android:layout_height="wrap_content"-->
+                        <!--android:id="@+id/listViewShop"-->
+                        <!--android:layout_alignParentLeft="true"-->
+                        <!--android:layout_alignParentStart="true"-->
+                        <!--android:clickable="true"-->
+                        <!--android:layout_below="@+id/btnGym" />-->
 
-                    android:orientation="vertical">
 
-                    <ListView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:id="@+id/listViewBar"
-                        android:layout_alignParentLeft="true"
-                        android:layout_alignParentStart="true"
 
-                        android:layout_below="@+id/btnGym" />
-                </LinearLayout>
+                <!--</LinearLayout>-->
 
-                <LinearLayout
-                    android:id="@+id/Gym"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                <!--<LinearLayout-->
+                    <!--android:id="@+id/Bar"-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="match_parent"-->
 
-                    android:orientation="vertical">
+                    <!--android:orientation="vertical">-->
 
-                    <ListView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:id="@+id/listViewGym"
-                        android:layout_alignParentLeft="true"
-                        android:layout_alignParentStart="true"
-                        android:layout_below="@+id/btnGym" />
-                </LinearLayout>
-            </FrameLayout>
-        </LinearLayout>
-    </TabHost>
+                    <!--<ListView-->
+                        <!--android:layout_width="wrap_content"-->
+                        <!--android:layout_height="wrap_content"-->
+                        <!--android:id="@+id/listViewBar"-->
+                        <!--android:layout_alignParentLeft="true"-->
+                        <!--android:layout_alignParentStart="true"-->
+
+                        <!--android:layout_below="@+id/btnGym" />-->
+                <!--</LinearLayout>-->
+
+                <!--<LinearLayout-->
+                    <!--android:id="@+id/Gym"-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="match_parent"-->
+
+                    <!--android:orientation="vertical">-->
+
+                    <!--<ListView-->
+                        <!--android:layout_width="wrap_content"-->
+                        <!--android:layout_height="wrap_content"-->
+                        <!--android:id="@+id/listViewGym"-->
+                        <!--android:layout_alignParentLeft="true"-->
+                        <!--android:layout_alignParentStart="true"-->
+                        <!--android:layout_below="@+id/btnGym" />-->
+                <!--</LinearLayout>-->
+            <!--</FrameLayout>-->
+        <!--</LinearLayout>-->
+    <!--</TabHost>-->
 
 
     <TextView
@@ -133,4 +134,28 @@
         android:layout_alignParentEnd="true"
         android:id="@+id/space2" />
 
-</RelativeLayout>
+
+    <Spinner
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/spinner"
+        android:layout_marginTop="20dp"
+        android:entries="@array/pof_array"
+        android:layout_alignTop="@+id/fragment"
+        android:layout_toRightOf="@+id/textViewLat"
+        android:layout_toEndOf="@+id/textViewLat" />
+
+    <fragment
+        android:layout_width="match_parent"
+        android:layout_height="400dp"
+        android:name="com.google.android.gms.maps.MapFragment"
+        android:id="@+id/mapPOF"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        />
+
+
+</LinearLayout>

@@ -2,8 +2,8 @@ package com.example.mohamed.maps;
 
 import android.Manifest;
 import android.content.Context;
-import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -16,9 +16,21 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.Spinner;
 import android.widget.TabHost;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapFragment;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.PolylineOptions;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -32,6 +44,7 @@ import java.io.PrintWriter;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -39,7 +52,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 /**
  * Created by Mohamed on 22/02/2016.
  */
-public class PlaceOfInterest extends MainActivity {
+public class PlaceOfInterest extends MainActivity implements OnMapReadyCallback{
 
     private static final String urlLink ="https://maps.googleapis.com/maps/api/directions/xml?origin=Pelterstreet&destination=Pelterstreet&mode=walking&key=AIzaSyC2MMB-7iqMzrccgD9voZHiGf2nY093Jlg";
 
@@ -48,7 +61,7 @@ public class PlaceOfInterest extends MainActivity {
     private static final String TAG = "Demo";
     private static ArrayList<String> POF = new ArrayList<String>();
     private static ArrayList<String> Photos = new ArrayList<String>();
-    private static ArrayList<String> POFplace = new ArrayList<String>();
+    private static ArrayList<PlacesList> arrayOfPlaces;
     private static ArrayList<String> photosLink = new ArrayList<String>();
     private static ArrayAdapter<String> adapter;
    private File xmlFile;
@@ -57,6 +70,9 @@ public class PlaceOfInterest extends MainActivity {
     TabHost tabHost;
     private String urlphoto;
     private ListView listy;
+    private Spinner spinner;
+    private PlacesList places;
+    private GoogleMap mMap;
 
 
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,50 +85,88 @@ public class PlaceOfInterest extends MainActivity {
         mDrawer.addView(contentView, 0);
         File dir = new File(this.getFilesDir() + "/Users/Mohamed/AndroidStudioProjects");
         dir.mkdirs(); //create folders where write files
-      xmlFile = new File(dir, "NearMe.xml");
+        xmlFile = new File(dir, "NearMe.xml");
 
 
-        final TabHost host = (TabHost)findViewById(R.id.tabHost);
+         final MapFragment mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.mapPOF);
+          mapFragment.getMapAsync(this);
+        arrayOfPlaces = new ArrayList<PlacesList>();
+        spinner = (Spinner) findViewById(R.id.spinner);
+
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+
+            public void onItemSelected(AdapterView<?> parent, View arg1,
+                                       int pos, long arg3) {
+                String Text = parent.getSelectedItem().toString();
+                if (Text.equals("shopping")) {
+                  getNear("shopping_mall");
 
 
-        host.setup();
+                } else if (Text.equals("bar")) {
+                    Toast.makeText(PlaceOfInterest.this, "bar",
+                            Toast.LENGTH_LONG).show();
+
+                } else if (Text.equals("gym")) {
+
+                } else if (Text.equals("restuarant")) {
+
+                } else if (Text.equals("hospital")) {
+
+                } else if (Text.equals("bank")) {
 
 
-        //Tab 1
-        TabHost.TabSpec spec = host.newTabSpec("Shopping");
-        spec.setContent(R.id.listViewShop);
-        spec.setIndicator("Shopping");
-        host.addTab(spec);
-
-        //Tab 2
-        spec = host.newTabSpec("Bar");
-        spec.setContent(R.id.listViewBar);
-        spec.setIndicator("Bar");
-        host.addTab(spec);
-
-        //Tab 3
-        spec = host.newTabSpec("Gym");
-        spec.setContent(R.id.listViewGym);
-        spec.setIndicator("Gym");
-        host.addTab(spec);
-
-        host.setOnTabChangedListener(new TabHost.OnTabChangeListener() {
-            @Override
-            public void onTabChanged(String arg0) {
+                } else if (Text.equals("library")) {
 
 
-                if (host.getCurrentTab() == 0){
-                    getNearby("shopping_mall");
-
-                }
-                if (host.getCurrentTab() == 1){
-                    getNearby("bar");
-                }
-                if (host.getCurrentTab() == 2){
-                    getNearby("gym");
                 }
             }
+
+            public void onNothingSelected(AdapterView<?> arg0) {
+
+            }
         });
+//
+//        final TabHost host = (TabHost)findViewById(R.id.tabHost);
+//
+//
+//        host.setup();
+//
+//
+//        //Tab 1
+//        TabHost.TabSpec spec = host.newTabSpec("Shopping");
+//        spec.setContent(R.id.listViewShop);
+//        spec.setIndicator("Shopping");
+//        host.addTab(spec);
+//
+//        //Tab 2
+//        spec = host.newTabSpec("Bar");
+//        spec.setContent(R.id.listViewBar);
+//        spec.setIndicator("Bar");
+//        host.addTab(spec);
+//
+//        //Tab 3
+//        spec = host.newTabSpec("Gym");
+//        spec.setContent(R.id.listViewGym);
+//        spec.setIndicator("Gym");
+//        host.addTab(spec);
+//
+//        host.setOnTabChangedListener(new TabHost.OnTabChangeListener() {
+//            @Override
+//            public void onTabChanged(String arg0) {
+//
+//
+//                if (host.getCurrentTab() == 0){
+//                    getNearby("shopping_mall");
+//
+//                }
+//                if (host.getCurrentTab() == 1){
+//                    getNearby("bar");
+//                }
+//                if (host.getCurrentTab() == 2){
+//                    getNearby("gym");
+//                }
+//            }
+//        });
 
         LocationManager manager = (LocationManager) this.getSystemService((Context.LOCATION_SERVICE));
         LocationListener listener = new LocationListener() {
@@ -127,16 +181,12 @@ public class PlaceOfInterest extends MainActivity {
                 longitude = location.getLongitude();
 
 
-
-                TextView longi = (TextView)findViewById(R.id.textViewLong);
-                TextView lati = (TextView)findViewById(R.id.textViewLat);
+                TextView longi = (TextView) findViewById(R.id.textViewLong);
+                TextView lati = (TextView) findViewById(R.id.textViewLat);
                 String doubleLong = Double.toString(longitude);
                 String doubleLat = Double.toString(latitude);
                 longi.setText(doubleLong);
                 lati.setText(doubleLat);
-
-
-
 
 
             }
@@ -171,39 +221,39 @@ public class PlaceOfInterest extends MainActivity {
         manager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, listener);
 
 
-
-
-
-
-      listy=(ListView) findViewById(R.id.listViewBar);
-        listy.setOnItemClickListener(new android.widget.AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
-
-                String item = (String) listy.getItemAtPosition(position);
-               // String urls = photosLink.get(position);
-
-
-                Intent anotherActivityIntent = new Intent(PlaceOfInterest.this, listViewHolder.class);
-                anotherActivityIntent.putExtra("name", item);
-              //  anotherActivityIntent.putExtra("urls", urls);
-                startActivity(anotherActivityIntent);
-
-
-                System.out.println(item);
-            }
-        });
     }
 
 
 
+//      listy=(ListView) findViewById(R.id.listViewBar);
+//        listy.setOnItemClickListener(new android.widget.AdapterView.OnItemClickListener() {
+//            @Override
+//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+//
+//
+//                String item = (String) listy.getItemAtPosition(position);
+//               // String urls = photosLink.get(position);
+//
+//
+//                Intent anotherActivityIntent = new Intent(PlaceOfInterest.this, listViewHolder.class);
+//                anotherActivityIntent.putExtra("name", item);
+//              //  anotherActivityIntent.putExtra("urls", urls);
+//                startActivity(anotherActivityIntent);
+//
+//
+//                System.out.println(item);
+//            }
+//        });
+//    }
+//
+
+
 
     private String getCurrentLocation() {
-     //   String Longitude = "-0.066720";
-     //  String Latitude = "51.526974";
-        String Longitude = Double.toString(longitude);
-        String Latitude = Double.toString(latitude);
+        String Longitude = "-0.066720";
+      String Latitude = "51.526974";
+     //   String Longitude = Double.toString(longitude);
+      //  String Latitude = Double.toString(latitude);
 
         TextView longi = (TextView)findViewById(R.id.textViewLong);
         TextView lati = (TextView)findViewById(R.id.textViewLat);
@@ -216,35 +266,35 @@ public class PlaceOfInterest extends MainActivity {
 
 
 
-    public void onBtnShop(View v)  {
-
-   getNearby("shopping_mall");
-        adapter=new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, POF);
-        ListView myList=(ListView) findViewById(R.id.listViewShop);
-        myList.setAdapter(adapter);
-
-    }
-
-    public void onBtnBar(View v)  {
-
-        getNearby("bar");
-        adapter=new
-                ArrayAdapter<String>(
-                this,
-                android.R.layout.simple_list_item_1,
-                POF);
-        ListView myList=(ListView)
-                findViewById(R.id.listViewBar);
-        myList.setAdapter(adapter);
-
-    }
-
-    public void onBtnGym(View v)  {
-
-        getNearby("gym");
-
-
-    }
+//    public void onBtnShop(View v)  {
+//
+//   getNearby("shopping_mall");
+//        adapter=new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, POF);
+//        ListView myList=(ListView) findViewById(R.id.listViewShop);
+//        myList.setAdapter(adapter);
+//
+//    }
+//
+//    public void onBtnBar(View v)  {
+//
+//        getNearby("bar");
+//        adapter=new
+//                ArrayAdapter<String>(
+//                this,
+//                android.R.layout.simple_list_item_1,
+//                POF);
+//        ListView myList=(ListView)
+//                findViewById(R.id.listViewBar);
+//        myList.setAdapter(adapter);
+//
+//    }
+//
+//    public void onBtnGym(View v)  {
+//
+//        getNearby("gym");
+//
+//
+//    }
 
 
     public void getPhotos(String ref){
@@ -312,10 +362,10 @@ public class PlaceOfInterest extends MainActivity {
             Log.d(TAG, "error url", e);
         }
 
-
-        if (type.equalsIgnoreCase("shopping_mall")){
-
-            displayResults();
+//
+//        if (type.equalsIgnoreCase("shopping_mall")){
+//
+    displayResults();
 
 
 //            for(int i = 0; i<Photos.size();i++){
@@ -323,28 +373,28 @@ public class PlaceOfInterest extends MainActivity {
 //            }
 
 
-            adapter = new ListAdapter(this, R.layout.custom_listview, POF);
-            ListView myList=(ListView) findViewById(R.id.listViewShop);
-            myList.setAdapter(adapter);
+//            adapter = new ListAdapter(this, R.layout.custom_listview, POF);
+//            ListView myList=(ListView) findViewById(R.id.listViewShop);
+//            myList.setAdapter(adapter);
        //     myList.setClickable(true);
 
 
 //            adapter = new ArrayAdapter<String>( this,android.R.layout.simple_list_item_1, POF);
 //            ListView myList=(ListView) findViewById(R.id.listViewShop);
 //            myList.setAdapter(adapter);
-        }
-
-
-        if (type.equalsIgnoreCase("bar")){
-
-            displayResults();
+//        }
+//
+//
+//        if (type.equalsIgnoreCase("bar")){
+//
+//            displayResults();
 
 //            for(int i = 0; i<Photos.size();i++){
 //                getPhotos(Photos.get(i));
 //            }
-            adapter = new ListAdapter(this, R.layout.custom_listview, POF );
-            ListView myList=(ListView) findViewById(R.id.listViewBar);
-            myList.setAdapter(adapter);
+//            adapter = new ListAdapter(this, R.layout.custom_listview, POF );
+//            ListView myList=(ListView) findViewById(R.id.listViewBar);
+//            myList.setAdapter(adapter);
        //     myList.setClickable(true);
 
 //            adapter=new
@@ -355,20 +405,20 @@ public class PlaceOfInterest extends MainActivity {
 //            ListView myList=(ListView)
 //                    findViewById(R.id.listViewBar);
 //            myList.setAdapter(adapter);
-        }
+//        }
 
 
-        if (type.equalsIgnoreCase("gym")){
-
-            displayResults();
+//        if (type.equalsIgnoreCase("gym")){
+//
+//            displayResults();
 
 //            for(int i = 0; i<Photos.size();i++){
 //                getPhotos(Photos.get(i));
 //            }
-            adapter = new ListAdapter(this, R.layout.custom_listview, POF );
-            ListView myList=(ListView) findViewById(R.id.listViewGym);
-
-            myList.setAdapter(adapter);
+//            adapter = new ListAdapter(this, R.layout.custom_listview, POF );
+//            ListView myList=(ListView) findViewById(R.id.listViewGym);
+//
+//            myList.setAdapter(adapter);
          //   myList.setClickable(true);
 //            adapter=new
 //                    ArrayAdapter<String>(
@@ -381,7 +431,7 @@ public class PlaceOfInterest extends MainActivity {
         }
 
 
-    }
+
 
 
     private void displayResults() {
@@ -419,6 +469,8 @@ public class PlaceOfInterest extends MainActivity {
 
 
 
+
+
                  //   Photos.add(eElement.getElementsByTagName("photo_reference").item(0).getTextContent());
 
 
@@ -452,6 +504,132 @@ public class PlaceOfInterest extends MainActivity {
     }
 
 
+    public void getNear(String type) {
 
 
+        Routes routeNum;
+
+        JSONObject leg = null;
+        ArrayList<LatLng> point1 = null;
+        PolylineOptions options = new PolylineOptions().width(10).color(Color.BLUE).geodesic(true);
+        List<LatLng> points = new ArrayList<LatLng>();
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        PolylineOptions polyLineOptions = null;
+        StrictMode.setThreadPolicy(policy);
+
+
+        URL = String
+                .format("https://maps.googleapis.com/maps/api/place/nearbysearch/json?%stype=%s&key=%s",
+                        getCurrentLocation(), type, GoogleAPIKey);
+
+        System.out.println(URL);
+        String result = null;
+
+
+        try {
+            java.net.URL url = new URL(URL);
+            URLConnection con = url.openConnection();
+            InputStream is = con.getInputStream();
+
+
+            BufferedReader br = new BufferedReader(new InputStreamReader(is));
+            StringBuilder sc = new StringBuilder();
+
+
+            String line = null;
+
+            while ((line = br.readLine()) != null) {
+
+                sc.append(line + "\n");
+
+            }
+
+            result = sc.toString();
+
+
+            br.close();
+            is.close();
+
+
+        } catch (Exception e) {
+
+        }
+
+
+
+        try {
+
+
+
+
+            JSONObject jsonObject = new JSONObject(result);
+
+
+            JSONArray placeArray = jsonObject.getJSONArray("results");
+
+
+
+           for(int i =0;i<placeArray.length();i++) {
+
+                places = new PlacesList();
+               JSONObject results = placeArray.getJSONObject(i);
+
+               String name = results.getString("name");
+               places.setName(name);
+               System.out.println("result" + results.getString("name"));
+
+
+               String vicinity = results.getString("vicinity");
+               places.setVicinity(vicinity);
+               System.out.println("vicinity" + results.getString("vicinity"));
+
+
+               JSONObject jsonLocation = results.getJSONObject("geometry").getJSONObject("location");
+
+               Double lat = jsonLocation.getDouble("lat");
+               places.setLat(lat);
+               Double lng = jsonLocation.getDouble("lng");
+               places.setLng(lng);
+
+
+               System.out.println("lat" + jsonLocation.getString("lat"));
+               System.out.println("lng" + jsonLocation.getString("lng"));
+
+               arrayOfPlaces.add(places);
+
+           }
+
+
+
+
+
+
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        //  System.out.println(routeList.get(0).getInstructions());
+
+        addmarkers();
+
+    }
+
+
+    public void addmarkers(){
+
+        for(int i = 0;i<arrayOfPlaces.size();i++){
+
+            LatLng latLng = new LatLng(arrayOfPlaces.get(i).getLat(),arrayOfPlaces.get(i).getLng());
+            String name = arrayOfPlaces.get(i).getName();
+            mMap.addMarker(new MarkerOptions().position(latLng).title(name));
+        }
+
+    }
+
+
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        mMap = googleMap;
+    }
 }

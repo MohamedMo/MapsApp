@@ -10,4 +10,16 @@
     <string name="action_settings">Settings</string>
     <string name="title_activity_mapsactivitytest">Map</string>
     <string name="title_activity_list_view_holder">listViewHolder</string>
+
+
+    <string-array name="pof_array">
+        <item>shopping</item>
+        <item>gym</item>
+        <item>bar</item>
+        <item>restuarant</item>
+        <item>hospital</item>
+        <item>bank</item>
+        <item>library</item>
+        <item>park</item>
+    </string-array>
 </resources>
