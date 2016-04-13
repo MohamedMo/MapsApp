@@ -13,33 +13,88 @@
         android:id="@+id/space3"/>
 
 
-    <EditText
-        android:layout_width="250dp"
-        android:layout_height="40dp"
-        android:id="@+id/startBus"
-        android:layout_marginTop="60dp"
-        android:layout_gravity="center"
-        android:hint="Start Location"/>
+    <LinearLayout
+        android:layout_width="400dp"
+        android:layout_height="150dp"
+        android:orientation="vertical"
+        android:layout_marginTop="52dp"
+        android:gravity="center"
+        android:background="#F24A4383"
+        >
+
+
+        <EditText
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="30dp"
+            android:id="@+id/startBus"
+            android:hint="Your Location"
+            android:textColorHint="#FEFDFD"
+            android:paddingBottom="10dp"
+            android:textColor="#ffffff"
+            android:layout_marginTop="20dp"
+
+            android:background="@android:color/transparent"
+
+            />
+
+        <View
+            android:id="@+id/divider"
+            android:layout_width="250dp"
+            android:layout_height="1dp"
+            android:background="#D4DADC" />
+
+        <EditText
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:paddingTop="10dp"
+            android:id="@+id/endBus"
+            android:layout_below="@+id/startLocation"
+            android:hint="Destination"
+            android:textColor="#FFFFFF"
+            android:layout_marginLeft="30dp"
+            android:textColorHint="#FEFDFD"
+            android:background="@android:color/transparent"
+
+            />
 
 
 
-    <EditText
-        android:layout_width="250dp"
-        android:layout_height="40dp"
-        android:id="@+id/endBus"
-        android:layout_gravity="center"
-        android:layout_marginTop="100dp"
-        android:hint="End Location"/>
+            <Button
+                android:layout_width="150dp"
+                android:layout_height="30dp"
+                android:id="@+id/btnSearchBus"
+                android:onClick="onBtnSearchBus"
+                android:layout_gravity="center"
+                android:text="Search"
+                android:textColor="#FEFDFD"
+                android:background="@drawable/layout_bg"
+                android:layout_marginTop="20dp"
+                android:layout_alignBottom="@+id/space3"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true" />
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/btnSearchBus"
-        android:onClick="onBtnSearchBus"
-        android:layout_gravity="center"
-        android:layout_alignBottom="@+id/space3"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+    </LinearLayout>
+
+
+
+
+
+
+
 
 
 
@@ -49,18 +104,22 @@
         android:layout_height="match_parent"
         android:layout_below="@id/space3"
         android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true">
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="50dp">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:orientation="vertical"
+          >
 
             <TabWidget
                 android:id="@android:id/tabs"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="#757575"></TabWidget>
+                android:background="#F24A4383"
+
+            ></TabWidget>
 
             <FrameLayout
                 android:id="@android:id/tabcontent"

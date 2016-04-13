@@ -611,6 +611,9 @@ public class PlaceOfInterest extends MainActivity implements OnMapReadyCallback,
                places.setName(name);
                System.out.println("result" + results.getString("name"));
 
+               Double ratings = results.getDouble("rating");
+               places.setRatings(ratings);
+
 
                String vicinity = results.getString("vicinity");
                places.setVicinity(vicinity);
@@ -678,6 +681,7 @@ public class PlaceOfInterest extends MainActivity implements OnMapReadyCallback,
             final String vicinity = arrayOfPlaces.get(i).getVicinity();
 
 
+
                 Marker marker = mMap.addMarker(new MarkerOptions().position(latLng).title(name).snippet(vicinity).icon(BitmapDescriptorFactory.defaultMarker(hue)));
             mMarkers.put(marker.getId(), i);
          //   mHashMap.put(marker, i);
@@ -703,10 +707,12 @@ public class PlaceOfInterest extends MainActivity implements OnMapReadyCallback,
                     final String name = arrayOfPlaces.get(id).getName();
                     final String vicinity = arrayOfPlaces.get(id).getVicinity();
                     final String image = arrayOfPlaces.get(id).getImage();
+                    final Double ratings = arrayOfPlaces.get(id).getRatings();
                     Intent intent = new Intent(PlaceOfInterest.this, listViewHolder.class);
                     intent.putExtra("name", name);
                     intent.putExtra("vicinity", vicinity);
                     intent.putExtra("image", image);
+                    intent.putExtra("ratings", ratings);
 
                     startActivity(intent);
 

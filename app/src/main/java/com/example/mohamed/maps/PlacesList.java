@@ -9,6 +9,7 @@ public class PlacesList {
     private double lat;
     private double lng;
     private String image;
+    private Double ratings;
 
 
     public PlacesList(){
@@ -53,6 +54,14 @@ public class PlacesList {
 
     public void setImage(String image) {
         this.image = image;
+    }
+
+    public Double getRatings() {
+        return ratings;
+    }
+
+    public void setRatings(Double ratings) {
+        this.ratings = ratings;
     }
 }
 

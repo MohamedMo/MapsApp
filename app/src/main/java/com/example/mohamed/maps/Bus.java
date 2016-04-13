@@ -1,9 +1,16 @@
 package com.example.mohamed.maps;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.graphics.Color;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.StrictMode;
+import android.support.v4.app.ActivityCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
@@ -11,6 +18,7 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TabHost;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -55,6 +63,8 @@ public class Bus extends MainActivity implements OnMapReadyCallback {
     float zoomLevel = (float) 16.0;
     LatLng latLng;
     private ListView myList;
+    private double latitude = 0.0;
+    private double longitude = 0.0;
 
 
 
@@ -65,6 +75,9 @@ public class Bus extends MainActivity implements OnMapReadyCallback {
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View contentView = inflater.inflate(R.layout.bus_transport, null, false);
         mDrawer.addView(contentView, 0);
+
+
+
 
 
 
@@ -90,6 +103,12 @@ public class Bus extends MainActivity implements OnMapReadyCallback {
      // //  final MapFragment mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.fragment);
       //  mapFragment.getMapAsync(this);
 
+        for(int i=0;i<host.getTabWidget().getChildCount();i++)
+        {
+            TextView tv = (TextView) host.getTabWidget().getChildAt(i).findViewById(android.R.id.title);
+            tv.setTextColor(Color.parseColor("#ffffff"));
+        }
+
         myList = (ListView)
                 findViewById(R.id.listViewNear);
         myList.setOnItemClickListener(new android.widget.AdapterView.OnItemClickListener() {
@@ -111,7 +130,64 @@ public class Bus extends MainActivity implements OnMapReadyCallback {
             }
         });
 
-        getNearby();
+
+
+
+        LocationManager manager = (LocationManager) this.getSystemService((Context.LOCATION_SERVICE));
+        LocationListener listener = new LocationListener() {
+            @Override
+            public void onLocationChanged(Location location) {
+
+                //This goes up to 21
+                //   latLng = new LatLng(location.getLatitude(), location.getLongitude());
+                //  mMap.addMarker(new MarkerOptions().position(latLng).title("Marker"));
+                // mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoomLevel));
+                latitude = location.getLatitude();
+                longitude = location.getLongitude();
+
+
+
+
+
+
+
+
+                getNearby();
+
+
+
+            }
+
+            @Override
+            public void onStatusChanged(String provider, int status, Bundle extras) {
+
+            }
+
+            @Override
+            public void onProviderEnabled(String provider) {
+
+            }
+
+            @Override
+            public void onProviderDisabled(String provider) {
+
+
+            }
+        };
+
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
+        }
+        manager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, listener);
+
+
 
 //getJourney();
     }
@@ -123,8 +199,11 @@ public class Bus extends MainActivity implements OnMapReadyCallback {
 
         StrictMode.setThreadPolicy(policy);
 
+        String doubleLong = Double.toString(longitude);
+        String doubleLat = Double.toString(latitude);
+
         URL = String
-                .format("http://transportapi.com/v3/uk/bus/stops/near.json?lat=51.527789&lon=-0.102323&page=3&rpp=10&api_key=%s&app_id=%s",
+                .format("http://transportapi.com/v3/uk/bus/stops/near.json?lat=%s&lon=%s&page=3&rpp=10&api_key=%s&app_id=%s",doubleLat,doubleLong,
                         api_key, app_key);
         System.out.println(URL);
         String result = null;

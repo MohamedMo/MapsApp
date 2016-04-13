@@ -32,7 +32,7 @@ public class listViewHolder extends MainActivity {
 
         resultText = (TextView) findViewById(R.id.textView4);
         resultText1 = (TextView) findViewById(R.id.textView5);
-        resultText2 = (TextView) findViewById(R.id.textView6);
+        resultText2 = (TextView) findViewById(R.id.ratings);
                     i = (ImageView) findViewById(R.id.image1);
 
         String urlphoto = (getIntent().getExtras().getString("image"));
@@ -57,6 +57,7 @@ public class listViewHolder extends MainActivity {
 
         resultText.setText(getIntent().getExtras().getString("name"));
         resultText1.setText(getIntent().getExtras().getString("vicinity"));
+        resultText2.setText(Double.toString(getIntent().getExtras().getDouble("ratings")));
    //     resultText1.setText(getIntent().getExtras().getString("local"));
 
 
