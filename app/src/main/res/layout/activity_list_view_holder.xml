@@ -1,48 +1,91 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:weightSum="1">
+    android:weightSum="0">
+
+<ImageView
+    android:layout_width="match_parent"
+    android:layout_height="200dp"
+    android:id="@+id/image1"
+    android:layout_gravity="center"
+    android:layout_marginTop="100dp"
+    />
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+
 
 
     <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="200dp"
+        android:layout_height="80dp"
+  android:layout_marginTop="20dp"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="Medium Text"
         android:id="@+id/textView4"
-        android:layout_above="@+id/textView5"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="56dp" />
+        android:textColor="@color/bluepurple"
+        android:gravity="center"
+        android:layout_gravity="center"
+
+
+
+  />
+
+        <TextView
+            android:layout_width="200dp"
+            android:layout_height="80dp"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="Medium Text"
+            android:id="@+id/textView5"
+            android:layout_marginTop="20dp"
+            android:gravity="center"
+            android:layout_gravity="center"/>
 
     <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="Medium Text"
-        android:id="@+id/textView5"
-        android:layout_above="@+id/textView6"
-        android:layout_alignLeft="@+id/textView4"
-        android:layout_alignStart="@+id/textView4"
-        android:layout_marginBottom="55dp" />
+        android:background="@color/bluepurple"
+        android:text="4.2"
+        android:id="@+id/ratings"
+        android:textColor="@color/white"
+        android:textStyle="bold"
+        android:gravity="center"
+        android:layout_gravity="center"
+        android:layout_marginTop="40dp"
+        />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="Medium Text"
-        android:id="@+id/textView6"
-        android:layout_centerVertical="true"
-        android:layout_alignLeft="@+id/textView5"
-        android:layout_alignStart="@+id/textView5" />
 
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/imagesForPlace"
-        android:layout_below="@+id/textView6"
-        android:layout_alignLeft="@+id/textView6"
-        android:layout_alignStart="@+id/textView6"
-        android:layout_marginTop="64dp" />
-</RelativeLayout>
+
+
+
+
+
+
+
+/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="Medium Text"
+            android:id="@+id/textView6"
+            android:layout_centerVertical="true"
+            android:layout_alignLeft="@+id/textView5"
+            android:layout_alignStart="@+id/textView5"
+            android:layout_marginTop="200dp"
+            android:layout_marginLeft="130dp"/>
+
+
+</LinearLayout>
+
+
+
+
+</LinearLayout>

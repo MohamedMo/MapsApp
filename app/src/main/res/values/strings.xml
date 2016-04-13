@@ -10,7 +10,9 @@
     <string name="action_settings">Settings</string>
     <string name="title_activity_mapsactivitytest">Map</string>
     <string name="title_activity_list_view_holder">listViewHolder</string>
-
+    <color name="green">#8cff1a</color>
+    <color name="white">#ffffff</color>
+    <color name="bluepurple">#F24A4383</color>
 
     <string-array name="pof_array">
         <item>SELECT A PLACE</item>

@@ -8,6 +8,7 @@ public class PlacesList {
     private String vicinity;
     private double lat;
     private double lng;
+    private String image;
 
 
     public PlacesList(){
@@ -44,6 +45,14 @@ public class PlacesList {
 
     public void setLng(double lng) {
         this.lng = lng;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
     }
 }
 

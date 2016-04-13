@@ -625,8 +625,28 @@ public class PlaceOfInterest extends MainActivity implements OnMapReadyCallback,
                places.setLng(lng);
 
 
-               System.out.println("lat" + jsonLocation.getString("lat"));
-               System.out.println("lng" + jsonLocation.getString("lng"));
+
+
+               if(results.has("photos")){
+                   JSONArray jsonImage = results.getJSONArray("photos");
+                   JSONObject imageO = jsonImage.getJSONObject(0);
+                   String photoref = imageO.getString("photo_reference");
+
+                   urlphoto = String
+                           .format("https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=%s&key=%s",
+                                   photoref, GoogleAPIKey);
+                   places.setImage(urlphoto);
+                   System.out.println("photo" + urlphoto);
+               }
+
+               else{
+                   places.setImage("null");
+                   System.out.println("null");
+               }
+
+
+
+
 
                arrayOfPlaces.add(places);
 
@@ -682,9 +702,11 @@ public class PlaceOfInterest extends MainActivity implements OnMapReadyCallback,
 
                     final String name = arrayOfPlaces.get(id).getName();
                     final String vicinity = arrayOfPlaces.get(id).getVicinity();
+                    final String image = arrayOfPlaces.get(id).getImage();
                     Intent intent = new Intent(PlaceOfInterest.this, listViewHolder.class);
                     intent.putExtra("name", name);
                     intent.putExtra("vicinity", vicinity);
+                    intent.putExtra("image", image);
 
                     startActivity(intent);
 
@@ -712,9 +734,12 @@ public class PlaceOfInterest extends MainActivity implements OnMapReadyCallback,
 
         final String name = arrayOfPlaces.get(id).getName();
         final String vicinity = arrayOfPlaces.get(id).getVicinity();
+        final String image = arrayOfPlaces.get(id).getImage();
         Intent intent = new Intent(PlaceOfInterest.this, listViewHolder.class);
         intent.putExtra("name", name);
         intent.putExtra("vicinity", vicinity);
+        intent.putExtra("image", image);
+
 
         startActivity(intent);
 
