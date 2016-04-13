@@ -13,13 +13,14 @@
 
 
     <string-array name="pof_array">
-        <item>shopping</item>
-        <item>gym</item>
-        <item>bar</item>
-        <item>restuarant</item>
-        <item>hospital</item>
-        <item>bank</item>
-        <item>library</item>
-        <item>park</item>
+        <item>SELECT A PLACE</item>
+        <item>Shopping</item>
+        <item>Gym</item>
+        <item>Bar</item>
+        <item>Restuarant</item>
+        <item>Hospital</item>
+        <item>Bank</item>
+        <item>Library</item>
+        <item>Park</item>
     </string-array>
 </resources>

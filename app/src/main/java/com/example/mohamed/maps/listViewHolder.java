@@ -41,6 +41,7 @@ public class listViewHolder extends MainActivity {
 //        }
 
         resultText.setText(getIntent().getExtras().getString("name"));
+        resultText1.setText(getIntent().getExtras().getString("vicinity"));
    //     resultText1.setText(getIntent().getExtras().getString("local"));
 
 
