@@ -59,14 +59,6 @@ public class GPS_Location extends MainActivity  {
                 longi.setText(doubleLong);
                 lati.setText(doubleLat);
 
-
-
-
-
-
-
-
-
             }
 
             @Override
