@@ -116,7 +116,6 @@
                 android:textColor="@android:color/holo_red_dark"
 
                 android:textIsSelectable="false"
-                android:text="Bus  8"
                 android:layout_below="@+id/to"
                 android:layout_alignParentRight="true"
                 android:layout_alignParentEnd="true" />

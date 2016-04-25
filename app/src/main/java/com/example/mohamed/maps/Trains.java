@@ -1,12 +1,17 @@
 package com.example.mohamed.maps;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.TabHost;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -30,8 +35,16 @@ public class Trains extends MainActivity {
     private static String URL = "http://transportapi.com/v3/uk/bus/stops/near.json?lat=51.527789&lon=-0.102323&page=3&rpp=10&api_key=d9307fd91b0247c607e098d5effedc97&app_id=03bf8009";
     static JSONObject jObj = null;
     static String json = "";
-    private ArrayList<String> listItems = new ArrayList<String>();
+    private String newURL;
+    private static String StartingLocation;
+    private static String EndingLocation;
     private static ArrayAdapter<String> adapter;
+    private ArrayList<String> listItems = new ArrayList<String>();
+    private ArrayList<String> localityItems = new ArrayList<String>();
+    private ArrayList<String> journey = new ArrayList<String>();
+    private ArrayList<String> endJourney = new ArrayList<String>();
+    private ArrayList<String> durationArray = new ArrayList<String>();
+    private ArrayList<String> busStops = new ArrayList<String>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,7 +56,44 @@ public class Trains extends MainActivity {
 
         getNearby();
 
+
+        final TabHost host = (TabHost)findViewById(R.id.tabHost);
+
+
+        host.setup();
+
+
+        //Tab 1
+        TabHost.TabSpec spec = host.newTabSpec("Search");
+        spec.setContent(R.id.listViewTrainJ);
+
+        spec.setIndicator("Search");
+        host.addTab(spec);
+
+        //Tab 2
+        spec = host.newTabSpec("Near Me");
+        spec.setContent(R.id.listViewTrain);
+        spec.setIndicator("Near Me");
+        host.addTab(spec);
+
+        // //  final MapFragment mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.fragment);
+        //  mapFragment.getMapAsync(this);
+
+        for(int i=0;i<host.getTabWidget().getChildCount();i++)
+        {
+            TextView tv = (TextView) host.getTabWidget().getChildAt(i).findViewById(android.R.id.title);
+            tv.setTextColor(Color.parseColor("#ffffff"));
+        }
+
     }
+
+
+
+
+
+
+
+
 
 
     public void getNearby() {
@@ -113,7 +163,7 @@ public class Trains extends MainActivity {
                     android.R.layout.simple_list_item_1,
                     listItems);
             ListView myList = (ListView)
-                    findViewById(R.id.listView3);
+                    findViewById(R.id.listViewTrain);
             myList.setAdapter(adapter);
 
 
@@ -122,5 +172,163 @@ public class Trains extends MainActivity {
         }
 
 
+    }
+
+
+
+
+    public void getJourney(String startbus, String endbus) {
+
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+
+        StrictMode.setThreadPolicy(policy);
+
+        StartingLocation = startbus;
+        EndingLocation = endbus;
+
+        if(StartingLocation.equalsIgnoreCase("") || EndingLocation.equals("") ){
+
+            Toast.makeText(Trains.this, "Please Enter Train Stations", Toast.LENGTH_SHORT).show();
+        }
+        else {
+
+
+            newURL = String.format("http://transportapi.com/v3/uk/public/journey/from/%s/to/%s.json?app_id=03bf8009&app_key=d9307fd91b0247c607e098d5effedc97&modes=tube&region=tfl",
+                    StartingLocation, EndingLocation);
+
+            newURL = newURL.replaceAll(" ", "%20");
+            System.out.println(newURL);
+            String result = null;
+
+
+            try {
+                java.net.URL url = new URL(newURL);
+                URLConnection con = url.openConnection();
+                InputStream is = con.getInputStream();
+
+
+                BufferedReader br = new BufferedReader(new InputStreamReader(is));
+                StringBuilder sc = new StringBuilder();
+
+
+                String line = null;
+
+                while ((line = br.readLine()) != null) {
+
+                    sc.append(line + "\n");
+
+                }
+
+                result = sc.toString();
+
+
+                br.close();
+                is.close();
+
+
+            } catch (Exception e) {
+
+            }
+
+
+            try {
+//        JSONArray jsonArray = new JSONArray(result);
+//        for(int i =0;i<jsonArray.length();i++){
+//            JSONObject jo = jsonArray.getJSONObject(i);
+//            listItems.add(jo.getString("stops"));
+//        }
+
+
+                JSONObject mainObj = new JSONObject(result);
+                if (mainObj != null) {
+                    JSONArray list = mainObj.getJSONArray("routes");
+                    if (list != null) {
+
+                        JSONObject elem = list.getJSONObject(0);
+                        if (elem != null) {
+                            JSONArray prods = elem.getJSONArray("route_parts");
+                            if (prods != null) {
+                                for (int j = 0; j < prods.length(); j++) {
+                                    JSONObject innerElem = prods.getJSONObject(j);
+                                    if (innerElem != null) {
+                                        String start = innerElem.optString("from_point_name");
+                                        String end = innerElem.optString("to_point_name");
+                                        String duration = innerElem.optString("duration");
+                                        String linename = innerElem.optString("line_name");
+
+                                        String startloc = start;
+                                        String endloct = end;
+                                        String durloc = duration;
+                                        String line = linename;
+
+                                        journey.add(startloc);
+                                        endJourney.add(endloct);
+                                        durationArray.add(durloc);
+                                        busStops.add(line);
+
+
+                                        System.out.println(startloc);
+                                        System.out.println(endloct);
+                                        System.out.println(durloc);
+                                    }
+                                }
+                            }
+                        }
+
+                    }
+                }
+
+
+                adapter = new BusListAdapter(this, R.layout.custom_bus_layout, journey, endJourney, durationArray, busStops);
+                ListView myList = (ListView) findViewById(R.id.listViewTrainJ);
+                myList.setAdapter(adapter);
+//            JSONObject jsonResponse = new JSONObject(result);
+//            //JSONObject jsonMainNode = jsonResponse.getJSONObject("routes");
+//
+//
+//            JSONArray  routes = jsonResponse.optJSONArray("routes");
+//            JSONArray  js = jsonMainNode.optJSONArray("route_parts");
+//
+//            for (int i = 0; i < js.length(); i++) {
+//                JSONObject jsonChildNode = js.getJSONObject(i);
+//                String start = jsonChildNode.optString("from_point_name");
+//                String end = jsonChildNode.optString("to_point_name");
+//                String duration = jsonChildNode.optString("duration");
+//
+//                String startloc = start;
+//                String endloct = end;
+//                String durloc = duration;
+//
+//
+//
+//                System.out.println(startloc);
+//                System.out.println(endloct);
+//                System.out.println(durloc);
+//
+//              //  listItems.add(outPut);
+//              //  localityItems.add(end);
+//
+//
+//
+//
+//            }
+
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+                Toast.makeText(Trains.this, "Enter Valid Bus Station", Toast.LENGTH_SHORT).show();
+            }
+        }
+
+    }
+
+    public void onBtnSearchTrain(View v){
+
+        EditText start = (EditText)findViewById(R.id.startTrain);
+        EditText end = (EditText)findViewById(R.id.endTrain);
+        //TextView resultDirections = (TextView)findViewById(R.id.textViewDirectionsList);
+        String startingPos = start.getText().toString();
+        String finishingPos = end.getText().toString();
+        getJourney(startingPos, finishingPos);
     }
 }

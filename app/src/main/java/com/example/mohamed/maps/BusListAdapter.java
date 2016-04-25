@@ -77,7 +77,7 @@ public class BusListAdapter extends ArrayAdapter<String>{
            aa.setText(p);
 
 
-            gg.setText("Bus : " + h);
+            gg.setText("Line - : " + h);
 
 
         }

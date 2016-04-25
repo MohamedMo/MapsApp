@@ -236,6 +236,9 @@ public class Directions extends MainActivity implements View.OnClickListener, Te
             return;
         }
         manager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, listener);
+
+
+        
     }
 
 

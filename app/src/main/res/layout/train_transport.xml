@@ -1,11 +1,177 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:weightSum="1">
 
-    <ListView
+
+
+    <Space
         android:layout_width="wrap_content"
-        android:layout_height="257dp"
-        android:id="@+id/listView3"
-        android:layout_gravity="bottom" />
-</LinearLayout>
+        android:layout_height="150dp"
+        android:id="@+id/space3"/>
+
+
+    <LinearLayout
+        android:layout_width="400dp"
+        android:layout_height="150dp"
+        android:orientation="vertical"
+        android:layout_marginTop="52dp"
+        android:gravity="center"
+        android:background="#F24A4383"
+        >
+
+
+        <EditText
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="30dp"
+            android:id="@+id/startTrain"
+            android:hint="Train Station "
+            android:textColorHint="#FEFDFD"
+            android:paddingBottom="10dp"
+            android:textColor="#ffffff"
+            android:layout_marginTop="20dp"
+
+            android:background="@android:color/transparent"
+
+            />
+
+        <View
+            android:id="@+id/divider"
+            android:layout_width="250dp"
+            android:layout_height="1dp"
+            android:background="#D4DADC" />
+
+        <EditText
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:paddingTop="10dp"
+            android:id="@+id/endTrain"
+            android:layout_below="@+id/startTrain"
+            android:hint="Train Station Destination"
+            android:textColor="#FFFFFF"
+            android:layout_marginLeft="30dp"
+            android:textColorHint="#FEFDFD"
+            android:background="@android:color/transparent"
+
+            />
+
+
+
+        <Button
+            android:layout_width="150dp"
+            android:layout_height="30dp"
+            android:id="@+id/btnSearchBus"
+            android:onClick="onBtnSearchTrain"
+            android:layout_gravity="center"
+            android:text="Search"
+            android:textColor="#FEFDFD"
+            android:background="@drawable/layout_bg"
+            android:layout_marginTop="20dp"
+            android:layout_alignBottom="@+id/space3"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    </LinearLayout>
+
+
+
+
+
+
+
+
+
+
+    <TabHost
+        android:id="@+id/tabHost"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/space3"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="50dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            >
+
+            <TabWidget
+                android:id="@android:id/tabs"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="#F24A4383"
+
+                ></TabWidget>
+
+            <FrameLayout
+                android:id="@android:id/tabcontent"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <LinearLayout
+                    android:id="@+id/SearchBus"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+
+                    android:orientation="vertical">
+
+
+
+                    <ListView
+                        android:layout_width="wrap_content"
+                        android:layout_height="300dp"
+                        android:id="@+id/listViewTrainJ"
+                        android:divider="@null"
+                        android:layout_alignParentBottom="true"
+                        android:layout_alignParentLeft="true"
+                        android:layout_alignParentStart="true" />
+
+
+
+
+
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/near"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+
+
+                    <ListView
+                        android:layout_width="wrap_content"
+                        android:layout_height="182dp"
+                        android:id="@+id/listViewTrain"
+                        android:layout_gravity="bottom"
+                        android:layout_weight="0.12"
+                        />
+
+                </LinearLayout>
+
+            </FrameLayout>
+        </LinearLayout>
+    </TabHost>
+
+
+
+</RelativeLayout>

@@ -42,7 +42,22 @@
         android:onClick="onSearch"
         android:layout_below="@+id/textAddress"
         android:layout_centerHorizontal="true"
-        android:background="@color/wallet_highlighted_text_holo_dark"/>
+        android:background="@color/bluepurple"
+        android:textColor="@color/white"/>
+
+    <Button
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="60dp"
+        android:layout_height="20dp"
+        android:text="Clear"
+        android:textSize="10dp"
+        android:id="@+id/clear"
+        android:layout_marginTop="180dp"
+        android:onClick="onClear"
+        android:layout_below="@+id/textAddress"
+        android:layout_centerHorizontal="true"
+        android:background="@color/bluepurple"
+        android:textColor="@color/white"/>
 
     <TextView
         android:layout_width="wrap_content"

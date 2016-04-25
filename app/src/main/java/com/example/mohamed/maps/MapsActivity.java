@@ -30,6 +30,7 @@ import com.google.android.gms.maps.StreetViewPanorama;
 import com.google.android.gms.maps.StreetViewPanoramaFragment;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
@@ -74,6 +75,7 @@ public class MapsActivity extends MainActivity implements OnMapReadyCallback, Te
         mapFragment.getMapAsync(this);
 
 
+
         StreetViewPanoramaFragment streetViewPanoramaFragment =
                 (StreetViewPanoramaFragment) getFragmentManager()
                         .findFragmentById(R.id.street);
@@ -84,6 +86,7 @@ public class MapsActivity extends MainActivity implements OnMapReadyCallback, Te
         checkTTSIntent.setAction(TextToSpeech.Engine.ACTION_CHECK_TTS_DATA);
         startActivityForResult(checkTTSIntent, MY_DATA_CHECK_CODE);
         points = new ArrayList<LatLng>(); //added
+
 
 
 
@@ -146,12 +149,40 @@ public class MapsActivity extends MainActivity implements OnMapReadyCallback, Te
             // for ActivityCompat#requestPermissions for more details.
             return;
         }
-        mMap.setMyLocationEnabled(true);
+
+      mMap.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
+          @Override
+          public void onMapLongClick(LatLng latLng) {
+              MarkerOptions markerOptions = new MarkerOptions();
+
+              // Setting the position for the marker
+              markerOptions.position(latLng);
+
+
+              // Placing a marker on the touched position
+              mMap.addMarker(markerOptions);
+
+
+          }
+      });
+
+mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+    @Override
+    public boolean onMarkerClick(Marker marker) {
+      LatLng markerPosition =   marker.getPosition();
+        panorama.setPosition(markerPosition);
+        return true;
+    }
+});
 
 
     }
 
 
+    public void onClear (View v){
+
+        mMap.clear();
+    }
 
 
     public void onSearch(View v){
