@@ -14,7 +14,6 @@ import android.speech.RecognizerIntent;
 import android.speech.tts.TextToSpeech;
 import android.support.v4.app.ActivityCompat;
 import android.text.Html;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
@@ -36,24 +35,15 @@ import com.google.android.gms.maps.model.PolylineOptions;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.PrintWriter;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
 
 /**
  * Created by Mohamed on 24/01/2016.
@@ -291,7 +281,7 @@ public class Directions extends MainActivity implements View.OnClickListener, Te
       // TextView resultDirections = (TextView)findViewById(R.id.textViewDirectionsList);
         String startingPos = start.getText().toString();
         String finishingPos = end.getText().toString();
-        getDirections(startingPos, finishingPos, method);
+
         String finalDirections = "<html>";
 //        for(String s : Directions)
 //            finalDirections = finalDirections + s + "<p>";
@@ -343,7 +333,7 @@ public class Directions extends MainActivity implements View.OnClickListener, Te
         String currentLocation = Double.toString(latitude) + "," + Double.toString(longitude);
         EditText end = (EditText)findViewById(R.id.endLocation);
         String finishingPos = end.getText().toString();
-        getDirections(currentLocation,finishingPos,method);
+
 
 
     }
@@ -362,7 +352,7 @@ public class Directions extends MainActivity implements View.OnClickListener, Te
         // TextView resultDirections = (TextView)findViewById(R.id.textViewDirectionsList);
         String startingPos = start.getText().toString();
         String finishingPos = end.getText().toString();
-        getDirections(startingPos, finishingPos, method);
+
     }
 
     public void onBtnDrive(View v){
@@ -379,7 +369,7 @@ public class Directions extends MainActivity implements View.OnClickListener, Te
         // TextView resultDirections = (TextView)findViewById(R.id.textViewDirectionsList);
         String startingPos = start.getText().toString();
         String finishingPos = end.getText().toString();
-        getDirections(startingPos, finishingPos, method);
+
     }
 
     public void onWalkBtn(View v){
@@ -400,7 +390,7 @@ public class Directions extends MainActivity implements View.OnClickListener, Te
         String startingPos = start.getText().toString();
         String finishingPos = end.getText().toString();
         getNearby(startingPos, finishingPos, method);
-        getDirections(startingPos, finishingPos, method);
+
     }
 
     @Override
@@ -429,173 +419,7 @@ public class Directions extends MainActivity implements View.OnClickListener, Te
         }
     }
 
-    public void getDirections(String start, String end, String method) {
 
-
-        ArrayList<LatLng> point1 = null;
-        PolylineOptions options = new PolylineOptions().width(10).color(Color.BLUE).geodesic(true);
-        List<LatLng> points = new ArrayList<LatLng>();
-        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-        PolylineOptions polyLineOptions = null;
-        StrictMode.setThreadPolicy(policy);
-        Directions = new ArrayList<String>();
-        try {
-            start = start.replaceAll("\\s", "");
-            end = end.replaceAll("\\s", "");
-            method = method.replaceAll("\\s", "");
-        } catch (Exception e) {
-
-        }
-
-        StartingLocation = start;
-        EndingLocation = end;
-        TravellingMethod = method.toLowerCase();
-
-        URL = String
-                .format("https://maps.googleapis.com/maps/api/directions/xml?origin=%s&destination=%s&mode=%s&key=%s",
-                        StartingLocation, EndingLocation, TravellingMethod,
-                        GoogleAPIKey);
-
-        System.out.println(URL);
-        File dir = new File(this.getFilesDir() + "/Users/Mohamed/AndroidStudioProjects");
-        dir.mkdirs(); //create folders where write files
-        final File xmlFile = new File(dir, "DirectionsList.xml");
-
-      //  File xmlFile = new File("DirectionsList.xml");
-
-        try {
-            URL url = new URL(URL);
-            URLConnection con = url.openConnection();
-            InputStream is = con.getInputStream();
-
-            BufferedReader br = new BufferedReader(new InputStreamReader(is));
-
-            PrintWriter out = new PrintWriter(xmlFile);
-
-            String line = null;
-
-            while ((line = br.readLine()) != null) {
-                out.println(line);
-            }
-
-            out.close();
-            br.close();
-            is.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-            Log.d(TAG,"error url",e);
-        }
-
-        DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
-        try {
-            DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
-            Document doc = dBuilder.parse(xmlFile);
-            doc.getDocumentElement().normalize();
-            System.out.println("Root element :"
-                    + doc.getDocumentElement().getNodeName());
-
-
-
-
-
-            NodeList nodeList = doc.getElementsByTagName("route");
-            for (int i = 0; i < nodeList.getLength(); i++) {
-                Node node = nodeList.item(i);
-
-
-            }
-
-
-
-            NodeList nList = doc.getElementsByTagName("step");
-
-          //  System.out.println(nList.getLength());
-
-            for (int temp = 0; temp < nList.getLength(); temp++) {
-
-                Node nNode = nList.item(temp);
-
-                if (nNode.getNodeType() == Node.ELEMENT_NODE) {
-
-                    Element eElement = (Element) nNode;
-
-                    Directions.add(eElement
-                            .getElementsByTagName("html_instructions").item(0)
-                            .getTextContent());
-                    DirectionssPolylines.add(eElement
-                            .getElementsByTagName("points").item(0)
-                            .getTextContent());
-
-                }
-
-                for (int i = 0; i < DirectionssPolylines.size(); i++) {
-
-                    String polyline = "";
-                    polyline = DirectionssPolylines.get(i);
-
-                    list = decodePoly(polyline);
-                }
-
-
-              //  System.out.println("list = " + list);
-                System.out.println("list size = " + list.size());
-
-//
-                for (int j = 0; j < list.size(); j++) {
-                    LatLng posisi = new LatLng(list.get(j).latitude, list.get(j).longitude);
-                    // point1.add(posisi);
-                    options.add(posisi);
-
-                    // System.out.println(posisi);
-                    //  googleMap.addMarker(new MarkerOptions().position(posisi));
-                    // mMap.addMarker(new MarkerOptions().position(posisi).title("You are here"));
-                }
-//
-//
-//
-//                //   System.out.println(latlng.toString());
-//                line = mMap.addPolyline(options);
-//                //  mMap.addPolyline(polyLineOptions);
-//                //     ArrayList<LatLng> points = null;
-//
-//                LatLng startcam = new LatLng(list.get(0).latitude, list.get(0).longitude);
-//
-//                //  mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(startcam, 16));
-//
-//
-//                CameraPosition cameraPosition = new CameraPosition.Builder()
-//                        .target(startcam) // Sets the center of the map to
-//                        .zoom(15)                   // Sets the zoom
-//                        .bearing(0) // Sets the orientation of the camera to east
-//                        .tilt(60)    // Sets the tilt of the camera to 30 degrees
-//                        .build();    // Creates a CameraPosition from the builder
-//                mMap.animateCamera(CameraUpdateFactory.newCameraPosition(
-//                        cameraPosition));
-//
-//
-//                circles.add(mMap.addCircle(new CircleOptions()
-//                        .center(startcam)
-//                        .radius(30)
-//                        .strokeColor(Color.RED)
-//                        .fillColor(Color.TRANSPARENT)));
-//
-//
-//
-           }
-        } catch (Exception e) {
-            e.printStackTrace();
-
-        }
-
-        if (Directions.isEmpty()){
-            Directions.add("No data returned");
-        }
-
-
-
-       // googleMap.addPolyline(polyLineOptions);
-
-    }
 
 
     public void getNearby(String start, String end, String method) {
@@ -622,46 +446,56 @@ public class Directions extends MainActivity implements View.OnClickListener, Te
         EndingLocation = end;
         TravellingMethod = method.toLowerCase();
 
-        URL = String
-                .format("https://maps.googleapis.com/maps/api/directions/json?origin=%s&destination=%s&mode=%s&alternatives=true&key=%s",
-                        StartingLocation, EndingLocation, TravellingMethod,
-                        GoogleAPIKey);
-        System.out.println(URL);
-        String result = null;
+        if (StartingLocation.equals("") || EndingLocation.equals("")  ){
+            Toast.makeText(this, "Please enter locations", Toast.LENGTH_LONG).show();
 
 
-        try {
-            java.net.URL url = new URL(URL);
-            URLConnection con = url.openConnection();
-            InputStream is = con.getInputStream();
+        }
+        else {
 
 
-            BufferedReader br = new BufferedReader(new InputStreamReader(is));
-            StringBuilder sc = new StringBuilder();
+            URL = String
+                    .format("https://maps.googleapis.com/maps/api/directions/json?origin=%s&destination=%s&mode=%s&alternatives=true&key=%s",
+                            StartingLocation, EndingLocation, TravellingMethod,
+                            GoogleAPIKey);
+            System.out.println(URL);
+            String result = null;
 
 
-            String line = null;
+            try {
+                java.net.URL url = new URL(URL);
+                URLConnection con = url.openConnection();
+                InputStream is = con.getInputStream();
 
-            while ((line = br.readLine()) != null) {
 
-                sc.append(line + "\n");
+                BufferedReader br = new BufferedReader(new InputStreamReader(is));
+                StringBuilder sc = new StringBuilder();
+
+
+                String line = null;
+
+                while ((line = br.readLine()) != null) {
+
+                    sc.append(line + "\n");
+
+                }
+
+                result = sc.toString();
+
+
+                br.close();
+                is.close();
+
+
+            } catch (Exception e) {
+
+                Toast.makeText(this, "Enter valid address", Toast.LENGTH_LONG).show();
+
 
             }
 
-            result = sc.toString();
 
-
-            br.close();
-            is.close();
-
-
-        } catch (Exception e) {
-
-        }
-
-
-        try {
-
+            try {
 
 
 //        JSONArray jsonArray = new JSONArray(result);
@@ -669,63 +503,68 @@ public class Directions extends MainActivity implements View.OnClickListener, Te
 //            JSONObject jo = jsonArray.getJSONObject(i);
 //            listItems.add(jo.getString("stops"));
 //        }
-            JSONObject jsonObject = new JSONObject(result);
+                JSONObject jsonObject = new JSONObject(result);
 
-// routesArray contains ALL routes
-            JSONArray routesArray = jsonObject.getJSONArray("routes");
-
+                String error = jsonObject.getString("status");
 
 
-            for(int i =0;i<routesArray.length();i++){
 
-                routeNum = new Routes();
-                ArrayList<String> inst = new ArrayList<>();
-                ArrayList<String> routelines = new ArrayList<>();
-                List<LatLng> routepointLines = new ArrayList<>();
-                // Grab the first route
-                JSONObject route = routesArray.getJSONObject(i);
+                if (error.equalsIgnoreCase("ok")) {
 
-                String summary = route.getString("summary");
-                routeNum.setSummary(summary);
-              //  System.out.println("summary = " + summary);
 
-                // Take all legs from the route
-                JSONArray legs = route.getJSONArray("legs");
 
-// Grab first leg
-               leg = legs.getJSONObject(0);
 
-                JSONObject durationObject = leg.getJSONObject("duration");
-                String duration = durationObject.getString("text");
-                routeNum.setDuration(duration);
+                // routesArray contains ALL routes
+                JSONArray routesArray = jsonObject.getJSONArray("routes");
 
-                JSONObject distanceObject = leg.getJSONObject("distance");
-                String distance = distanceObject.getString("text");
-                routeNum.setDistance(distance);
 
-              //  System.out.println(duration);
-            //    System.out.println(distance);
+                for (int i = 0; i < routesArray.length(); i++) {
+
+                    routeNum = new Routes();
+                    ArrayList<String> inst = new ArrayList<>();
+                    ArrayList<String> routelines = new ArrayList<>();
+                    List<LatLng> routepointLines = new ArrayList<>();
+                    // Grab the first route
+                    JSONObject route = routesArray.getJSONObject(i);
+
+                    String summary = route.getString("summary");
+                    routeNum.setSummary(summary);
+                    //  System.out.println("summary = " + summary);
+
+                    // Take all legs from the route
+                    JSONArray legs = route.getJSONArray("legs");
+
+                    // Grab first leg
+                    leg = legs.getJSONObject(0);
+
+                    JSONObject durationObject = leg.getJSONObject("duration");
+                    String duration = durationObject.getString("text");
+                    routeNum.setDuration(duration);
+
+                    JSONObject distanceObject = leg.getJSONObject("distance");
+                    String distance = distanceObject.getString("text");
+                    routeNum.setDistance(distance);
+
+                    //  System.out.println(duration);
+                    //    System.out.println(distance);
 // Take all legs from the route
-                JSONArray steps = leg.getJSONArray("steps");
+                    JSONArray steps = leg.getJSONArray("steps");
 
 
-              //  System.out.println("steps size= " + steps.length());
+                    //  System.out.println("steps size= " + steps.length());
 
-                for(int h = 0;h<steps.length();h++) {
-
-
-                    JSONObject step = steps.getJSONObject(h);
-                    String instruc = step.getString("html_instructions");
-                    String reformattedInstruc = Html.fromHtml(instruc).toString();
-
-                    JSONObject lines = step.getJSONObject("polyline");
-                    routelines.add(lines.getString("points"));
+                    for (int h = 0; h < steps.length(); h++) {
 
 
+                        JSONObject step = steps.getJSONObject(h);
+                        String instruc = step.getString("html_instructions");
+                        String reformattedInstruc = Html.fromHtml(instruc).toString();
+
+                        JSONObject lines = step.getJSONObject("polyline");
+                        routelines.add(lines.getString("points"));
 
 
-
-                    inst.add(reformattedInstruc);
+                        inst.add(reformattedInstruc);
 //                    routelines.add(poly);
 
 //
@@ -754,57 +593,51 @@ public class Directions extends MainActivity implements View.OnClickListener, Te
 //ut.println("routepointlines = " + routepointLines.size());
 
 
+                        routeNum.setInstructions(inst);
 
-                    routeNum.setInstructions(inst);
+                        //  System.out.println(routelines);
+                        routeNum.setList(routelines);
 
-                  //  System.out.println(routelines);
-                    routeNum.setList(routelines);
+                        // System.out.println("json routes = " + routepointLines);
+                    }
 
-                   // System.out.println("json routes = " + routepointLines);
+                    //     System.out.println("Route lines size = " + routelines.size());
+
+                    // System.out.println("Route pass data end = " + routepointLines);
+
+
+                    //System.out.println("Route polyline size = " + routepointLines.size());
+                    //  System.out.println("Route pass data = " + routepointLines);
+                    //System.out.println(list);
+
+
+                    System.out.println(routelines);
+                    routeList.add(routeNum);
+
+                    // System.out.println(routeNum);
+
+                    //   System.out.println("routes=");
+                    // System.out.println(routeList.get(0).getInstructions());
+
+
+                    adapter = new DirectionsAdapter(this, R.layout.directions_list_view, routeList);
+                    ListView myList = (ListView) findViewById(R.id.listViewDir);
+                    myList.setAdapter(adapter);
+
+
+                }
+            }
+
+                else{
+                    Toast.makeText(this, "Enter valid address", Toast.LENGTH_LONG).show();
                 }
 
-           //     System.out.println("Route lines size = " + routelines.size());
-
-               // System.out.println("Route pass data end = " + routepointLines);
-
-
-                //System.out.println("Route polyline size = " + routepointLines.size());
-              //  System.out.println("Route pass data = " + routepointLines);
-                //System.out.println(list);
-
-
-
-                System.out.println(routelines);
-                routeList.add(routeNum);
-
-               // System.out.println(routeNum);
-
-             //   System.out.println("routes=");
-               // System.out.println(routeList.get(0).getInstructions());
-
-
-
-                adapter = new DirectionsAdapter(this, R.layout.directions_list_view,routeList );
-                ListView myList=(ListView) findViewById(R.id.listViewDir);
-                myList.setAdapter(adapter);
-
-
+            } catch (JSONException e) {
+                e.printStackTrace();
 
             }
 
-
-
-
-
-
-
-
-
-
-        } catch (JSONException e) {
-            e.printStackTrace();
         }
-
       //  System.out.println(routeList.get(0).getInstructions());
 
     }

@@ -157,26 +157,41 @@ public class MapsActivity extends MainActivity implements OnMapReadyCallback, Te
     public void onSearch(View v){
 
 
-
+        Address address;
        location_tf = (EditText)findViewById(R.id.textAddress);
          location = location_tf.getText().toString();
         List<Address> addressList = null;
         float zoomLevel = (float) 16.0; //This goes up to 21
-        if (location != null || !location.equals(""))
+        if (!location.equals(""))
         {
             Geocoder geocoder = new Geocoder(this);
             try {
                addressList = geocoder.getFromLocationName(location , 1);
+                if (addressList.size() == 0){
+                    Toast.makeText(this, "Enter valid address", Toast.LENGTH_LONG).show();
+                }
+                else{
+                    address = addressList.get(0);
+                    LatLng latLng = new LatLng(address.getLatitude(), address.getLongitude());
+                    mMap.addMarker(new MarkerOptions().position(latLng).title("Marker"));
+                    mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoomLevel));
+                    panorama.setPosition(latLng);
+                }
+
             } catch (IOException e) {
                 e.printStackTrace();
+                Toast.makeText(this, "Enter valid address", Toast.LENGTH_LONG).show();
             }
 
-            Address address = addressList.get(0);
-            LatLng latLng = new LatLng(address.getLatitude(), address.getLongitude());
-            mMap.addMarker(new MarkerOptions().position(latLng).title("Marker"));
-            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoomLevel));
-            panorama.setPosition(latLng);
 
+
+
+
+        }
+
+        else{
+
+            Toast.makeText(this, "Enter a location", Toast.LENGTH_LONG).show();
         }
 
 

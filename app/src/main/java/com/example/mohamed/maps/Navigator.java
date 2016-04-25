@@ -144,15 +144,6 @@ String Longitude;
                 latLng = new LatLng
                         (latitude, longitude);
 
-                CameraPosition cameraPosition = new CameraPosition.Builder()
-                        .target(latLng) // Sets the center of the map to
-                        .zoom(20)                   // Sets the zoom
-                        .bearing(bear) // Sets the orientation of the camera to east
-                        .tilt(90)    // Sets the tilt of the camera
-                        .build();    // Creates a CameraPosition from the builder
-                mMap.animateCamera(CameraUpdateFactory.newCameraPosition(
-                        cameraPosition));
-
                 if(now!=null){
                     now.remove();
                 }

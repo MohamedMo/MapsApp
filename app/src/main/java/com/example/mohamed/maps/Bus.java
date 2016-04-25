@@ -236,6 +236,8 @@ public class Bus extends MainActivity implements OnMapReadyCallback {
 
         } catch (Exception e) {
 
+
+
         }
 
 
@@ -305,45 +307,52 @@ public void onBtnSearchBus(View v){
         StartingLocation = startbus;
         EndingLocation = endbus;
 
-        newURL = String.format("http://transportapi.com/v3/uk/public/journey/from/%s/to/%s.json?app_id=03bf8009&app_key=d9307fd91b0247c607e098d5effedc97&modes=bus&region=tfl",
-                StartingLocation , EndingLocation);
+        if(StartingLocation.equalsIgnoreCase("") || EndingLocation.equals("") ){
 
-        newURL = newURL.replaceAll(" ", "%20");
-        System.out.println(newURL);
-        String result = null;
-
-
-        try {
-            java.net.URL url = new URL(newURL);
-            URLConnection con = url.openConnection();
-            InputStream is = con.getInputStream();
+            Toast.makeText(Bus.this, "Please Enter Bus Stations", Toast.LENGTH_SHORT).show();
+        }
+        else {
 
 
-            BufferedReader br = new BufferedReader(new InputStreamReader(is));
-            StringBuilder sc = new StringBuilder();
+            newURL = String.format("http://transportapi.com/v3/uk/public/journey/from/%s/to/%s.json?app_id=03bf8009&app_key=d9307fd91b0247c607e098d5effedc97&modes=bus&region=tfl",
+                    StartingLocation, EndingLocation);
+
+            newURL = newURL.replaceAll(" ", "%20");
+            System.out.println(newURL);
+            String result = null;
 
 
-            String line = null;
+            try {
+                java.net.URL url = new URL(newURL);
+                URLConnection con = url.openConnection();
+                InputStream is = con.getInputStream();
 
-            while ((line = br.readLine()) != null) {
 
-                sc.append(line + "\n");
+                BufferedReader br = new BufferedReader(new InputStreamReader(is));
+                StringBuilder sc = new StringBuilder();
+
+
+                String line = null;
+
+                while ((line = br.readLine()) != null) {
+
+                    sc.append(line + "\n");
+
+                }
+
+                result = sc.toString();
+
+
+                br.close();
+                is.close();
+
+
+            } catch (Exception e) {
 
             }
 
-            result = sc.toString();
 
-
-            br.close();
-            is.close();
-
-
-        } catch (Exception e) {
-
-        }
-
-
-        try {
+            try {
 //        JSONArray jsonArray = new JSONArray(result);
 //        for(int i =0;i<jsonArray.length();i++){
 //            JSONObject jo = jsonArray.getJSONObject(i);
@@ -351,26 +360,26 @@ public void onBtnSearchBus(View v){
 //        }
 
 
-            JSONObject mainObj = new JSONObject(result);
-            if(mainObj != null){
-                JSONArray list = mainObj.getJSONArray("routes");
-                if(list != null){
+                JSONObject mainObj = new JSONObject(result);
+                if (mainObj != null) {
+                    JSONArray list = mainObj.getJSONArray("routes");
+                    if (list != null) {
 
                         JSONObject elem = list.getJSONObject(0);
-                        if(elem != null){
+                        if (elem != null) {
                             JSONArray prods = elem.getJSONArray("route_parts");
-                            if(prods != null){
-                                for(int j = 0; j < prods.length();j++){
+                            if (prods != null) {
+                                for (int j = 0; j < prods.length(); j++) {
                                     JSONObject innerElem = prods.getJSONObject(j);
-                                    if(innerElem != null){
+                                    if (innerElem != null) {
                                         String start = innerElem.optString("from_point_name");
                                         String end = innerElem.optString("to_point_name");
                                         String duration = innerElem.optString("duration");
                                         String busLine = innerElem.optString("line_name");
 
                                         String startloc = start;
-                                         String endloct = end;
-                                         String durloc = duration;
+                                        String endloct = end;
+                                        String durloc = duration;
                                         String busL = busLine;
 
                                         journey.add(startloc);
@@ -379,21 +388,21 @@ public void onBtnSearchBus(View v){
                                         busStops.add(busL);
 
 
-                System.out.println(startloc);
-                System.out.println(endloct);
-                System.out.println(durloc);
+                                        System.out.println(startloc);
+                                        System.out.println(endloct);
+                                        System.out.println(durloc);
                                     }
                                 }
                             }
                         }
 
+                    }
                 }
-            }
 
 
-            adapter = new BusListAdapter(this, R.layout.custom_bus_layout, journey , endJourney ,durationArray,busStops );
-            ListView myList=(ListView) findViewById(R.id.listViewBusJ);
-            myList.setAdapter(adapter);
+                adapter = new BusListAdapter(this, R.layout.custom_bus_layout, journey, endJourney, durationArray, busStops);
+                ListView myList = (ListView) findViewById(R.id.listViewBusJ);
+                myList.setAdapter(adapter);
 //            JSONObject jsonResponse = new JSONObject(result);
 //            //JSONObject jsonMainNode = jsonResponse.getJSONObject("routes");
 //
@@ -426,12 +435,11 @@ public void onBtnSearchBus(View v){
 //            }
 
 
-
-        } catch (JSONException e) {
-            e.printStackTrace();
-            Toast.makeText(Bus.this, "Enter Valid Bus Station", Toast.LENGTH_SHORT).show();
+            } catch (JSONException e) {
+                e.printStackTrace();
+                Toast.makeText(Bus.this, "Enter Valid Bus Station", Toast.LENGTH_SHORT).show();
+            }
         }
-
 
     }
 

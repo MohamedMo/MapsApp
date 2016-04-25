@@ -1,7 +1,9 @@
 package com.example.mohamed.maps;
 
 import android.Manifest;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
@@ -20,6 +22,7 @@ import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TabHost;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -202,6 +205,36 @@ public class PlaceOfInterest extends MainActivity implements OnMapReadyCallback,
 //        });
 
         LocationManager manager = (LocationManager) this.getSystemService((Context.LOCATION_SERVICE));
+
+
+        if (manager.isProviderEnabled(LocationManager.GPS_PROVIDER)){
+            Toast.makeText(this, "GPS is Enabled in your devide", Toast.LENGTH_SHORT).show();
+        }else{
+            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
+            alertDialogBuilder.setMessage("GPS is disabled in your device. Would you like to enable it?")
+                    .setCancelable(false)
+                    .setPositiveButton("Goto Settings Page To Enable GPS",
+                            new DialogInterface.OnClickListener(){
+                                public void onClick(DialogInterface dialog, int id){
+                                    Intent callGPSSettingIntent = new Intent(
+                                            android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                                    startActivity(callGPSSettingIntent);
+                                }
+                            });
+            alertDialogBuilder.setNegativeButton("Cancel",
+                    new DialogInterface.OnClickListener(){
+                        public void onClick(DialogInterface dialog, int id){
+                            dialog.cancel();
+                        }
+                    });
+            AlertDialog alert = alertDialogBuilder.create();
+            alert.show();
+        }
+
+
+
+
+
         LocationListener listener = new LocationListener() {
             @Override
             public void onLocationChanged(Location location) {
@@ -214,12 +247,12 @@ public class PlaceOfInterest extends MainActivity implements OnMapReadyCallback,
                 longitude = location.getLongitude();
 
 
-                TextView longi = (TextView) findViewById(R.id.textViewLong);
-                TextView lati = (TextView) findViewById(R.id.textViewLat);
-                String doubleLong = Double.toString(longitude);
-                String doubleLat = Double.toString(latitude);
-                longi.setText(doubleLong);
-                lati.setText(doubleLat);
+//                TextView longi = (TextView) findViewById(R.id.textViewLong);
+//                TextView lati = (TextView) findViewById(R.id.textViewLat);
+//                String doubleLong = Double.toString(longitude);
+//                String doubleLat = Double.toString(latitude);
+//                longi.setText(doubleLong);
+//                lati.setText(doubleLat);
 
 
             }
@@ -254,6 +287,9 @@ public class PlaceOfInterest extends MainActivity implements OnMapReadyCallback,
         manager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, listener);
 
 
+
+
+
     }
 
 
@@ -283,10 +319,10 @@ public class PlaceOfInterest extends MainActivity implements OnMapReadyCallback,
 
 
     private String getCurrentLocation() {
-        String Longitude = "-0.066720";
-      String Latitude = "51.526974";
-     //   String Longitude = Double.toString(longitude);
-      //  String Latitude = Double.toString(latitude);
+      //  String Longitude = "-0.066720";
+    //  String Latitude = "51.526974";
+        String Longitude = Double.toString(longitude);
+        String Latitude = Double.toString(latitude);
 
         TextView longi = (TextView)findViewById(R.id.textViewLong);
         TextView lati = (TextView)findViewById(R.id.textViewLat);
@@ -600,70 +636,71 @@ public class PlaceOfInterest extends MainActivity implements OnMapReadyCallback,
 
             JSONArray placeArray = jsonObject.getJSONArray("results");
 
-
-
-           for(int i =0;i<placeArray.length();i++) {
-
-                places = new PlacesList();
-               JSONObject results = placeArray.getJSONObject(i);
-
-               String name = results.getString("name");
-               places.setName(name);
-               System.out.println("result" + results.getString("name"));
-
-               Double ratings = results.getDouble("rating");
-               places.setRatings(ratings);
-
-
-               String vicinity = results.getString("vicinity");
-               places.setVicinity(vicinity);
-               System.out.println("vicinity" + results.getString("vicinity"));
-
-
-               JSONObject jsonLocation = results.getJSONObject("geometry").getJSONObject("location");
-
-               Double lat = jsonLocation.getDouble("lat");
-               places.setLat(lat);
-               Double lng = jsonLocation.getDouble("lng");
-               places.setLng(lng);
+            String error = jsonObject.getString("status");
 
 
 
-
-               if(results.has("photos")){
-                   JSONArray jsonImage = results.getJSONArray("photos");
-                   JSONObject imageO = jsonImage.getJSONObject(0);
-                   String photoref = imageO.getString("photo_reference");
-
-                   urlphoto = String
-                           .format("https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=%s&key=%s",
-                                   photoref, GoogleAPIKey);
-                   places.setImage(urlphoto);
-                   System.out.println("photo" + urlphoto);
-               }
-
-               else{
-                   places.setImage("null");
-                   System.out.println("null");
-               }
+            if (error.equalsIgnoreCase("ok")) {
 
 
+                for (int i = 0; i < placeArray.length(); i++) {
+
+                    places = new PlacesList();
+                    JSONObject results = placeArray.getJSONObject(i);
+
+                    String name = results.getString("name");
+                    places.setName(name);
+                    System.out.println("result" + results.getString("name"));
+
+                    Double ratings = results.getDouble("rating");
+                    places.setRatings(ratings);
 
 
-
-               arrayOfPlaces.add(places);
-
-           }
-
+                    String vicinity = results.getString("vicinity");
+                    places.setVicinity(vicinity);
+                    System.out.println("vicinity" + results.getString("vicinity"));
 
 
+                    JSONObject jsonLocation = results.getJSONObject("geometry").getJSONObject("location");
+
+                    Double lat = jsonLocation.getDouble("lat");
+                    places.setLat(lat);
+                    Double lng = jsonLocation.getDouble("lng");
+                    places.setLng(lng);
 
 
+                    if (results.has("photos")) {
+                        JSONArray jsonImage = results.getJSONArray("photos");
+                        JSONObject imageO = jsonImage.getJSONObject(0);
+                        String photoref = imageO.getString("photo_reference");
 
+                        urlphoto = String
+                                .format("https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=%s&key=%s",
+                                        photoref, GoogleAPIKey);
+                        places.setImage(urlphoto);
+                        System.out.println("photo" + urlphoto);
+                    } else {
+                        places.setImage("null");
+                        System.out.println("null");
+                    }
+
+
+                    arrayOfPlaces.add(places);
+
+                }
+
+
+            }
+
+            else{
+
+                Toast.makeText(this, "No places found", Toast.LENGTH_LONG).show();
+            }
 
         } catch (JSONException e) {
             e.printStackTrace();
         }
+
 
         //  System.out.println(routeList.get(0).getInstructions());
 
@@ -682,7 +719,7 @@ public class PlaceOfInterest extends MainActivity implements OnMapReadyCallback,
 
 
 
-                Marker marker = mMap.addMarker(new MarkerOptions().position(latLng).title(name).snippet(vicinity).icon(BitmapDescriptorFactory.defaultMarker(hue)));
+            Marker marker = mMap.addMarker(new MarkerOptions().position(latLng).title(name).snippet(vicinity).icon(BitmapDescriptorFactory.defaultMarker(hue)));
             mMarkers.put(marker.getId(), i);
          //   mHashMap.put(marker, i);
 

@@ -67,11 +67,6 @@ public class MapHolder extends MainActivity implements OnMapReadyCallback {
     public void polylines(){
 
 
-//        PolylineOptions options = new PolylineOptions().width(10).color(Color.BLUE).geodesic(true);
-
-
-
-
         list =  getIntent().getExtras().getStringArrayList("lines");
 
         System.out.println("map holder size" + list.size());
@@ -81,73 +76,12 @@ public class MapHolder extends MainActivity implements OnMapReadyCallback {
                         String polyline;
                         polyline = list.get(i);
                        decoderPoly(polyline);
-         //   System.out.println("route size = " + newList.size());
 
                     }
-      ;
 
-
-
-//        for (int j = 0; j < newList.size(); j++) {
-//            LatLng posisi = new LatLng(newList.get(j).latitude, newList.get(j).longitude);
-//            options.add(posisi);
-//
-//
-//        }
-//
-//        line = mMap.addPolyline(options);
-//
-//        LatLng startcam = new LatLng(newList.get(0).latitude, newList.get(0).longitude);
-//
-//        //  mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(startcam, 16));
-//
-//
-//        CameraPosition cameraPosition = new CameraPosition.Builder()
-//                .target(startcam) // Sets the center of the map to
-//                .zoom(15)                   // Sets the zoom
-//                .bearing(0) // Sets the orientation of the camera to east
-//                .tilt(60)    // Sets the tilt of the camera to 30 degrees
-//                .build();    // Creates a CameraPosition from the builder
-//        mMap.animateCamera(CameraUpdateFactory.newCameraPosition(
-//                cameraPosition));
 
     }
 
-
-
-    private List<LatLng> decodePoly(String encoded) {
-
-        List<LatLng> poly = new ArrayList<LatLng>();
-        int index = 0, len = encoded.length();
-        int lat = 0, lng = 0;
-
-        while (index < len) {
-            int b, shift = 0, result = 0;
-            do {
-                b = encoded.charAt(index++) - 63;
-                result |= (b & 0x1f) << shift;
-                shift += 5;
-            } while (b >= 0x20);
-            int dlat = ((result & 1) != 0 ? ~(result >> 1) : (result >> 1));
-            lat += dlat;
-
-            shift = 0;
-            result = 0;
-            do {
-                b = encoded.charAt(index++) - 63;
-                result |= (b & 0x1f) << shift;
-                shift += 5;
-            } while (b >= 0x20);
-            int dlng = ((result & 1) != 0 ? ~(result >> 1) : (result >> 1));
-            lng += dlng;
-
-            LatLng p = new LatLng((((double) lat / 1E5)),
-                    (((double) lng / 1E5)));
-            poly.add(p);
-        }
-
-        return poly;
-    }
 
 
 
