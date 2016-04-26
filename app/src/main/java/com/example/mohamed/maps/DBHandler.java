@@ -85,9 +85,6 @@ public class DBHandler extends SQLiteOpenHelper {
                 text = c.getString(c.getColumnIndex("name"));
                 list.add(text);
 
-
-
-               // text += "\n";
             }
             c.moveToNext();
         }
