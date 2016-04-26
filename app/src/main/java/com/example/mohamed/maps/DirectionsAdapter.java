@@ -1,12 +1,12 @@
 package com.example.mohamed.maps;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -29,17 +29,20 @@ public class DirectionsAdapter extends ArrayAdapter<Routes> {
     private GoogleMap mMap;
     LayoutInflater vi;
     int Resource;
+    String method;
     RecyclerView.ViewHolder holder;
 
 
     protected ListView mListView;
 
-    public DirectionsAdapter(Context context, int resource,  ArrayList<Routes> objects) {
+    public DirectionsAdapter(Context context, int resource,  ArrayList<Routes> objects , String method ) {
         super(context, resource, objects);
         this.duration = duration;
         this.list=list;
         Resource = resource;
         routes = objects;
+        this.method = method;
+
     }
 
 
@@ -80,17 +83,38 @@ public class DirectionsAdapter extends ArrayAdapter<Routes> {
         // if not, assign some text!
 
         duration.setText(routes.get(position).getDuration());
-        duration.setTextColor(Color.parseColor("#948CE8"));
+
 
         locat.setText("via  " + routes.get(position).getSummary());
 
 
 
         distance.setText(routes.get(position).getDistance());
-        distance.setTextColor(Color.parseColor("#948CE8"));
 
 
+        if(method.equalsIgnoreCase("WALKING")){
 
+
+        ImageView image = (ImageView) v.findViewById(R.id.imageList);
+        image.setImageResource(R.drawable.walking);
+
+        }
+
+        if(method.equalsIgnoreCase("BICYCLING")){
+
+
+            ImageView image = (ImageView) v.findViewById(R.id.imageList);
+            image.setImageResource(R.drawable.cycle);
+
+        }
+
+        if(method.equalsIgnoreCase("DRIVING")){
+
+
+            ImageView image = (ImageView) v.findViewById(R.id.imageList);
+            image.setImageResource(R.drawable.drive);
+
+        }
 
         // the view must be returned to our activity
         return v;

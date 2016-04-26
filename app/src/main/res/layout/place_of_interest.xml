@@ -91,34 +91,28 @@
     <!--</TabHost>-->
 
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="New Text"
-        android:id="@+id/placeOfInterestView"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
+    <LinearLayout
+        android:layout_width="390dp"
+        android:layout_height="50dp"
+        android:orientation="vertical"
+        android:layout_marginTop="52dp"
+        android:gravity="center"
+        android:background="#F24A4383"
+        >
+
+        <TextView
+            android:layout_width="200dp"
+            android:layout_height="match_parent"
+            android:text="Nearby Places"
+            android:textColor="@color/white"
+            android:textSize="23dp"
+            android:layout_marginRight="10dp"
+
+            android:gravity="center"/>
 
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="0"
-        android:id="@+id/textViewLong"
-        android:layout_below="@+id/placeOfInterestView"
-        />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="0"
-        android:id="@+id/textViewLat"
-        />
+    </LinearLayout>
 
     <Space
         android:layout_width="20px"
@@ -132,14 +126,13 @@
 
 
     <Spinner
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="350dp"
+        android:layout_height="60dp"
         android:id="@+id/spinner"
         android:layout_marginTop="0dp"
         android:entries="@array/pof_array"
-        android:layout_alignTop="@+id/fragment"
-        android:layout_toRightOf="@+id/textViewLat"
-        android:layout_toEndOf="@+id/textViewLat" />
+
+        />
 
     <fragment
         android:layout_width="match_parent"

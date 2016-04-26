@@ -124,11 +124,12 @@ public class PlaceOfInterest extends MainActivity implements OnMapReadyCallback,
                     addmarkers(30);
 
                 } else if (Text.equals("Gym")) {
+                    mMap.clear();
                     arrayOfPlaces.clear();
                     getNear("gym");
                     addmarkers(240);
 
-                } else if (Text.equals("Restuarant")) {
+                } else if (Text.equals("Restaurant")) {
                     mMap.clear();
                     arrayOfPlaces.clear();
                     getNear("restaurant");
@@ -208,12 +209,12 @@ public class PlaceOfInterest extends MainActivity implements OnMapReadyCallback,
 
 
         if (manager.isProviderEnabled(LocationManager.GPS_PROVIDER)){
-            Toast.makeText(this, "GPS is Enabled in your devide", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "GPS is Enabled in your device", Toast.LENGTH_SHORT).show();
         }else{
             AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
-            alertDialogBuilder.setMessage("GPS is disabled in your device. Would you like to enable it?")
+            alertDialogBuilder.setMessage("GPS is disabled!, please enable")
                     .setCancelable(false)
-                    .setPositiveButton("Goto Settings Page To Enable GPS",
+                    .setPositiveButton("Go to Settings",
                             new DialogInterface.OnClickListener(){
                                 public void onClick(DialogInterface dialog, int id){
                                     Intent callGPSSettingIntent = new Intent(
@@ -319,16 +320,15 @@ public class PlaceOfInterest extends MainActivity implements OnMapReadyCallback,
 
 
     private String getCurrentLocation() {
-       String Longitude = "-0.066720";
-      String Latitude = "51.526974";
-       // String Longitude = Double.toString(longitude);
-     //   String Latitude = Double.toString(latitude);
+       //String Longitude = "-0.066720";
+     // String Latitude = "51.526974";
+        String Longitude = Double.toString(longitude);
+        String Latitude = Double.toString(latitude);
 
         TextView longi = (TextView)findViewById(R.id.textViewLong);
         TextView lati = (TextView)findViewById(R.id.textViewLat);
 
-      //  String Longitude = longi.getText().toString();
-       // String Latitude = lati.getText().toString();
+
 
         return String.format("location=%s,%s&radius=500&", Latitude, Longitude);
     }
@@ -652,9 +652,15 @@ public class PlaceOfInterest extends MainActivity implements OnMapReadyCallback,
                     places.setName(name);
                     System.out.println("result" + results.getString("name"));
 
+                    if (results.has("rating")){
+
+
                     Double ratings = results.getDouble("rating");
                     places.setRatings(ratings);
-
+                }
+                    else{
+                        places.setRatings(0.0);
+                    }
 
                     String vicinity = results.getString("vicinity");
                     places.setVicinity(vicinity);

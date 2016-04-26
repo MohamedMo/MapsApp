@@ -10,7 +10,6 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.StrictMode;
-import android.speech.RecognizerIntent;
 import android.speech.tts.TextToSpeech;
 import android.support.v4.app.ActivityCompat;
 import android.text.Html;
@@ -28,7 +27,6 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.Circle;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
-import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 
@@ -43,12 +41,11 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 /**
  * Created by Mohamed on 24/01/2016.
  */
-public class Directions extends MainActivity implements View.OnClickListener, TextToSpeech.OnInitListener, OnMapReadyCallback {
+public class Directions extends MainActivity implements OnMapReadyCallback {
 
 
     private TextView resultText;
@@ -164,47 +161,9 @@ public class Directions extends MainActivity implements View.OnClickListener, Te
                 latLng = new LatLng
                         (latitude, longitude);
 
-                if(now!=null){
-                    now.remove();
-                }
-
-                //This goes up to 21
-               // latLng = new LatLng(location.getLatitude(), location.getLongitude());
-                //  mMap.addMarker(new MarkerOptions().position(latLng).title("Marker"));
-              //  mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoomLevel));
-            //  now =  mMap.addMarker(new MarkerOptions().position(test).title("You are here"));
-                now =  mMap.addMarker(new MarkerOptions().position(latLng).title("You are here"));
 
 
 
-                if(circles.isEmpty()){
-
-                }
-                else {
-                    float[] distance = new float[2];
-                    for (int i = 0; i < circles.size(); i++) {
-                        Location.distanceBetween(now.getPosition().latitude, now.getPosition().longitude,
-                                circles.get(i).getCenter().latitude, circles.get(i).getCenter().longitude, distance);
-
-                        if (distance[0] > circles.get(i).getRadius()) {
-                            // Toast.makeText(getBaseContext(), "Outside", Toast.LENGTH_LONG).show();
-
-                        } else {
-                            Toast.makeText(getBaseContext(), "Inside", Toast.LENGTH_LONG).show();
-
-                            String result = Html.fromHtml(Directions.get(i)).toString();
-                            speakWords(result);
-                        }
-                    }
-                }
-
-
-
-
-
-
-
-                //   redrawLine(); //added
 
             }
 
@@ -242,92 +201,9 @@ public class Directions extends MainActivity implements View.OnClickListener, Te
     }
 
 
-    public void onActivityResult(int request_code, int result_code, Intent i){
-
-
-        if (request_code == MY_DATA_CHECK_CODE) {
-            if (result_code == TextToSpeech.Engine.CHECK_VOICE_DATA_PASS) {
-                //the user has the necessary data - create the TTS
-                myTTS = new TextToSpeech(this, this);
-            }
-            else {
-                //no data - install it now
-                Intent installTTSIntent = new Intent();
-                installTTSIntent.setAction(TextToSpeech.Engine.ACTION_INSTALL_TTS_DATA);
-                startActivity(installTTSIntent);
-            }
-        }
-
-        super.onActivityResult(request_code, result_code, i);
-
-        switch (request_code){
-
-            case 100: if (result_code == RESULT_OK && i != null){
-                ArrayList<String> result = i.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
-                resultText.setText(result.get(0));
-            }
-                break;
-        }
-
-    }
-
-
-    public void onDirectionsClick(View v)  {
 
 
 
-        mMap.clear();
-        //System.out.println("hello");
-
-        EditText start = (EditText)findViewById(R.id.startLocation);
-        EditText end = (EditText)findViewById(R.id.endLocation);
-      // TextView resultDirections = (TextView)findViewById(R.id.textViewDirectionsList);
-        String startingPos = start.getText().toString();
-        String finishingPos = end.getText().toString();
-
-        String finalDirections = "<html>";
-//        for(String s : Directions)
-//            finalDirections = finalDirections + s + "<p>";
-//        finalDirections = finalDirections + "</html>";
-//        String result = Html.fromHtml(finalDirections).toString();
-//        resultDirections.setText(result);
-
-        //Directions.get(1);
-        String result = Html.fromHtml(Directions.get(1)).toString();
-      //  resultDirections.setText(result);
-
-
-        }
-
-    public void btnPreviousClick (View v){
-
-//        test = new LatLng
-//                (51.529030, -0.07469);
-     //   TextView resultDirections = (TextView)findViewById(R.id.textViewDirectionsList);
-        if(position > 0){
-            position--;
-            String result = Html.fromHtml(Directions.get(position)).toString();
-           // resultDirections.setText(result);
-            // show the data here
-        }
-    }
-
-    public void btnNextClick(View v) {
-
-//        test = new LatLng
-//                (51.5281664, -0.0745294);
-
-        //TextView resultDirections = (TextView)findViewById(R.id.textViewDirectionsList);
-
-
-        if (position < Directions.size() - 1){
-            position++;
-            String result = Html.fromHtml(Directions.get(position)).toString();
-          //  resultDirections.setText(result);
-            // show the data here
-        }
-
-    }
 
 
     public void onBtnStart (View v){
@@ -343,43 +219,41 @@ public class Directions extends MainActivity implements View.OnClickListener, Te
 
     public void onBtnCycle(View v){
 
-
+        routeList.clear();
         Directions.clear();
         DirectionssPolylines.clear();
-        mMap.clear();
+
 
 
         method = "BICYCLING";
         EditText start = (EditText)findViewById(R.id.startLocation);
         EditText end = (EditText)findViewById(R.id.endLocation);
-        // TextView resultDirections = (TextView)findViewById(R.id.textViewDirectionsList);
         String startingPos = start.getText().toString();
         String finishingPos = end.getText().toString();
-
+        getNearby(startingPos, finishingPos, method);
     }
 
     public void onBtnDrive(View v){
 
-
+        routeList.clear();
         Directions.clear();
         DirectionssPolylines.clear();
-        mMap.clear();
 
 
         method = "DRIVING";
         EditText start = (EditText)findViewById(R.id.startLocation);
         EditText end = (EditText)findViewById(R.id.endLocation);
-        // TextView resultDirections = (TextView)findViewById(R.id.textViewDirectionsList);
         String startingPos = start.getText().toString();
         String finishingPos = end.getText().toString();
-
+        getNearby(startingPos, finishingPos, method);
     }
 
     public void onWalkBtn(View v){
 
-
+        routeList.clear();
         Directions.clear();
         DirectionssPolylines.clear();
+
    //     mMap.clear();
 
 
@@ -396,31 +270,7 @@ public class Directions extends MainActivity implements View.OnClickListener, Te
 
     }
 
-    @Override
-    public void onClick(View v) {
-        //get the text entered
-     //   TextView enteredText = (TextView)findViewById(R.id.textViewDirectionsList);
-     //   String words = enteredText.getText().toString();
-     //   speakWords(words);
-    }
 
-    private void speakWords(String speech) {
-
-        //speak straight away
-        myTTS.speak(speech, TextToSpeech.QUEUE_FLUSH, null);
-    }
-
-    @Override
-    public void onInit(int initStatus) {
-        //check for successful instantiation
-        if (initStatus == TextToSpeech.SUCCESS) {
-            if(myTTS.isLanguageAvailable(Locale.US)==TextToSpeech.LANG_AVAILABLE)
-                myTTS.setLanguage(Locale.US);
-        }
-        else if (initStatus == TextToSpeech.ERROR) {
-            Toast.makeText(this, "Sorry! Text To Speech failed...", Toast.LENGTH_LONG).show();
-        }
-    }
 
 
 
@@ -623,7 +473,7 @@ public class Directions extends MainActivity implements View.OnClickListener, Te
                     // System.out.println(routeList.get(0).getInstructions());
 
 
-                    adapter = new DirectionsAdapter(this, R.layout.directions_list_view, routeList);
+                    adapter = new DirectionsAdapter(this, R.layout.directions_list_view, routeList, TravellingMethod);
                     ListView myList = (ListView) findViewById(R.id.listViewDir);
                     myList.setAdapter(adapter);
 
