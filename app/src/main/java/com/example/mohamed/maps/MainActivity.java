@@ -119,6 +119,10 @@ public class MainActivity extends AppCompatActivity {
                 Intent intent7 = new Intent(this, Navigator.class);
                 this.startActivity(intent7);
                 break;
+            case R.id.favourites_nav:
+                Intent intent8 = new Intent(this, Favourites.class);
+                this.startActivity(intent8);
+                break;
 
 
         }

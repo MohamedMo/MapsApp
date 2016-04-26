@@ -21,6 +21,7 @@ public class listViewHolder extends MainActivity {
     TextView resultText1;
     TextView resultText2;
     ImageView i;
+    DBHandler handler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,6 +30,8 @@ public class listViewHolder extends MainActivity {
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View contentView = inflater.inflate(R.layout.activity_list_view_holder, null, false);
         mDrawer.addView(contentView, 0);
+
+        handler = new DBHandler(this,null,null,1);
 
         resultText = (TextView) findViewById(R.id.textView4);
         resultText1 = (TextView) findViewById(R.id.textView5);
@@ -64,6 +67,14 @@ public class listViewHolder extends MainActivity {
     }
 
 
+    public void addToFavourites(View v){
 
+
+        String name = getIntent().getExtras().getString("name");
+        String vicinity = getIntent().getExtras().getString("vicinity");
+        Double ratings = getIntent().getExtras().getDouble("ratings");
+        String urlPhoto = getIntent().getExtras().getString("image");
+        handler.addToDatabase(name,vicinity,ratings,urlPhoto);
+    }
 
 }

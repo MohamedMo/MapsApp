@@ -33,5 +33,9 @@
             android:id="@+id/nav_seventh_fragment"
             android:icon="@drawable/ic_three"
             android:title="Navigator" />
+        <item
+            android:id="@+id/favourites_nav"
+            android:icon="@drawable/ic_three"
+            android:title="Favourites" />
     </group>
 </menu>

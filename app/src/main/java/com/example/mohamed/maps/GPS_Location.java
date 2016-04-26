@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.google.android.gms.maps.model.LatLng;
@@ -52,12 +53,27 @@ public class GPS_Location extends MainActivity  {
                 latitude = location.getLatitude();
                longitude = location.getLongitude();
 
-                TextView longi = (TextView)findViewById(R.id.textViewLongitude);
-                TextView lati = (TextView)findViewById(R.id.textViewLatitude);
+                TextView longi = (TextView)findViewById(R.id.textViewLong);
+                TextView lati = (TextView)findViewById(R.id.textViewLat);
                 String doubleLong = Double.toString(longitude);
                 String doubleLat = Double.toString(latitude);
                 longi.setText(doubleLong);
                 lati.setText(doubleLat);
+
+                ProgressBar pb = ((ProgressBar)findViewById(R.id.pb1));
+                ProgressBar pb2 = ((ProgressBar)findViewById(R.id.pb2));
+
+                pb.setVisibility(View.GONE);
+                pb2.setVisibility(View.GONE);
+
+
+
+                String doub = Double.toString(longitude);
+                String doub2 = Double.toString(latitude);
+
+                longi.setText(doub);
+                lati.setText(doub2);
+                getCompleteAddressString();
 
             }
 
@@ -103,28 +119,29 @@ public class GPS_Location extends MainActivity  {
 //    }
 
 
-
-    public void onGPSBtnClick (View v){
-
-        TextView longi = (TextView)findViewById(R.id.textViewLongitude);
-        TextView lati = (TextView)findViewById(R.id.textViewLatitude);
-
-        String doub = Double.toString(longitude);
-        String doub2 = Double.toString(latitude);
-
-        longi.setText(doub);
-        lati.setText(doub2);
-getCompleteAddressString();
-
-
-    }
+//
+//    public void onGPSBtnClick (View v){
+//
+//        TextView longi = (TextView)findViewById(R.id.textViewLong);
+//        TextView lati = (TextView)findViewById(R.id.textViewLat);
+//
+//        String doub = Double.toString(longitude);
+//        String doub2 = Double.toString(latitude);
+//
+//        longi.setText(doub);
+//        lati.setText(doub2);
+//getCompleteAddressString();
+//
+//
+//    }
 
     public void getCompleteAddressString() {
 
 
-        TextView addressText = (TextView)findViewById(R.id.textViewAddress);
-        TextView cityText = (TextView)findViewById(R.id.textViewCity);
-        TextView postcodeText = (TextView)findViewById(R.id.textViewPostCode);
+        TextView addressText = (TextView)findViewById(R.id.gps_address);
+        TextView cityText = (TextView)findViewById(R.id.gps_city);
+        TextView postcodeText = (TextView)findViewById(R.id.gps_postal);
+        TextView countryText = (TextView)findViewById(R.id.gps_country);
         String s = "ff";
         geocoder = new Geocoder(this, Locale.getDefault());
 
@@ -134,16 +151,17 @@ getCompleteAddressString();
             e.printStackTrace();
         }
 //
-        String Address = addresses.get(0).getAddressLine(0).toString(); // If any additional address line present than only, check with max available address lines by getMaxAddressLineIndex()
-        String city = addresses.get(0).getLocality().toString();
-    //    String state = addresses.get(0).getAdminArea().toString();
-     //   String country = addresses.get(0).getCountryName().toString();
-        String postalCode = addresses.get(0).getPostalCode().toString();
-     //   String knownName = addresses.get(0).getFeatureName().toString();
+        String Address = addresses.get(0).getAddressLine(0); // If any additional address line present than only, check with max available address lines by getMaxAddressLineIndex()
+        String city = addresses.get(0).getLocality();
+        String country = addresses.get(0).getCountryName();
+        String postalCode = addresses.get(0).getPostalCode();
+
+
 
         addressText.setText(Address);
         cityText.setText(city);
         postcodeText.setText(postalCode);
+        countryText.setText(country);
 
 
     }
