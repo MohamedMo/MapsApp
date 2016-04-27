@@ -320,44 +320,65 @@ String Longitude;
 
     public void onBtnCycle(View v){
 
-
+        circles.clear();
         Directions.clear();
         DirectionssPolylines.clear();
         mMap.clear();
 
 
+        Button btn = (Button) findViewById(R.id.walk);
+        String doubleLong = Double.toString(longitude);
+        String doubleLat = Double.toString(latitude);
+
+
+
+        Longitude = "-0.066720";
+        Latitude = "51.526974";
+
+        String latlng = doubleLat + "," + doubleLong;
+        //String latlng = Latitude + "," + Longitude;
         method = "BICYCLING";
-        EditText start = (EditText)findViewById(R.id.startLocation);
+
         EditText end = (EditText)findViewById(R.id.endLocation);
         // TextView resultDirections = (TextView)findViewById(R.id.textViewDirectionsList);
-        String startingPos = start.getText().toString();
+
         String finishingPos = end.getText().toString();
-        getDirections(startingPos, finishingPos, method);
+        getDirections(latlng, finishingPos, method);
     }
 
     public void onBtnDrive(View v){
 
 
+        circles.clear();
         Directions.clear();
         DirectionssPolylines.clear();
         mMap.clear();
 
 
+        Button btn = (Button) findViewById(R.id.walk);
+        String doubleLong = Double.toString(longitude);
+        String doubleLat = Double.toString(latitude);
+
+
+
+        String latlng = doubleLat + "," + doubleLong;
+        //String latlng = Latitude + "," + Longitude;
         method = "DRIVING";
-        EditText start = (EditText)findViewById(R.id.startLocation);
+
         EditText end = (EditText)findViewById(R.id.endLocation);
         // TextView resultDirections = (TextView)findViewById(R.id.textViewDirectionsList);
-        String startingPos = start.getText().toString();
+
         String finishingPos = end.getText().toString();
-        getDirections(startingPos, finishingPos, method);
+        getDirections(latlng, finishingPos, method);
     }
 
     public void onWalkBtn(View v){
 
 
+        circles.clear();
         Directions.clear();
         DirectionssPolylines.clear();
-        //     mMap.clear();
+        mMap.clear();
 
 
         Button btn = (Button) findViewById(R.id.walk);
@@ -370,6 +391,7 @@ String Longitude;
          Latitude = "51.526974";
 
         String latlng = doubleLat + "," + doubleLong;
+        //String latlng = Latitude + "," + Longitude;
         method = "WALKING";
 
         EditText end = (EditText)findViewById(R.id.endLocation);
@@ -471,6 +493,11 @@ String Longitude;
                     + doc.getDocumentElement().getNodeName());
 
 
+            String usr = doc.getElementsByTagName("status").item(0).getTextContent();
+
+
+            if (usr.equalsIgnoreCase("ok")) {
+
 
 
 
@@ -480,7 +507,6 @@ String Longitude;
 
 
             }
-
 
 
             NodeList nList = doc.getElementsByTagName("step");
@@ -528,14 +554,13 @@ String Longitude;
                 }
 
 
-
                 //   System.out.println(latlng.toString());
                 line = mMap.addPolyline(options);
                 //  mMap.addPolyline(polyLineOptions);
                 //     ArrayList<LatLng> points = null;
                 double lo = Double.parseDouble(Longitude);
                 double la = Double.parseDouble(Latitude);
-              //  LatLng startcam = new LatLng(latitude, longitude);
+                //  LatLng startcam = new LatLng(latitude, longitude);
                 LatLng startcam = new LatLng(list.get(0).latitude, list.get(0).longitude);
                 LatLng begin = new LatLng(latitude, longitude);
                 //  mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(startcam, 16));
@@ -558,19 +583,28 @@ String Longitude;
                         .fillColor(Color.TRANSPARENT)));
 
 
-
             }
+        }
+
+            else{
+                Toast.makeText(this, "Enter valid address", Toast.LENGTH_LONG).show();
+            }
+
+
         } catch (Exception e) {
             e.printStackTrace();
 
         }
+
 
         if (Directions.isEmpty()){
             Directions.add("No data returned");
         }
 
 
-
+        System.out.println("Directions" +Directions.size());
+        System.out.println("List" +list.size());
+        System.out.println("circles" +circles.size());
         // googleMap.addPolyline(polyLineOptions);
 
     }
