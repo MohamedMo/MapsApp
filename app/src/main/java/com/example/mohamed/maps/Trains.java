@@ -2,6 +2,8 @@ package com.example.mohamed.maps;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.view.LayoutInflater;
@@ -97,112 +99,23 @@ public class Trains extends MainActivity {
 
 
     public void getNearby() {
+        if(!isNetworkOnline()){
+            Toast.makeText(this, "No internet connection ", Toast.LENGTH_LONG).show();
+        }else {
 
-        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+            StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
 
-        StrictMode.setThreadPolicy(policy);
+            StrictMode.setThreadPolicy(policy);
 
-        URL = String
-                .format("http://transportapi.com/v3/uk/train/stations/near.json?lat=51.527789&lon=-0.102323&page=3&rpp=10&api_key=8b06798f5abf775a2973fc9d9970674d&app_id=91a0f395",
-                        api_key, app_key);
-        System.out.println(URL);
-        String result = null;
-
-
-        try {
-            java.net.URL url = new URL(URL);
-            URLConnection con = url.openConnection();
-            InputStream is = con.getInputStream();
-
-
-            BufferedReader br = new BufferedReader(new InputStreamReader(is));
-            StringBuilder sc = new StringBuilder();
-
-
-            String line = null;
-
-            while ((line = br.readLine()) != null) {
-
-                sc.append(line + "\n");
-
-            }
-
-            result = sc.toString();
-
-
-            br.close();
-            is.close();
-
-
-        } catch (Exception e) {
-
-        }
-
-
-        try {
-
-
-
-            JSONObject jsonResponse = new JSONObject(result);
-            JSONArray jsonMainNode = jsonResponse.optJSONArray("stations");
-
-            for (int i = 0; i < jsonMainNode.length(); i++) {
-                JSONObject jsonChildNode = jsonMainNode.getJSONObject(i);
-                String name = jsonChildNode.optString("name");
-
-                String outPut = name;
-                listItems.add(outPut);
-
-
-            }
-
-
-            adapter = new
-                    ArrayAdapter<String>(
-                    this,
-                    android.R.layout.simple_list_item_1,
-                    listItems);
-            ListView myList = (ListView)
-                    findViewById(R.id.listViewTrain);
-            myList.setAdapter(adapter);
-
-
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-
-    }
-
-
-
-
-    public void getJourney(String startbus, String endbus) {
-
-        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-
-        StrictMode.setThreadPolicy(policy);
-
-        StartingLocation = startbus;
-        EndingLocation = endbus;
-
-        if(StartingLocation.equalsIgnoreCase("") || EndingLocation.equals("") ){
-
-            Toast.makeText(Trains.this, "Please Enter Train Stations", Toast.LENGTH_SHORT).show();
-        }
-        else {
-
-
-            newURL = String.format("http://transportapi.com/v3/uk/public/journey/from/%s/to/%s.json?app_id=03bf8009&app_key=d9307fd91b0247c607e098d5effedc97&modes=tube&region=tfl",
-                    StartingLocation, EndingLocation);
-
-            newURL = newURL.replaceAll(" ", "%20");
-            System.out.println(newURL);
+            URL = String
+                    .format("http://transportapi.com/v3/uk/train/stations/near.json?lat=51.527789&lon=-0.102323&page=3&rpp=10&api_key=8b06798f5abf775a2973fc9d9970674d&app_id=91a0f395",
+                            api_key, app_key);
+            System.out.println(URL);
             String result = null;
 
 
             try {
-                java.net.URL url = new URL(newURL);
+                java.net.URL url = new URL(URL);
                 URLConnection con = url.openConnection();
                 InputStream is = con.getInputStream();
 
@@ -232,6 +145,102 @@ public class Trains extends MainActivity {
 
 
             try {
+
+
+                JSONObject jsonResponse = new JSONObject(result);
+                JSONArray jsonMainNode = jsonResponse.optJSONArray("stations");
+
+                for (int i = 0; i < jsonMainNode.length(); i++) {
+                    JSONObject jsonChildNode = jsonMainNode.getJSONObject(i);
+                    String name = jsonChildNode.optString("name");
+
+                    String outPut = name;
+                    listItems.add(outPut);
+
+
+                }
+
+
+                adapter = new
+                        ArrayAdapter<String>(
+                        this,
+                        android.R.layout.simple_list_item_1,
+                        listItems);
+                ListView myList = (ListView)
+                        findViewById(R.id.listViewTrain);
+                myList.setAdapter(adapter);
+
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+        }
+    }
+
+
+
+
+
+    public void getJourney(String startbus, String endbus) {
+
+        if(!isNetworkOnline()){
+            Toast.makeText(this, "No internet connection ", Toast.LENGTH_LONG).show();
+        }
+        else {
+
+            StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+
+            StrictMode.setThreadPolicy(policy);
+
+            StartingLocation = startbus;
+            EndingLocation = endbus;
+
+            if (StartingLocation.equalsIgnoreCase("") || EndingLocation.equals("")) {
+
+                Toast.makeText(Trains.this, "Please Enter Train Stations", Toast.LENGTH_SHORT).show();
+            } else {
+
+
+                newURL = String.format("http://transportapi.com/v3/uk/public/journey/from/%s/to/%s.json?app_id=03bf8009&app_key=d9307fd91b0247c607e098d5effedc97&modes=tube&region=tfl",
+                        StartingLocation, EndingLocation);
+
+                newURL = newURL.replaceAll(" ", "%20");
+                System.out.println(newURL);
+                String result = null;
+
+
+                try {
+                    java.net.URL url = new URL(newURL);
+                    URLConnection con = url.openConnection();
+                    InputStream is = con.getInputStream();
+
+
+                    BufferedReader br = new BufferedReader(new InputStreamReader(is));
+                    StringBuilder sc = new StringBuilder();
+
+
+                    String line = null;
+
+                    while ((line = br.readLine()) != null) {
+
+                        sc.append(line + "\n");
+
+                    }
+
+                    result = sc.toString();
+
+
+                    br.close();
+                    is.close();
+
+
+                } catch (Exception e) {
+
+                }
+
+
+                try {
 //        JSONArray jsonArray = new JSONArray(result);
 //        for(int i =0;i<jsonArray.length();i++){
 //            JSONObject jo = jsonArray.getJSONObject(i);
@@ -239,49 +248,49 @@ public class Trains extends MainActivity {
 //        }
 
 
-                JSONObject mainObj = new JSONObject(result);
-                if (mainObj != null) {
-                    JSONArray list = mainObj.getJSONArray("routes");
-                    if (list != null) {
+                    JSONObject mainObj = new JSONObject(result);
+                    if (mainObj != null) {
+                        JSONArray list = mainObj.getJSONArray("routes");
+                        if (list != null) {
 
-                        JSONObject elem = list.getJSONObject(0);
-                        if (elem != null) {
-                            JSONArray prods = elem.getJSONArray("route_parts");
-                            if (prods != null) {
-                                for (int j = 0; j < prods.length(); j++) {
-                                    JSONObject innerElem = prods.getJSONObject(j);
-                                    if (innerElem != null) {
-                                        String start = innerElem.optString("from_point_name");
-                                        String end = innerElem.optString("to_point_name");
-                                        String duration = innerElem.optString("duration");
-                                        String linename = innerElem.optString("line_name");
+                            JSONObject elem = list.getJSONObject(0);
+                            if (elem != null) {
+                                JSONArray prods = elem.getJSONArray("route_parts");
+                                if (prods != null) {
+                                    for (int j = 0; j < prods.length(); j++) {
+                                        JSONObject innerElem = prods.getJSONObject(j);
+                                        if (innerElem != null) {
+                                            String start = innerElem.optString("from_point_name");
+                                            String end = innerElem.optString("to_point_name");
+                                            String duration = innerElem.optString("duration");
+                                            String linename = innerElem.optString("line_name");
 
-                                        String startloc = start;
-                                        String endloct = end;
-                                        String durloc = duration;
-                                        String line = linename;
+                                            String startloc = start;
+                                            String endloct = end;
+                                            String durloc = duration;
+                                            String line = linename;
 
-                                        journey.add(startloc);
-                                        endJourney.add(endloct);
-                                        durationArray.add(durloc);
-                                        busStops.add(line);
+                                            journey.add(startloc);
+                                            endJourney.add(endloct);
+                                            durationArray.add(durloc);
+                                            busStops.add(line);
 
 
-                                        System.out.println(startloc);
-                                        System.out.println(endloct);
-                                        System.out.println(durloc);
+                                            System.out.println(startloc);
+                                            System.out.println(endloct);
+                                            System.out.println(durloc);
+                                        }
                                     }
                                 }
                             }
+
                         }
-
                     }
-                }
 
 
-                adapter = new BusListAdapter(this, R.layout.custom_bus_layout, journey, endJourney, durationArray, busStops);
-                ListView myList = (ListView) findViewById(R.id.listViewTrainJ);
-                myList.setAdapter(adapter);
+                    adapter = new BusListAdapter(this, R.layout.custom_bus_layout, journey, endJourney, durationArray, busStops);
+                    ListView myList = (ListView) findViewById(R.id.listViewTrainJ);
+                    myList.setAdapter(adapter);
 //            JSONObject jsonResponse = new JSONObject(result);
 //            //JSONObject jsonMainNode = jsonResponse.getJSONObject("routes");
 //
@@ -314,14 +323,32 @@ public class Trains extends MainActivity {
 //            }
 
 
-            } catch (JSONException e) {
-                e.printStackTrace();
-                Toast.makeText(Trains.this, "Enter Valid Bus Station", Toast.LENGTH_SHORT).show();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                    Toast.makeText(Trains.this, "Enter Valid Bus Station", Toast.LENGTH_SHORT).show();
+                }
             }
         }
+    }
+    public boolean isNetworkOnline() {
+        boolean status=false;
+        try{
+            ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+            NetworkInfo netInfo = cm.getNetworkInfo(0);
+            if (netInfo != null && netInfo.getState()==NetworkInfo.State.CONNECTED) {
+                status= true;
+            }else {
+                netInfo = cm.getNetworkInfo(1);
+                if(netInfo!=null && netInfo.getState()== NetworkInfo.State.CONNECTED)
+                    status= true;
+            }
+        }catch(Exception e){
+            e.printStackTrace();
+            return false;
+        }
+        return status;
 
     }
-
     public void onBtnSearchTrain(View v){
 
         EditText start = (EditText)findViewById(R.id.startTrain);

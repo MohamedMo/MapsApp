@@ -11,6 +11,8 @@ import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.speech.RecognizerIntent;
 import android.speech.tts.TextToSpeech;
@@ -74,6 +76,11 @@ public class MapsActivity extends MainActivity implements OnMapReadyCallback, Te
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
+
+
+        if(!isNetworkOnline()){
+            Toast.makeText(this, "No internet connection ", Toast.LENGTH_LONG).show();
+        }
 
 
         StreetViewPanoramaFragment streetViewPanoramaFragment =
@@ -188,44 +195,42 @@ mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
     public void onSearch(View v){
 
 
-        Address address;
-       location_tf = (EditText)findViewById(R.id.textAddress);
-         location = location_tf.getText().toString();
-        List<Address> addressList = null;
-        float zoomLevel = (float) 16.0; //This goes up to 21
-        if (!location.equals(""))
-        {
-            Geocoder geocoder = new Geocoder(this);
-            try {
-               addressList = geocoder.getFromLocationName(location , 1);
-                if (addressList.size() == 0){
+        if(!isNetworkOnline()){
+            Toast.makeText(this, "No internet connection ", Toast.LENGTH_LONG).show();
+        }else {
+
+
+            Address address;
+            location_tf = (EditText) findViewById(R.id.textAddress);
+            location = location_tf.getText().toString();
+            List<Address> addressList = null;
+            float zoomLevel = (float) 16.0; //This goes up to 21
+            if (!location.equals("")) {
+                Geocoder geocoder = new Geocoder(this);
+                try {
+                    addressList = geocoder.getFromLocationName(location, 1);
+                    if (addressList.size() == 0) {
+                        Toast.makeText(this, "Enter valid address", Toast.LENGTH_LONG).show();
+                    } else {
+                        address = addressList.get(0);
+                        LatLng latLng = new LatLng(address.getLatitude(), address.getLongitude());
+                        mMap.addMarker(new MarkerOptions().position(latLng).title("Marker"));
+                        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoomLevel));
+                        panorama.setPosition(latLng);
+                    }
+
+                } catch (IOException e) {
+                    e.printStackTrace();
                     Toast.makeText(this, "Enter valid address", Toast.LENGTH_LONG).show();
                 }
-                else{
-                    address = addressList.get(0);
-                    LatLng latLng = new LatLng(address.getLatitude(), address.getLongitude());
-                    mMap.addMarker(new MarkerOptions().position(latLng).title("Marker"));
-                    mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoomLevel));
-                    panorama.setPosition(latLng);
-                }
 
-            } catch (IOException e) {
-                e.printStackTrace();
-                Toast.makeText(this, "Enter valid address", Toast.LENGTH_LONG).show();
+
+            } else {
+
+                Toast.makeText(this, "Enter a location", Toast.LENGTH_LONG).show();
             }
 
-
-
-
-
         }
-
-        else{
-
-            Toast.makeText(this, "Enter a location", Toast.LENGTH_LONG).show();
-        }
-
-
 
     }
 //
@@ -269,6 +274,26 @@ mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
 //        }
 //    }
 
+
+    public boolean isNetworkOnline() {
+        boolean status=false;
+        try{
+            ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+            NetworkInfo netInfo = cm.getNetworkInfo(0);
+            if (netInfo != null && netInfo.getState()==NetworkInfo.State.CONNECTED) {
+                status= true;
+            }else {
+                netInfo = cm.getNetworkInfo(1);
+                if(netInfo!=null && netInfo.getState()== NetworkInfo.State.CONNECTED)
+                    status= true;
+            }
+        }catch(Exception e){
+            e.printStackTrace();
+            return false;
+        }
+        return status;
+
+    }
 
     public void promptSpeechInput (){
 

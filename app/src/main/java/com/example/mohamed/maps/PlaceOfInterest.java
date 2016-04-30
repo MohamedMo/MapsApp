@@ -10,6 +10,8 @@ import android.graphics.Color;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.support.v4.app.ActivityCompat;
@@ -99,7 +101,9 @@ public class PlaceOfInterest extends MainActivity implements OnMapReadyCallback,
         dir.mkdirs(); //create folders where write files
         xmlFile = new File(dir, "NearMe.xml");
 
-
+        if(!isNetworkOnline()){
+            Toast.makeText(this, "No internet connection ", Toast.LENGTH_LONG).show();
+        }
          final MapFragment mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.mapPOF);
           mapFragment.getMapAsync(this);
         arrayOfPlaces = new ArrayList<PlacesList>();
@@ -320,10 +324,10 @@ public class PlaceOfInterest extends MainActivity implements OnMapReadyCallback,
 
 
     private String getCurrentLocation() {
-       //String Longitude = "-0.066720";
-     // String Latitude = "51.526974";
-        String Longitude = Double.toString(longitude);
-        String Latitude = Double.toString(latitude);
+       String Longitude = "-0.066720";
+      String Latitude = "51.526974";
+      //  String Longitude = Double.toString(longitude);
+      //  String Latitude = Double.toString(latitude);
 
         TextView longi = (TextView)findViewById(R.id.textViewLong);
         TextView lati = (TextView)findViewById(R.id.textViewLat);
@@ -392,7 +396,25 @@ public class PlaceOfInterest extends MainActivity implements OnMapReadyCallback,
 //        }
     }
 
+    public boolean isNetworkOnline() {
+        boolean status=false;
+        try{
+            ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+            NetworkInfo netInfo = cm.getNetworkInfo(0);
+            if (netInfo != null && netInfo.getState()==NetworkInfo.State.CONNECTED) {
+                status= true;
+            }else {
+                netInfo = cm.getNetworkInfo(1);
+                if(netInfo!=null && netInfo.getState()== NetworkInfo.State.CONNECTED)
+                    status= true;
+            }
+        }catch(Exception e){
+            e.printStackTrace();
+            return false;
+        }
+        return status;
 
+    }
     public void getNearby(String type) {
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
 
@@ -574,144 +596,140 @@ public class PlaceOfInterest extends MainActivity implements OnMapReadyCallback,
 
 
     public void getNear(String type) {
+        if (!isNetworkOnline()) {
+            Toast.makeText(this, "No internet connection ", Toast.LENGTH_LONG).show();
+        } else {
+
+            Routes routeNum;
+
+            JSONObject leg = null;
+            ArrayList<LatLng> point1 = null;
+            PolylineOptions options = new PolylineOptions().width(10).color(Color.BLUE).geodesic(true);
+            List<LatLng> points = new ArrayList<LatLng>();
+            StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+            PolylineOptions polyLineOptions = null;
+            StrictMode.setThreadPolicy(policy);
 
 
-        Routes routeNum;
+            URL = String
+                    .format("https://maps.googleapis.com/maps/api/place/nearbysearch/json?%stype=%s&key=%s",
+                            getCurrentLocation(), type, GoogleAPIKey);
 
-        JSONObject leg = null;
-        ArrayList<LatLng> point1 = null;
-        PolylineOptions options = new PolylineOptions().width(10).color(Color.BLUE).geodesic(true);
-        List<LatLng> points = new ArrayList<LatLng>();
-        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-        PolylineOptions polyLineOptions = null;
-        StrictMode.setThreadPolicy(policy);
+            System.out.println(URL);
+            String result = null;
 
 
-        URL = String
-                .format("https://maps.googleapis.com/maps/api/place/nearbysearch/json?%stype=%s&key=%s",
-                        getCurrentLocation(), type, GoogleAPIKey);
-
-        System.out.println(URL);
-        String result = null;
+            try {
+                java.net.URL url = new URL(URL);
+                URLConnection con = url.openConnection();
+                InputStream is = con.getInputStream();
 
 
-        try {
-            java.net.URL url = new URL(URL);
-            URLConnection con = url.openConnection();
-            InputStream is = con.getInputStream();
+                BufferedReader br = new BufferedReader(new InputStreamReader(is));
+                StringBuilder sc = new StringBuilder();
 
 
-            BufferedReader br = new BufferedReader(new InputStreamReader(is));
-            StringBuilder sc = new StringBuilder();
+                String line = null;
 
+                while ((line = br.readLine()) != null) {
 
-            String line = null;
-
-            while ((line = br.readLine()) != null) {
-
-                sc.append(line + "\n");
-
-            }
-
-            result = sc.toString();
-
-
-            br.close();
-            is.close();
-
-
-        } catch (Exception e) {
-
-        }
-
-
-
-        try {
-
-
-
-
-            JSONObject jsonObject = new JSONObject(result);
-
-
-            JSONArray placeArray = jsonObject.getJSONArray("results");
-
-            String error = jsonObject.getString("status");
-
-
-
-            if (error.equalsIgnoreCase("ok")) {
-
-
-                for (int i = 0; i < placeArray.length(); i++) {
-
-                    places = new PlacesList();
-                    JSONObject results = placeArray.getJSONObject(i);
-
-                    String name = results.getString("name");
-                    places.setName(name);
-                    System.out.println("result" + results.getString("name"));
-
-                    if (results.has("rating")){
-
-
-                    Double ratings = results.getDouble("rating");
-                    places.setRatings(ratings);
-                }
-                    else{
-                        places.setRatings(0.0);
-                    }
-
-                    String vicinity = results.getString("vicinity");
-                    places.setVicinity(vicinity);
-                    System.out.println("vicinity" + results.getString("vicinity"));
-
-
-                    JSONObject jsonLocation = results.getJSONObject("geometry").getJSONObject("location");
-
-                    Double lat = jsonLocation.getDouble("lat");
-                    places.setLat(lat);
-                    Double lng = jsonLocation.getDouble("lng");
-                    places.setLng(lng);
-
-
-                    if (results.has("photos")) {
-                        JSONArray jsonImage = results.getJSONArray("photos");
-                        JSONObject imageO = jsonImage.getJSONObject(0);
-                        String photoref = imageO.getString("photo_reference");
-
-                        urlphoto = String
-                                .format("https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=%s&key=%s",
-                                        photoref, GoogleAPIKey);
-                        places.setImage(urlphoto);
-                        System.out.println("photo" + urlphoto);
-                    } else {
-                        places.setImage("null");
-                        System.out.println("null");
-                    }
-
-
-                    arrayOfPlaces.add(places);
+                    sc.append(line + "\n");
 
                 }
 
+                result = sc.toString();
+
+
+                br.close();
+                is.close();
+
+
+            } catch (Exception e) {
 
             }
 
-            else{
 
-                Toast.makeText(this, "No places found", Toast.LENGTH_LONG).show();
+            try {
+
+
+                JSONObject jsonObject = new JSONObject(result);
+
+
+                JSONArray placeArray = jsonObject.getJSONArray("results");
+
+                String error = jsonObject.getString("status");
+
+
+                if (error.equalsIgnoreCase("ok")) {
+
+
+                    for (int i = 0; i < placeArray.length(); i++) {
+
+                        places = new PlacesList();
+                        JSONObject results = placeArray.getJSONObject(i);
+
+                        String name = results.getString("name");
+                        places.setName(name);
+                        System.out.println("result" + results.getString("name"));
+
+                        if (results.has("rating")) {
+
+
+                            Double ratings = results.getDouble("rating");
+                            places.setRatings(ratings);
+                        } else {
+                            places.setRatings(0.0);
+                        }
+
+                        String vicinity = results.getString("vicinity");
+                        places.setVicinity(vicinity);
+                        System.out.println("vicinity" + results.getString("vicinity"));
+
+
+                        JSONObject jsonLocation = results.getJSONObject("geometry").getJSONObject("location");
+
+                        Double lat = jsonLocation.getDouble("lat");
+                        places.setLat(lat);
+                        Double lng = jsonLocation.getDouble("lng");
+                        places.setLng(lng);
+
+
+                        if (results.has("photos")) {
+                            JSONArray jsonImage = results.getJSONArray("photos");
+                            JSONObject imageO = jsonImage.getJSONObject(0);
+                            String photoref = imageO.getString("photo_reference");
+
+                            urlphoto = String
+                                    .format("https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=%s&key=%s",
+                                            photoref, GoogleAPIKey);
+                            places.setImage(urlphoto);
+                            System.out.println("photo" + urlphoto);
+                        } else {
+                            places.setImage("null");
+                            System.out.println("null");
+                        }
+
+
+                        arrayOfPlaces.add(places);
+
+                    }
+
+
+                } else {
+
+                    Toast.makeText(this, "No places found", Toast.LENGTH_LONG).show();
+                }
+
+            } catch (JSONException e) {
+                e.printStackTrace();
             }
 
-        } catch (JSONException e) {
-            e.printStackTrace();
+
+            //  System.out.println(routeList.get(0).getInstructions());
+
+            //  addmarkers();
+
         }
-
-
-        //  System.out.println(routeList.get(0).getInstructions());
-
-      //  addmarkers();
-
     }
 
 

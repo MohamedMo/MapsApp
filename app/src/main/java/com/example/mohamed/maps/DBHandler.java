@@ -23,6 +23,7 @@ public class DBHandler extends SQLiteOpenHelper {
     public static final String COLUMN_RATINGS = "ratings";
     public static final String COLUMN_URL = "url";
     ArrayList<String> list = new ArrayList<String>();
+    ArrayList<String> listDB = new ArrayList<String>();
     public DBHandler(Context context, String name, SQLiteDatabase.CursorFactory factory, int version) {
         super(context, DATABASE_NAME, factory, DATABASE_VERSION);
     }
@@ -65,7 +66,7 @@ public class DBHandler extends SQLiteOpenHelper {
 
     public void deleteItem (String name){
         SQLiteDatabase db = getWritableDatabase();
-        db.execSQL("DELETE FROM " + TABLE_FAVOURITES + " WHERE " + COLUMN_NAME+"='"+name+"'");
+        db.execSQL("DELETE FROM " + TABLE_FAVOURITES + " WHERE " + COLUMN_NAME + "='" + name + "'");
 
     }
 
@@ -92,4 +93,100 @@ public class DBHandler extends SQLiteOpenHelper {
         db.close();
         return list;
     }
+
+    public ArrayList<String> getList (String name){
+
+        String namedb ="";
+        String vicinity ="";
+        Double ratings;
+        String url ="";
+
+        SQLiteDatabase db = getWritableDatabase();
+        // Cursor c=db.rawQuery("SELECT * FROM " + TABLE_FAVOURITES + " WHERE " + COLUMN_NAME + "='" + name+ "'", null);
+        String selectQuery = "SELECT  * FROM " + TABLE_FAVOURITES + " WHERE "
+                + COLUMN_NAME + "='" + name + "'";
+
+        Cursor c = db.rawQuery(selectQuery, null);
+
+
+        if (c != null) {
+            c.moveToFirst();
+
+
+            namedb = c.getString(c.getColumnIndex(COLUMN_NAME));
+            vicinity = c.getString(c.getColumnIndex(COLUMN_VICINITY));
+            url = c.getString(c.getColumnIndex(COLUMN_URL));
+
+
+
+            // list.add(namedb);
+
+
+        }
+
+        listDB.add(namedb);
+        listDB.add(vicinity);
+        listDB.add(url);
+
+        System.out.println(listDB);
+
+
+
+        return listDB;
+    }
+
+    public Double getRating (String name){
+
+
+        Double ratings = null;
+
+
+        SQLiteDatabase db = getWritableDatabase();
+        // Cursor c=db.rawQuery("SELECT * FROM " + TABLE_FAVOURITES + " WHERE " + COLUMN_NAME + "='" + name+ "'", null);
+        String selectQuery = "SELECT  * FROM " + TABLE_FAVOURITES + " WHERE "
+                + COLUMN_NAME + "='" + name + "'";
+
+        Cursor c = db.rawQuery(selectQuery, null);
+
+
+        if (c != null) {
+            c.moveToFirst();
+
+
+            ratings = c.getDouble(c.getColumnIndex(COLUMN_RATINGS));
+
+
+
+
+            // list.add(namedb);
+
+
+        }
+
+
+        System.out.println(listDB);
+
+
+
+        return ratings;
+    }
+
+
+
+
+    public boolean check (String name) {
+        SQLiteDatabase db = getWritableDatabase();
+        String selectQuery = "SELECT  * FROM " + TABLE_FAVOURITES + " WHERE "
+                + COLUMN_NAME + "='" + name + "'";
+
+        Cursor c = db.rawQuery(selectQuery, null);
+        if(c.getCount() <= 0){
+
+            return false;
+        }
+
+        return true;
+    }
+
+
 }

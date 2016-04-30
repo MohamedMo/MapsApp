@@ -8,6 +8,8 @@ import android.graphics.Color;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.speech.tts.TextToSpeech;
@@ -87,6 +89,10 @@ public class Directions extends MainActivity implements OnMapReadyCallback {
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View contentView = inflater.inflate(R.layout.directions, null, false);
         mDrawer.addView(contentView, 0);
+
+        if(!isNetworkOnline()){
+            Toast.makeText(this, "No internet connection ", Toast.LENGTH_LONG).show();
+        }
         routeList = new ArrayList<Routes>();
         //get a reference to the button element listed in the XML layout
         //Button speakButton = (Button)findViewById(R.id.btnReadText);
@@ -219,55 +225,68 @@ public class Directions extends MainActivity implements OnMapReadyCallback {
 
     public void onBtnCycle(View v){
 
-        routeList.clear();
-        Directions.clear();
-        DirectionssPolylines.clear();
+        if(!isNetworkOnline()){
+            Toast.makeText(this, "No internet connection ", Toast.LENGTH_LONG).show();
+        }
+        else {
+            routeList.clear();
+            Directions.clear();
+            DirectionssPolylines.clear();
 
 
-
-        method = "BICYCLING";
-        EditText start = (EditText)findViewById(R.id.startLocation);
-        EditText end = (EditText)findViewById(R.id.endLocation);
-        String startingPos = start.getText().toString();
-        String finishingPos = end.getText().toString();
-        getNearby(startingPos, finishingPos, method);
+            method = "BICYCLING";
+            EditText start = (EditText) findViewById(R.id.startLocation);
+            EditText end = (EditText) findViewById(R.id.endLocation);
+            String startingPos = start.getText().toString();
+            String finishingPos = end.getText().toString();
+            getNearby(startingPos, finishingPos, method);
+        }
     }
 
     public void onBtnDrive(View v){
 
-        routeList.clear();
-        Directions.clear();
-        DirectionssPolylines.clear();
+        if(!isNetworkOnline()){
+            Toast.makeText(this, "No internet connection ", Toast.LENGTH_LONG).show();
+        }
+        else {
+            routeList.clear();
+            Directions.clear();
+            DirectionssPolylines.clear();
 
 
-        method = "DRIVING";
-        EditText start = (EditText)findViewById(R.id.startLocation);
-        EditText end = (EditText)findViewById(R.id.endLocation);
-        String startingPos = start.getText().toString();
-        String finishingPos = end.getText().toString();
-        getNearby(startingPos, finishingPos, method);
+            method = "DRIVING";
+            EditText start = (EditText) findViewById(R.id.startLocation);
+            EditText end = (EditText) findViewById(R.id.endLocation);
+            String startingPos = start.getText().toString();
+            String finishingPos = end.getText().toString();
+            getNearby(startingPos, finishingPos, method);
+        }
     }
 
     public void onWalkBtn(View v){
 
-        routeList.clear();
-        Directions.clear();
-        DirectionssPolylines.clear();
+        if(!isNetworkOnline()){
+            Toast.makeText(this, "No internet connection ", Toast.LENGTH_LONG).show();
+        }
+        else {
+            routeList.clear();
+            Directions.clear();
+            DirectionssPolylines.clear();
 
-   //     mMap.clear();
+            //     mMap.clear();
 
 
-        Button btn = (Button) findViewById(R.id.walk);
+            Button btn = (Button) findViewById(R.id.walk);
 
 
-        method = "WALKING";
-        EditText start = (EditText)findViewById(R.id.startLocation);
-        EditText end = (EditText)findViewById(R.id.endLocation);
-        // TextView resultDirections = (TextView)findViewById(R.id.textViewDirectionsList);
-        String startingPos = start.getText().toString();
-        String finishingPos = end.getText().toString();
-        getNearby(startingPos, finishingPos, method);
-
+            method = "WALKING";
+            EditText start = (EditText) findViewById(R.id.startLocation);
+            EditText end = (EditText) findViewById(R.id.endLocation);
+            // TextView resultDirections = (TextView)findViewById(R.id.textViewDirectionsList);
+            String startingPos = start.getText().toString();
+            String finishingPos = end.getText().toString();
+            getNearby(startingPos, finishingPos, method);
+        }
     }
 
 
@@ -495,6 +514,25 @@ public class Directions extends MainActivity implements OnMapReadyCallback {
 
     }
 
+    public boolean isNetworkOnline() {
+        boolean status=false;
+        try{
+            ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+            NetworkInfo netInfo = cm.getNetworkInfo(0);
+            if (netInfo != null && netInfo.getState()==NetworkInfo.State.CONNECTED) {
+                status= true;
+            }else {
+                netInfo = cm.getNetworkInfo(1);
+                if(netInfo!=null && netInfo.getState()== NetworkInfo.State.CONNECTED)
+                    status= true;
+            }
+        }catch(Exception e){
+            e.printStackTrace();
+            return false;
+        }
+        return status;
+
+    }
 
 
     private List<LatLng> decodePoly(String encoded) {

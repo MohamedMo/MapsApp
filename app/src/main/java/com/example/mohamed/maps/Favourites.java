@@ -1,6 +1,7 @@
 package com.example.mohamed.maps;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,10 +20,11 @@ public class Favourites extends MainActivity {
 
     ListView favouritelv;
     DBHandler handler;
+    Double ratings;
 
     private static ArrayAdapter<String> adapter;
     private ArrayList<String> listItems = new ArrayList<String>();
-
+    private ArrayList<String> list = new ArrayList<String>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,6 +41,41 @@ public class Favourites extends MainActivity {
 
         displayDB();
 
+
+        favouritelv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                ArrayList<String> instruct = new ArrayList<String>();
+                ArrayList<String> lines = new ArrayList<String>();
+
+
+
+
+                String item = (String) favouritelv.getItemAtPosition(position);
+                ratings = handler.getRating(item);
+              list = handler.getList(item);
+
+                final String name = list.get(0);
+                final String vicinity = list.get(1);
+                //final String ratings = list.get(2);
+                final String image = list.get(2);
+
+
+                System.out.println("name =" + name);
+                System.out.println("vicinity ="+  vicinity);
+                System.out.println("image " +  name);
+                Intent intent = new Intent(Favourites.this, listViewHolder.class);
+                intent.putExtra("name", name);
+                intent.putExtra("vicinity", vicinity);
+                intent.putExtra("image", image);
+                intent.putExtra("ratings", ratings);
+
+
+
+                startActivity(intent);
+
+            }
+        });
 
 
         favouritelv.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {

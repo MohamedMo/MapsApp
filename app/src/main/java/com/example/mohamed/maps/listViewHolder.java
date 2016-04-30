@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -71,10 +72,17 @@ public class listViewHolder extends MainActivity {
 
 
         String name = getIntent().getExtras().getString("name");
-        String vicinity = getIntent().getExtras().getString("vicinity");
-        Double ratings = getIntent().getExtras().getDouble("ratings");
-        String urlPhoto = getIntent().getExtras().getString("image");
-        handler.addToDatabase(name,vicinity,ratings,urlPhoto);
+        if(handler.check(name)){
+            Toast.makeText(this, "Already in favourites ", Toast.LENGTH_LONG).show();
+        }
+        else {
+            String vicinity = getIntent().getExtras().getString("vicinity");
+            Double ratings = getIntent().getExtras().getDouble("ratings");
+            String urlPhoto = getIntent().getExtras().getString("image");
+            handler.addToDatabase(name, vicinity, ratings, urlPhoto);
+
+            Toast.makeText(this, "Added to favourites ", Toast.LENGTH_LONG).show();
+        }
     }
 
 }

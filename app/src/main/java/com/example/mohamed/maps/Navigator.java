@@ -8,6 +8,8 @@ import android.graphics.Color;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.speech.RecognizerIntent;
@@ -102,6 +104,13 @@ String Longitude;
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View contentView = inflater.inflate(R.layout.navigator_layout, null, false);
         mDrawer.addView(contentView, 0);
+
+
+        if(!isNetworkOnline()){
+            Toast.makeText(this, "No internet connection ", Toast.LENGTH_LONG).show();
+        }
+
+
         routeList = new ArrayList<Routes>();
         //get a reference to the button element listed in the XML layout
         //Button speakButton = (Button)findViewById(R.id.btnReadText);
@@ -248,7 +257,25 @@ String Longitude;
 
     }
 
+    public boolean isNetworkOnline() {
+        boolean status=false;
+        try{
+            ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+            NetworkInfo netInfo = cm.getNetworkInfo(0);
+            if (netInfo != null && netInfo.getState()==NetworkInfo.State.CONNECTED) {
+                status= true;
+            }else {
+                netInfo = cm.getNetworkInfo(1);
+                if(netInfo!=null && netInfo.getState()== NetworkInfo.State.CONNECTED)
+                    status= true;
+            }
+        }catch(Exception e){
+            e.printStackTrace();
+            return false;
+        }
+        return status;
 
+    }
     public void onDirectionsClick(View v)  {
 
 
@@ -320,85 +347,94 @@ String Longitude;
 
     public void onBtnCycle(View v){
 
-        circles.clear();
-        Directions.clear();
-        DirectionssPolylines.clear();
-        mMap.clear();
+        if(!isNetworkOnline()){
+            Toast.makeText(this, "No internet connection ", Toast.LENGTH_LONG).show();
+        }
+        else {
+            circles.clear();
+            Directions.clear();
+            DirectionssPolylines.clear();
+            mMap.clear();
 
 
-        Button btn = (Button) findViewById(R.id.walk);
-        String doubleLong = Double.toString(longitude);
-        String doubleLat = Double.toString(latitude);
+            Button btn = (Button) findViewById(R.id.walk);
+            String doubleLong = Double.toString(longitude);
+            String doubleLat = Double.toString(latitude);
 
 
+            Longitude = "-0.066720";
+            Latitude = "51.526974";
 
-        Longitude = "-0.066720";
-        Latitude = "51.526974";
+            String latlng = doubleLat + "," + doubleLong;
+            //String latlng = Latitude + "," + Longitude;
+            method = "BICYCLING";
 
-        String latlng = doubleLat + "," + doubleLong;
-        //String latlng = Latitude + "," + Longitude;
-        method = "BICYCLING";
+            EditText end = (EditText) findViewById(R.id.endLocation);
+            // TextView resultDirections = (TextView)findViewById(R.id.textViewDirectionsList);
 
-        EditText end = (EditText)findViewById(R.id.endLocation);
-        // TextView resultDirections = (TextView)findViewById(R.id.textViewDirectionsList);
-
-        String finishingPos = end.getText().toString();
-        getDirections(latlng, finishingPos, method);
+            String finishingPos = end.getText().toString();
+            getDirections(latlng, finishingPos, method);
+        }
     }
 
     public void onBtnDrive(View v){
+        if(!isNetworkOnline()){
+            Toast.makeText(this, "No internet connection ", Toast.LENGTH_LONG).show();
+        }else {
+
+            circles.clear();
+            Directions.clear();
+            DirectionssPolylines.clear();
+            mMap.clear();
 
 
-        circles.clear();
-        Directions.clear();
-        DirectionssPolylines.clear();
-        mMap.clear();
+            Button btn = (Button) findViewById(R.id.walk);
+            String doubleLong = Double.toString(longitude);
+            String doubleLat = Double.toString(latitude);
 
 
-        Button btn = (Button) findViewById(R.id.walk);
-        String doubleLong = Double.toString(longitude);
-        String doubleLat = Double.toString(latitude);
+            String latlng = doubleLat + "," + doubleLong;
+            //String latlng = Latitude + "," + Longitude;
+            method = "DRIVING";
 
+            EditText end = (EditText) findViewById(R.id.endLocation);
+            // TextView resultDirections = (TextView)findViewById(R.id.textViewDirectionsList);
 
-
-        String latlng = doubleLat + "," + doubleLong;
-        //String latlng = Latitude + "," + Longitude;
-        method = "DRIVING";
-
-        EditText end = (EditText)findViewById(R.id.endLocation);
-        // TextView resultDirections = (TextView)findViewById(R.id.textViewDirectionsList);
-
-        String finishingPos = end.getText().toString();
-        getDirections(latlng, finishingPos, method);
+            String finishingPos = end.getText().toString();
+            getDirections(latlng, finishingPos, method);
+        }
     }
 
     public void onWalkBtn(View v){
 
-
-        circles.clear();
-        Directions.clear();
-        DirectionssPolylines.clear();
-        mMap.clear();
-
-
-        Button btn = (Button) findViewById(R.id.walk);
-       String doubleLong = Double.toString(longitude);
-        String doubleLat = Double.toString(latitude);
+        if(!isNetworkOnline()){
+            Toast.makeText(this, "No internet connection ", Toast.LENGTH_LONG).show();
+        }
+        else {
+            circles.clear();
+            Directions.clear();
+            DirectionssPolylines.clear();
+            mMap.clear();
 
 
+            Button btn = (Button) findViewById(R.id.walk);
+            String doubleLong = Double.toString(longitude);
+            String doubleLat = Double.toString(latitude);
 
-         Longitude = "-0.066720";
-         Latitude = "51.526974";
 
-        String latlng = doubleLat + "," + doubleLong;
-        //String latlng = Latitude + "," + Longitude;
-        method = "WALKING";
+            Longitude = "-0.066720";
+            Latitude = "51.526974";
 
-        EditText end = (EditText)findViewById(R.id.endLocation);
-        // TextView resultDirections = (TextView)findViewById(R.id.textViewDirectionsList);
+            String latlng = doubleLat + "," + doubleLong;
+            //String latlng = Latitude + "," + Longitude;
+            method = "WALKING";
 
-        String finishingPos = end.getText().toString();
-        getDirections(latlng, finishingPos, method);
+            EditText end = (EditText) findViewById(R.id.endLocation);
+            // TextView resultDirections = (TextView)findViewById(R.id.textViewDirectionsList);
+
+            String finishingPos = end.getText().toString();
+            getDirections(latlng, finishingPos, method);
+        }
     }
 
 

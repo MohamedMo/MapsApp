@@ -8,6 +8,8 @@ import android.graphics.Color;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.support.v4.app.ActivityCompat;
@@ -77,7 +79,9 @@ public class Bus extends MainActivity implements OnMapReadyCallback {
         mDrawer.addView(contentView, 0);
 
 
-
+        if(!isNetworkOnline()){
+            Toast.makeText(this, "No internet connection ", Toast.LENGTH_LONG).show();
+        }
 
 
 
@@ -195,53 +199,56 @@ public class Bus extends MainActivity implements OnMapReadyCallback {
 
     public void getNearby() {
 
-        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        if(!isNetworkOnline()){
+            Toast.makeText(this, "No internet connection ", Toast.LENGTH_LONG).show();
+        }
+        else {
+            StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
 
-        StrictMode.setThreadPolicy(policy);
+            StrictMode.setThreadPolicy(policy);
 
-        String doubleLong = Double.toString(longitude);
-        String doubleLat = Double.toString(latitude);
+            String doubleLong = Double.toString(longitude);
+            String doubleLat = Double.toString(latitude);
 
-        URL = String
-                .format("http://transportapi.com/v3/uk/bus/stops/near.json?lat=%s&lon=%s&page=3&rpp=10&api_key=%s&app_id=%s",doubleLat,doubleLong,
-                        api_key, app_key);
-        System.out.println(URL);
-        String result = null;
-
-
-        try {
-            java.net.URL url = new URL(URL);
-            URLConnection con = url.openConnection();
-            InputStream is = con.getInputStream();
+            URL = String
+                    .format("http://transportapi.com/v3/uk/bus/stops/near.json?lat=%s&lon=%s&page=3&rpp=10&api_key=%s&app_id=%s", doubleLat, doubleLong,
+                            api_key, app_key);
+            System.out.println(URL);
+            String result = null;
 
 
-            BufferedReader br = new BufferedReader(new InputStreamReader(is));
-            StringBuilder sc = new StringBuilder();
+            try {
+                java.net.URL url = new URL(URL);
+                URLConnection con = url.openConnection();
+                InputStream is = con.getInputStream();
 
 
-            String line = null;
+                BufferedReader br = new BufferedReader(new InputStreamReader(is));
+                StringBuilder sc = new StringBuilder();
 
-            while ((line = br.readLine()) != null) {
 
-                sc.append(line + "\n");
+                String line = null;
+
+                while ((line = br.readLine()) != null) {
+
+                    sc.append(line + "\n");
+
+                }
+
+                result = sc.toString();
+
+
+                br.close();
+                is.close();
+
+
+            } catch (Exception e) {
+
 
             }
 
-            result = sc.toString();
 
-
-            br.close();
-            is.close();
-
-
-        } catch (Exception e) {
-
-
-
-        }
-
-
-        try {
+            try {
 //        JSONArray jsonArray = new JSONArray(result);
 //        for(int i =0;i<jsonArray.length();i++){
 //            JSONObject jo = jsonArray.getJSONObject(i);
@@ -249,52 +256,74 @@ public class Bus extends MainActivity implements OnMapReadyCallback {
 //        }
 
 
-            JSONObject jsonResponse = new JSONObject(result);
-            JSONArray jsonMainNode = jsonResponse.optJSONArray("stops");
+                JSONObject jsonResponse = new JSONObject(result);
+                JSONArray jsonMainNode = jsonResponse.optJSONArray("stops");
 
-            for (int i = 0; i < jsonMainNode.length(); i++) {
-                JSONObject jsonChildNode = jsonMainNode.getJSONObject(i);
-                String name = jsonChildNode.optString("name");
-                String locality = jsonChildNode.optString("locality");
+                for (int i = 0; i < jsonMainNode.length(); i++) {
+                    JSONObject jsonChildNode = jsonMainNode.getJSONObject(i);
+                    String name = jsonChildNode.optString("name");
+                    String locality = jsonChildNode.optString("locality");
 
-                String outPut = name;
-                listItems.add(outPut);
-                localityItems.add(locality);
-
-
+                    String outPut = name;
+                    listItems.add(outPut);
+                    localityItems.add(locality);
 
 
+                }
+
+
+                adapter = new
+                        ArrayAdapter<String>(
+                        this,
+                        android.R.layout.simple_list_item_1,
+                        listItems);
+                myList = (ListView)
+                        findViewById(R.id.listViewNear);
+
+
+                myList.setAdapter(adapter);
+
+
+            } catch (JSONException e) {
+                e.printStackTrace();
             }
 
-
-            adapter = new
-                    ArrayAdapter<String>(
-                    this,
-                    android.R.layout.simple_list_item_1,
-                    listItems);
-             myList = (ListView)
-                    findViewById(R.id.listViewNear);
-
-
-            myList.setAdapter(adapter);
-
-
-        } catch (JSONException e) {
-            e.printStackTrace();
         }
 
+    }
+    public boolean isNetworkOnline() {
+        boolean status=false;
+        try{
+            ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+            NetworkInfo netInfo = cm.getNetworkInfo(0);
+            if (netInfo != null && netInfo.getState()==NetworkInfo.State.CONNECTED) {
+                status= true;
+            }else {
+                netInfo = cm.getNetworkInfo(1);
+                if(netInfo!=null && netInfo.getState()== NetworkInfo.State.CONNECTED)
+                    status= true;
+            }
+        }catch(Exception e){
+            e.printStackTrace();
+            return false;
+        }
+        return status;
 
     }
 
-
 public void onBtnSearchBus(View v){
 
-    EditText start = (EditText)findViewById(R.id.startBus);
-    EditText end = (EditText)findViewById(R.id.endBus);
-    //TextView resultDirections = (TextView)findViewById(R.id.textViewDirectionsList);
-    String startingPos = start.getText().toString();
-    String finishingPos = end.getText().toString();
-    getJourney(startingPos, finishingPos);
+    if(!isNetworkOnline()){
+        Toast.makeText(this, "No internet connection ", Toast.LENGTH_LONG).show();
+    }
+    else {
+        EditText start = (EditText) findViewById(R.id.startBus);
+        EditText end = (EditText) findViewById(R.id.endBus);
+        //TextView resultDirections = (TextView)findViewById(R.id.textViewDirectionsList);
+        String startingPos = start.getText().toString();
+        String finishingPos = end.getText().toString();
+        getJourney(startingPos, finishingPos);
+    }
 }
 
 
