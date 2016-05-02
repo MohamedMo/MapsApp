@@ -31,23 +31,23 @@ public class MainActivity extends AppCompatActivity {
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        dlDrawer = (DrawerLayout)findViewById(R.id.drawer_layout);
+        dlDrawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawerToggle = setupDrawerToggle();
 
         dlDrawer.setDrawerListener(drawerToggle);
 
-        mDrawer = (DrawerLayout)findViewById(R.id.drawer_layout);
+        mDrawer = (DrawerLayout) findViewById(R.id.drawer_layout);
 
-        nvDrawer = (NavigationView)findViewById(R.id.nvView);
+        nvDrawer = (NavigationView) findViewById(R.id.nvView);
 
         setupDrawerContent(nvDrawer);
     }
 
     private ActionBarDrawerToggle setupDrawerToggle() {
-        return new ActionBarDrawerToggle(this, dlDrawer, toolbar, R.string.drawer_open,  R.string.drawer_close);
+        return new ActionBarDrawerToggle(this, dlDrawer, toolbar, R.string.drawer_open, R.string.drawer_close);
     }
 
-    private void setupDrawerContent (NavigationView navigationView){
+    private void setupDrawerContent(NavigationView navigationView) {
 
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
 
@@ -59,34 +59,10 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    public void selectDrawerItem (MenuItem menuItem){
-
-//
-//        Fragment fragment = null;
-//
-//        Class fragmentClass = null;
-//        switch (menuItem.getItemId()){
-//            case R.id.nav_first_fragment:
-//              //  fragmentClass = FirstFragment.class;
-//              //  fragmentClass = GPS_Location.class;
-//                break;
-//            case R.id.nav_second_fragment:
-//                fragmentClass = SecondFragment.class;
-//                break;
-//            case R.id.nav_third_fragment:
-//                fragmentClass = ThirdFragment.class;
-//        }
-//
-//        try{
-//            fragment = (Fragment) fragmentClass.newInstance();
-//        } catch (Exception e){
-//            e.printStackTrace();
-//        }
-//        FragmentManager fragmentManager = getSupportFragmentManager();
-//        fragmentManager.beginTransaction().replace(R.id.flContent, fragment).commit();
+    public void selectDrawerItem(MenuItem menuItem) {
 
 
-        switch(menuItem.getItemId()) {
+        switch (menuItem.getItemId()) {
             case R.id.nav_first_fragment:
                 Intent intent = new Intent(this, MapsActivity.class);
                 this.startActivity(intent);
@@ -128,22 +104,13 @@ public class MainActivity extends AppCompatActivity {
         }
 
 
-
         // Highlight the selected item, update the title, and close the drawer
         menuItem.setChecked(true);
         setTitle(menuItem.getTitle());
         mDrawer.closeDrawers();
     }
 
-    public boolean onOptionsItemSelected(MenuItem item){
-
-//        switch (item.getItemId()) {
-//            case android.R.id.home:
-//                mDrawer.openDrawer(GravityCompat.START);
-//                return true;
-//        }
-
-
+    public boolean onOptionsItemSelected(MenuItem item) {
 
 
         if (drawerToggle.onOptionsItemSelected(item)) {

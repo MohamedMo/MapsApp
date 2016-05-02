@@ -21,7 +21,7 @@ import java.util.List;
  */
 public class DirectionsAdapter extends ArrayAdapter<Routes> {
 
-    ArrayList<Routes>routes;
+    ArrayList<Routes> routes;
     private ArrayList<String> duration;
     private ArrayList<String> end;
     private ArrayList<String> line;
@@ -35,10 +35,10 @@ public class DirectionsAdapter extends ArrayAdapter<Routes> {
 
     protected ListView mListView;
 
-    public DirectionsAdapter(Context context, int resource,  ArrayList<Routes> objects , String method ) {
+    public DirectionsAdapter(Context context, int resource, ArrayList<Routes> objects, String method) {
         super(context, resource, objects);
         this.duration = duration;
-        this.list=list;
+        this.list = list;
         Resource = resource;
         routes = objects;
         this.method = method;
@@ -46,41 +46,22 @@ public class DirectionsAdapter extends ArrayAdapter<Routes> {
     }
 
 
-    public View getView(int position, View convertView, ViewGroup parent){
+    public View getView(int position, View convertView, ViewGroup parent) {
 
-        // assign the view we are converting to a local variable
+
         View v = convertView;
 
-        // first check to see if the view is null. if so, we have to inflate it.
-        // to inflate it basically means to render, or show, the view.
+
         if (v == null) {
             LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             v = inflater.inflate(R.layout.directions_list_view, null);
         }
 
 
-
-
-		/*
-		 * Recall that the variable position is sent in as an argument to this method.
-		 * The variable simply refers to the position of the current object in the list. (The ArrayAdapter
-		 * iterates through the list we sent it)
-		 *
-		 * Therefore, i refers to the current Item object.
-		 */
-
-
-
-            // This is how you obtain a reference to the TextViews.
-            // These TextViews are created in the XML files we defined.
-
-            TextView duration = (TextView) v.findViewById(R.id.duration);
-            TextView locat = (TextView) v.findViewById(R.id.location);
+        TextView duration = (TextView) v.findViewById(R.id.duration);
+        TextView locat = (TextView) v.findViewById(R.id.location);
         TextView distance = (TextView) v.findViewById(R.id.distance);
 
-
-        // check to see if each individual textview is null.
-        // if not, assign some text!
 
         duration.setText(routes.get(position).getDuration());
 
@@ -88,19 +69,18 @@ public class DirectionsAdapter extends ArrayAdapter<Routes> {
         locat.setText("via  " + routes.get(position).getSummary());
 
 
-
         distance.setText(routes.get(position).getDistance());
 
 
-        if(method.equalsIgnoreCase("WALKING")){
+        if (method.equalsIgnoreCase("WALKING")) {
 
 
-        ImageView image = (ImageView) v.findViewById(R.id.imageList);
-        image.setImageResource(R.drawable.walking);
+            ImageView image = (ImageView) v.findViewById(R.id.imageList);
+            image.setImageResource(R.drawable.walking);
 
         }
 
-        if(method.equalsIgnoreCase("BICYCLING")){
+        if (method.equalsIgnoreCase("BICYCLING")) {
 
 
             ImageView image = (ImageView) v.findViewById(R.id.imageList);
@@ -108,7 +88,7 @@ public class DirectionsAdapter extends ArrayAdapter<Routes> {
 
         }
 
-        if(method.equalsIgnoreCase("DRIVING")){
+        if (method.equalsIgnoreCase("DRIVING")) {
 
 
             ImageView image = (ImageView) v.findViewById(R.id.imageList);
@@ -116,7 +96,7 @@ public class DirectionsAdapter extends ArrayAdapter<Routes> {
 
         }
 
-        // the view must be returned to our activity
+
         return v;
 
     }

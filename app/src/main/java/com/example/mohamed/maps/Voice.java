@@ -25,7 +25,7 @@ public class Voice extends MainActivity implements View.OnClickListener, TextToS
     private SpeechRecognizer speech;
 
 
-   private TextView resultText;
+    private TextView resultText;
     private String command;
     //TTS object
     private TextToSpeech myTTS;
@@ -34,16 +34,16 @@ public class Voice extends MainActivity implements View.OnClickListener, TextToS
 
 
     @Override
-    protected void onCreate (Bundle savedInstanceState){
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         LayoutInflater inflater = (LayoutInflater) this
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View contentView = inflater.inflate(R.layout.voice, null, false);
         mDrawer.addView(contentView, 0);
-        resultText = (TextView)findViewById(R.id.textViewResult);
+        resultText = (TextView) findViewById(R.id.textViewResult);
 
         //get a reference to the button element listed in the XML layout
-        Button speakButton = (Button)findViewById(R.id.btnSayText);
+        Button speakButton = (Button) findViewById(R.id.btnSayText);
         //listen for clicks
         speakButton.setOnClickListener(this);
 
@@ -53,16 +53,16 @@ public class Voice extends MainActivity implements View.OnClickListener, TextToS
         startActivityForResult(checkTTSIntent, MY_DATA_CHECK_CODE);
     }
 
-    public void onVoiceClick (View v){
+    public void onVoiceClick(View v) {
 
-        if (v.getId() == R.id.imageButton){
+        if (v.getId() == R.id.imageButton) {
 
             promptSpeechInput();
         }
     }
 
 
-    public void promptSpeechInput (){
+    public void promptSpeechInput() {
 
         Intent i = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
         i.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
@@ -72,23 +72,20 @@ public class Voice extends MainActivity implements View.OnClickListener, TextToS
 
         try {
             startActivityForResult(i, 100);
-        }
-        catch (ActivityNotFoundException a)
-        {
-            Toast.makeText(Voice.this,"Sorry",Toast.LENGTH_LONG).show();
+        } catch (ActivityNotFoundException a) {
+            Toast.makeText(Voice.this, "Sorry", Toast.LENGTH_LONG).show();
         }
     }
 
 
-    public void onActivityResult(int request_code, int result_code, Intent i){
+    public void onActivityResult(int request_code, int result_code, Intent i) {
 
 
         if (request_code == MY_DATA_CHECK_CODE) {
             if (result_code == TextToSpeech.Engine.CHECK_VOICE_DATA_PASS) {
                 //the user has the necessary data - create the TTS
                 myTTS = new TextToSpeech(this, this);
-            }
-            else {
+            } else {
                 //no data - install it now
                 Intent installTTSIntent = new Intent();
                 installTTSIntent.setAction(TextToSpeech.Engine.ACTION_INSTALL_TTS_DATA);
@@ -98,22 +95,23 @@ public class Voice extends MainActivity implements View.OnClickListener, TextToS
 
         super.onActivityResult(request_code, result_code, i);
 
-        switch (request_code){
+        switch (request_code) {
 
-            case 100: if (result_code == RESULT_OK && i != null){
-                ArrayList<String> result = i.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
-               // resultText.setText(result.get(0));
-                command = result.get(0);
-               // respond();
-            }
+            case 100:
+                if (result_code == RESULT_OK && i != null) {
+                    ArrayList<String> result = i.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
+                    // resultText.setText(result.get(0));
+                    command = result.get(0);
+                    // respond();
+                }
                 break;
         }
 
     }
 
-    public void respond(){
+    public void respond() {
 
-        if(command.toString().equals("hello")){
+        if (command.toString().equals("hello")) {
 
             Intent i = new Intent(Voice.this, MapsActivity.class);
             startActivity(i);
@@ -122,7 +120,7 @@ public class Voice extends MainActivity implements View.OnClickListener, TextToS
     }
 
 
-    public void onSayTextClick (View v){
+    public void onSayTextClick(View v) {
 
 
     }
@@ -130,7 +128,7 @@ public class Voice extends MainActivity implements View.OnClickListener, TextToS
     @Override
     public void onClick(View v) {
         //get the text entered
-        EditText enteredText = (EditText)findViewById(R.id.sayText);
+        EditText enteredText = (EditText) findViewById(R.id.sayText);
         String words = enteredText.getText().toString();
         speakWords(words);
     }
@@ -145,10 +143,9 @@ public class Voice extends MainActivity implements View.OnClickListener, TextToS
     public void onInit(int initStatus) {
         //check for successful instantiation
         if (initStatus == TextToSpeech.SUCCESS) {
-            if(myTTS.isLanguageAvailable(Locale.US)==TextToSpeech.LANG_AVAILABLE)
+            if (myTTS.isLanguageAvailable(Locale.US) == TextToSpeech.LANG_AVAILABLE)
                 myTTS.setLanguage(Locale.US);
-        }
-        else if (initStatus == TextToSpeech.ERROR) {
+        } else if (initStatus == TextToSpeech.ERROR) {
             Toast.makeText(this, "Sorry! Text To Speech failed...", Toast.LENGTH_LONG).show();
         }
     }

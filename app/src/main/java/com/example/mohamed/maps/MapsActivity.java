@@ -5,7 +5,6 @@ import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Color;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
@@ -35,14 +34,13 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
-import com.google.android.gms.maps.model.PolylineOptions;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-public class MapsActivity extends MainActivity implements OnMapReadyCallback, TextToSpeech.OnInitListener, OnStreetViewPanoramaReadyCallback{
+public class MapsActivity extends MainActivity implements OnMapReadyCallback, TextToSpeech.OnInitListener, OnStreetViewPanoramaReadyCallback {
 
     private GoogleMap mMap;
     private StreetViewPanorama panorama;
@@ -65,20 +63,22 @@ public class MapsActivity extends MainActivity implements OnMapReadyCallback, Te
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         LayoutInflater inflater = (LayoutInflater) this
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View contentView = inflater.inflate(R.layout.activity_maps, null, false);
         mDrawer.addView(contentView, 0);
+
         resultText = (TextView) findViewById(R.id.textView3);
+
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
 
-
-        if(!isNetworkOnline()){
+        if (!isNetworkOnline()) {
             Toast.makeText(this, "No internet connection ", Toast.LENGTH_LONG).show();
         }
 
@@ -95,9 +95,6 @@ public class MapsActivity extends MainActivity implements OnMapReadyCallback, Te
         points = new ArrayList<LatLng>(); //added
 
 
-
-
-
         LocationManager manager = (LocationManager) this.getSystemService((Context.LOCATION_SERVICE));
         LocationListener listener = new LocationListener() {
             @Override
@@ -109,7 +106,7 @@ public class MapsActivity extends MainActivity implements OnMapReadyCallback, Te
                 mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoomLevel));
                 points.add(latLng); //added
 
-                redrawLine(); //added
+                redrawMarker(); //added
 
             }
 
@@ -157,47 +154,47 @@ public class MapsActivity extends MainActivity implements OnMapReadyCallback, Te
             return;
         }
 
-      mMap.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
-          @Override
-          public void onMapLongClick(LatLng latLng) {
-              MarkerOptions markerOptions = new MarkerOptions();
+        mMap.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
+            @Override
+            public void onMapLongClick(LatLng latLng) {
+                MarkerOptions markerOptions = new MarkerOptions();
 
-              // Setting the position for the marker
-              markerOptions.position(latLng);
-
-
-              // Placing a marker on the touched position
-              mMap.addMarker(markerOptions);
+                // Setting the position for the marker
+                markerOptions.position(latLng);
 
 
-          }
-      });
+                // Placing a marker on the touched position
+                mMap.addMarker(markerOptions);
 
-mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
-    @Override
-    public boolean onMarkerClick(Marker marker) {
-      LatLng markerPosition =   marker.getPosition();
-        panorama.setPosition(markerPosition);
-        return true;
+
+            }
+        });
+
+        mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+            @Override
+            public boolean onMarkerClick(Marker marker) {
+                LatLng markerPosition = marker.getPosition();
+                panorama.setPosition(markerPosition);
+                return true;
+            }
+        });
+
+
     }
-});
 
 
-    }
-
-
-    public void onClear (View v){
+    public void onClear(View v) {
 
         mMap.clear();
     }
 
 
-    public void onSearch(View v){
+    public void onSearch(View v) {
 
 
-        if(!isNetworkOnline()){
+        if (!isNetworkOnline()) {
             Toast.makeText(this, "No internet connection ", Toast.LENGTH_LONG).show();
-        }else {
+        } else {
 
 
             Address address;
@@ -233,61 +230,21 @@ mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
         }
 
     }
-//
-//    public void onBtnVoiceClick (View v){
-//
-//        if (v.getId() == R.id.btnToVoice){
-//
-//           // Intent i = new Intent(MapsActivity.this, Voice.class);
-//           // startActivity(i);
-//            promptSpeechInput();
-//
-//
-//        }
-//    }
-//
-//    public void onBtnDirectionsClick (View v){
-//
-//        if (v.getId() == R.id.btnToDirections){
-//
-//            Intent i = new Intent(MapsActivity.this, Directions.class);
-//            startActivity(i);
-//        }
-//    }
-//
-//    public void onPOFClick (View v){
-//
-//        if (v.getId() == R.id.btnPOF){
-//
-//            Intent i = new Intent(MapsActivity.this, PlaceOfInterest.class);
-//            startActivity(i);
-//        }
-//    }
-//
-//
-//    public void onBtnGPS (View v){
-//
-//        if (v.getId() == R.id.btnGPS){
-//
-//            Intent i = new Intent(MapsActivity.this, GPS_Location.class);
-//            startActivity(i);
-//        }
-//    }
 
 
     public boolean isNetworkOnline() {
-        boolean status=false;
-        try{
+        boolean status = false;
+        try {
             ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
             NetworkInfo netInfo = cm.getNetworkInfo(0);
-            if (netInfo != null && netInfo.getState()==NetworkInfo.State.CONNECTED) {
-                status= true;
-            }else {
+            if (netInfo != null && netInfo.getState() == NetworkInfo.State.CONNECTED) {
+                status = true;
+            } else {
                 netInfo = cm.getNetworkInfo(1);
-                if(netInfo!=null && netInfo.getState()== NetworkInfo.State.CONNECTED)
-                    status= true;
+                if (netInfo != null && netInfo.getState() == NetworkInfo.State.CONNECTED)
+                    status = true;
             }
-        }catch(Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             return false;
         }
@@ -295,7 +252,7 @@ mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
 
     }
 
-    public void promptSpeechInput (){
+    public void promptSpeechInput() {
 
         Intent i = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
         i.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
@@ -305,23 +262,20 @@ mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
 
         try {
             startActivityForResult(i, 100);
-        }
-        catch (ActivityNotFoundException a)
-        {
+        } catch (ActivityNotFoundException a) {
             Toast.makeText(MapsActivity.this, "Sorry", Toast.LENGTH_LONG).show();
         }
     }
 
 
-    public void onActivityResult(int request_code, int result_code, Intent i){
+    public void onActivityResult(int request_code, int result_code, Intent i) {
 
 
         if (request_code == MY_DATA_CHECK_CODE) {
             if (result_code == TextToSpeech.Engine.CHECK_VOICE_DATA_PASS) {
                 //the user has the necessary data - create the TTS
                 myTTS = new TextToSpeech(this, this);
-            }
-            else {
+            } else {
                 //no data - install it now
                 Intent installTTSIntent = new Intent();
                 installTTSIntent.setAction(TextToSpeech.Engine.ACTION_INSTALL_TTS_DATA);
@@ -331,15 +285,16 @@ mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
 
         super.onActivityResult(request_code, result_code, i);
 
-        switch (request_code){
+        switch (request_code) {
 
-            case 100: if (result_code == RESULT_OK && i != null){
-                ArrayList<String> result = i.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
-                // resultText.setText(result.get(0));
-                command = result.get(0);
-                resultText.setText(result.get(0));
-                 respond(v);
-            }
+            case 100:
+                if (result_code == RESULT_OK && i != null) {
+                    ArrayList<String> result = i.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
+                    // resultText.setText(result.get(0));
+                    command = result.get(0);
+                    resultText.setText(result.get(0));
+                    respond(v);
+                }
                 break;
         }
 
@@ -349,10 +304,9 @@ mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
     public void onInit(int initStatus) {
         //check for successful instantiation
         if (initStatus == TextToSpeech.SUCCESS) {
-            if(myTTS.isLanguageAvailable(Locale.US)==TextToSpeech.LANG_AVAILABLE)
+            if (myTTS.isLanguageAvailable(Locale.US) == TextToSpeech.LANG_AVAILABLE)
                 myTTS.setLanguage(Locale.US);
-        }
-        else if (initStatus == TextToSpeech.ERROR) {
+        } else if (initStatus == TextToSpeech.ERROR) {
             Toast.makeText(this, "Sorry! Text To Speech failed...", Toast.LENGTH_LONG).show();
         }
     }
@@ -363,64 +317,56 @@ mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
         myTTS.speak(speech, TextToSpeech.QUEUE_FLUSH, null);
     }
 
-    public void respond(View v){
+    public void respond(View v) {
 
-        if(command.toString().equals("hello")){
+        if (command.toString().equals("hello")) {
             speakWords("hi");
         }
-        if(command.toString().equals("where am I")){
+        if (command.toString().equals("where am I")) {
             speakWords("how would I know");
             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoomLevel));
         }
 
-        if(command.toString().equals("go")){
+        if (command.toString().equals("go")) {
 
             speakWords("go where");
         }
 
-        if(command.toString().contains("go"))
-        {
+        if (command.toString().contains("go")) {
             speakWords("Yes sir");
-            String seperate =  "\\s*\\bgo\\b\\s*";
+            String seperate = "\\s*\\bgo\\b\\s*";
             command = command.replaceAll(seperate, "");
 
-         //   String parts[] = command.split(" ");
-          //  String loc = parts[1];
+            //   String parts[] = command.split(" ");
+            //  String loc = parts[1];
 
-            location_tf = (EditText)findViewById(R.id.textAddress);
+            location_tf = (EditText) findViewById(R.id.textAddress);
             location_tf.setText(command);
             onSearch(v);
 
         }
 
-        if(command.toString().equals("zoom in")) {
+        if (command.toString().equals("zoom in")) {
             speakWords("ok");
             mMap.moveCamera(CameraUpdateFactory.zoomIn());
         }
-        if(command.toString().equals("zoom out")){
+        if (command.toString().equals("zoom out")) {
 
             speakWords("say please next time");
             mMap.moveCamera(CameraUpdateFactory.zoomOut());
-        }
-
-        else{
-          //  speakWords("please repeat that");
+        } else {
+            //  speakWords("please repeat that");
         }
     }
 
-    private void redrawLine(){
+    private void redrawMarker() {
 
         mMap.clear();  //clears all Markers and Polylines
 
-        PolylineOptions options = new PolylineOptions().width(5).color(Color.BLUE).geodesic(true);
-        for (int i = 0; i < points.size(); i++) {
-            LatLng point = points.get(i);
-            options.add(point);
-        }
-       // addMarker(); //add Marker in current position
+    
+
         mMap.addMarker(new MarkerOptions().position(latLng).title("You are here"));
 
-        line = mMap.addPolyline(options); //add Polyline
     }
 
     @Override
@@ -430,16 +376,5 @@ mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
         panorama.setPosition(new LatLng(-33.87365, 151.20689));
     }
 
-
-/*include:
-    1. Favourites for PlaceOfInterest
-    2. Favourites for routes.
-    3. Implement TFL API (Bus and Train) including time
-    4. Use database for reviews of POF (add ratings)
-    5. Fix Directions (View it on map)
-    6. Get voice turn by turn navigation to work
-    7. Reminders to change routes for TFL
-
-*/
 
 }

@@ -50,9 +50,7 @@ public class Bus extends MainActivity implements OnMapReadyCallback {
     public static final String api_key = "8b06798f5abf775a2973fc9d9970674d";
     public static final String app_key = "91a0f395";
     private static String URL = "http://transportapi.com/v3/uk/bus/stops/near.json?lat=51.527789&lon=-0.102323&page=3&rpp=10&api_key=d9307fd91b0247c607e098d5effedc97&app_id=03bf8009";
-    static JSONObject jObj = null;
     private String newURL;
-    static String json = "";
     private ArrayList<String> listItems = new ArrayList<String>();
     private ArrayList<String> localityItems = new ArrayList<String>();
     private ArrayList<String> journey = new ArrayList<String>();
@@ -69,7 +67,6 @@ public class Bus extends MainActivity implements OnMapReadyCallback {
     private double longitude = 0.0;
 
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -79,13 +76,12 @@ public class Bus extends MainActivity implements OnMapReadyCallback {
         mDrawer.addView(contentView, 0);
 
 
-        if(!isNetworkOnline()){
+        if (!isNetworkOnline()) {
             Toast.makeText(this, "No internet connection ", Toast.LENGTH_LONG).show();
         }
 
 
-
-        final TabHost host = (TabHost)findViewById(R.id.tabHost);
+        final TabHost host = (TabHost) findViewById(R.id.tabHost);
 
 
         host.setup();
@@ -104,11 +100,10 @@ public class Bus extends MainActivity implements OnMapReadyCallback {
         spec.setIndicator("Near Me");
         host.addTab(spec);
 
-     // //  final MapFragment mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.fragment);
-      //  mapFragment.getMapAsync(this);
+        // //  final MapFragment mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.fragment);
+        //  mapFragment.getMapAsync(this);
 
-        for(int i=0;i<host.getTabWidget().getChildCount();i++)
-        {
+        for (int i = 0; i < host.getTabWidget().getChildCount(); i++) {
             TextView tv = (TextView) host.getTabWidget().getChildAt(i).findViewById(android.R.id.title);
             tv.setTextColor(Color.parseColor("#ffffff"));
         }
@@ -124,7 +119,7 @@ public class Bus extends MainActivity implements OnMapReadyCallback {
                 String localities = localityItems.get(position);
 
 
-                Intent anotherActivityIntent = new Intent(Bus.this, listViewHolder.class);
+                Intent anotherActivityIntent = new Intent(Bus.this, PlacesHolder.class);
                 anotherActivityIntent.putExtra("name", item);
                 anotherActivityIntent.putExtra("local", localities);
                 startActivity(anotherActivityIntent);
@@ -133,8 +128,6 @@ public class Bus extends MainActivity implements OnMapReadyCallback {
                 System.out.println(item);
             }
         });
-
-
 
 
         LocationManager manager = (LocationManager) this.getSystemService((Context.LOCATION_SERVICE));
@@ -150,14 +143,7 @@ public class Bus extends MainActivity implements OnMapReadyCallback {
                 longitude = location.getLongitude();
 
 
-
-
-
-
-
-
                 getNearby();
-
 
 
             }
@@ -192,17 +178,14 @@ public class Bus extends MainActivity implements OnMapReadyCallback {
         manager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, listener);
 
 
-
-//getJourney();
     }
 
 
     public void getNearby() {
 
-        if(!isNetworkOnline()){
+        if (!isNetworkOnline()) {
             Toast.makeText(this, "No internet connection ", Toast.LENGTH_LONG).show();
-        }
-        else {
+        } else {
             StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
 
             StrictMode.setThreadPolicy(policy);
@@ -249,11 +232,6 @@ public class Bus extends MainActivity implements OnMapReadyCallback {
 
 
             try {
-//        JSONArray jsonArray = new JSONArray(result);
-//        for(int i =0;i<jsonArray.length();i++){
-//            JSONObject jo = jsonArray.getJSONObject(i);
-//            listItems.add(jo.getString("stops"));
-//        }
 
 
                 JSONObject jsonResponse = new JSONObject(result);
@@ -291,19 +269,20 @@ public class Bus extends MainActivity implements OnMapReadyCallback {
         }
 
     }
+
     public boolean isNetworkOnline() {
-        boolean status=false;
-        try{
+        boolean status = false;
+        try {
             ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
             NetworkInfo netInfo = cm.getNetworkInfo(0);
-            if (netInfo != null && netInfo.getState()==NetworkInfo.State.CONNECTED) {
-                status= true;
-            }else {
+            if (netInfo != null && netInfo.getState() == NetworkInfo.State.CONNECTED) {
+                status = true;
+            } else {
                 netInfo = cm.getNetworkInfo(1);
-                if(netInfo!=null && netInfo.getState()== NetworkInfo.State.CONNECTED)
-                    status= true;
+                if (netInfo != null && netInfo.getState() == NetworkInfo.State.CONNECTED)
+                    status = true;
             }
-        }catch(Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             return false;
         }
@@ -311,20 +290,19 @@ public class Bus extends MainActivity implements OnMapReadyCallback {
 
     }
 
-public void onBtnSearchBus(View v){
+    public void onBtnSearchBus(View v) {
 
-    if(!isNetworkOnline()){
-        Toast.makeText(this, "No internet connection ", Toast.LENGTH_LONG).show();
+        if (!isNetworkOnline()) {
+            Toast.makeText(this, "No internet connection ", Toast.LENGTH_LONG).show();
+        } else {
+            EditText start = (EditText) findViewById(R.id.startBus);
+            EditText end = (EditText) findViewById(R.id.endBus);
+            //TextView resultDirections = (TextView)findViewById(R.id.textViewDirectionsList);
+            String startingPos = start.getText().toString();
+            String finishingPos = end.getText().toString();
+            getJourney(startingPos, finishingPos);
+        }
     }
-    else {
-        EditText start = (EditText) findViewById(R.id.startBus);
-        EditText end = (EditText) findViewById(R.id.endBus);
-        //TextView resultDirections = (TextView)findViewById(R.id.textViewDirectionsList);
-        String startingPos = start.getText().toString();
-        String finishingPos = end.getText().toString();
-        getJourney(startingPos, finishingPos);
-    }
-}
 
 
     public void getJourney(String startbus, String endbus) {
@@ -336,11 +314,10 @@ public void onBtnSearchBus(View v){
         StartingLocation = startbus;
         EndingLocation = endbus;
 
-        if(StartingLocation.equalsIgnoreCase("") || EndingLocation.equals("") ){
+        if (StartingLocation.equalsIgnoreCase("") || EndingLocation.equals("")) {
 
             Toast.makeText(Bus.this, "Please Enter Bus Stations", Toast.LENGTH_SHORT).show();
-        }
-        else {
+        } else {
 
 
             newURL = String.format("http://transportapi.com/v3/uk/public/journey/from/%s/to/%s.json?app_id=03bf8009&app_key=d9307fd91b0247c607e098d5effedc97&modes=bus&region=tfl",
@@ -382,11 +359,6 @@ public void onBtnSearchBus(View v){
 
 
             try {
-//        JSONArray jsonArray = new JSONArray(result);
-//        for(int i =0;i<jsonArray.length();i++){
-//            JSONObject jo = jsonArray.getJSONObject(i);
-//            listItems.add(jo.getString("stops"));
-//        }
 
 
                 JSONObject mainObj = new JSONObject(result);
@@ -432,36 +404,6 @@ public void onBtnSearchBus(View v){
                 adapter = new BusListAdapter(this, R.layout.custom_bus_layout, journey, endJourney, durationArray, busStops);
                 ListView myList = (ListView) findViewById(R.id.listViewBusJ);
                 myList.setAdapter(adapter);
-//            JSONObject jsonResponse = new JSONObject(result);
-//            //JSONObject jsonMainNode = jsonResponse.getJSONObject("routes");
-//
-//
-//            JSONArray  routes = jsonResponse.optJSONArray("routes");
-//            JSONArray  js = jsonMainNode.optJSONArray("route_parts");
-//
-//            for (int i = 0; i < js.length(); i++) {
-//                JSONObject jsonChildNode = js.getJSONObject(i);
-//                String start = jsonChildNode.optString("from_point_name");
-//                String end = jsonChildNode.optString("to_point_name");
-//                String duration = jsonChildNode.optString("duration");
-//
-//                String startloc = start;
-//                String endloct = end;
-//                String durloc = duration;
-//
-//
-//
-//                System.out.println(startloc);
-//                System.out.println(endloct);
-//                System.out.println(durloc);
-//
-//              //  listItems.add(outPut);
-//              //  localityItems.add(end);
-//
-//
-//
-//
-//            }
 
 
             } catch (JSONException e) {
@@ -471,8 +413,6 @@ public void onBtnSearchBus(View v){
         }
 
     }
-
-
 
 
     @Override

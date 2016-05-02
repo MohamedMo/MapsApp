@@ -21,7 +21,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -69,7 +68,7 @@ public class Navigator extends MainActivity implements OnMapReadyCallback, TextT
     //status check code
     private int MY_DATA_CHECK_CODE = 0;
     private int position = 0;
-String Longitude;
+    String Longitude;
     String Latitude;
     private static String StartingLocation;
     private static String EndingLocation;
@@ -78,22 +77,17 @@ String Longitude;
     String method = "walking";
     private static ArrayList<String> Directions = new ArrayList<String>();
     private static ArrayList<String> DirectionssPolylines = new ArrayList<String>();
-    private static final String urlLink ="https://maps.googleapis.com/maps/api/directions/xml?origin=Pelterstreet&destination=Pelterstreet&mode=walking&key=AIzaSyC2MMB-7iqMzrccgD9voZHiGf2nY093Jlg";
-    private TextView textViewList;
     private static final String TAG = "Demo";
     public static final String GoogleAPIKey = "AIzaSyC2MMB-7iqMzrccgD9voZHiGf2nY093Jlg";
     List<LatLng> list;
     Polyline line; //added
     LatLng latLng;
-    LatLng test;
     GoogleMap mMap;
     Marker now;
     private double latitude = 0.0;
     private double longitude = 0.0;
     private static ArrayList<Circle> circles = new ArrayList<Circle>();
-    private ArrayList<Routes>routeList;
-    private DirectionsAdapter adapter;
-    private ListView myList;
+    private ArrayList<Routes> routeList;
     private float bear;
 
 
@@ -106,70 +100,56 @@ String Longitude;
         mDrawer.addView(contentView, 0);
 
 
-        if(!isNetworkOnline()){
+        if (!isNetworkOnline()) {
             Toast.makeText(this, "No internet connection ", Toast.LENGTH_LONG).show();
         }
 
 
         routeList = new ArrayList<Routes>();
-        //get a reference to the button element listed in the XML layout
-        //Button speakButton = (Button)findViewById(R.id.btnReadText);
-        //listen for clicks
-        // speakButton.setO
-        // nClickListener(this);
+
 
         //check for TTS data
         Intent checkTTSIntent = new Intent();
         checkTTSIntent.setAction(TextToSpeech.Engine.ACTION_CHECK_TTS_DATA);
         startActivityForResult(checkTTSIntent, MY_DATA_CHECK_CODE);
 
-         final MapFragment mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.navigatorMap);
-          mapFragment.getMapAsync(this);
-
-        // mMap.getUiSettings().setMyLocationButtonEnabled(true);
-
-
-
+        final MapFragment mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.navigatorMap);
+        mapFragment.getMapAsync(this);
 
 
         LocationManager manager = (LocationManager) this.getSystemService((Context.LOCATION_SERVICE));
+        
         LocationListener listener = new LocationListener() {
             @Override
             public void onLocationChanged(Location location) {
 
 
-          bear = location.getBearing();
+                bear = location.getBearing();
 
-             //   latitude = location.getLatitude();
-              //  longitude = location.getLongitude();
+                //   latitude = location.getLatitude();
+                //  longitude = location.getLongitude();
 
                 latitude = location.getLatitude();
                 longitude = location.getLongitude();
 
-        //      String Longitude = "-0.066720";
-         //       String Latitude = "51.526974";
+                //      String Longitude = "-0.066720";
+                //       String Latitude = "51.526974";
 
 
                 latLng = new LatLng
                         (latitude, longitude);
 
-                if(now!=null){
+                if (now != null) {
                     now.remove();
                 }
 
-                //This goes up to 21
-                // latLng = new LatLng(location.getLatitude(), location.getLongitude());
-                //  mMap.addMarker(new MarkerOptions().position(latLng).title("Marker"));
-                //  mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoomLevel));
-                //  now =  mMap.addMarker(new MarkerOptions().position(test).title("You are here"));
-                now =  mMap.addMarker(new MarkerOptions().position(latLng).title("You are here"));
+
+                now = mMap.addMarker(new MarkerOptions().position(latLng).title("You are here"));
 
 
+                if (circles.isEmpty()) {
 
-                if(circles.isEmpty()){
-
-                }
-                else {
+                } else {
                     float[] distance = new float[2];
                     for (int i = 0; i < circles.size(); i++) {
                         Location.distanceBetween(now.getPosition().latitude, now.getPosition().longitude,
@@ -179,18 +159,13 @@ String Longitude;
                             // Toast.makeText(getBaseContext(), "Outside", Toast.LENGTH_LONG).show();
 
                         } else {
-                         //   Toast.makeText(getBaseContext(), "Inside", Toast.LENGTH_LONG).show();
+                            //   Toast.makeText(getBaseContext(), "Inside", Toast.LENGTH_LONG).show();
 
                             String result = Html.fromHtml(Directions.get(i)).toString();
                             speakWords(result);
                         }
                     }
                 }
-
-
-
-
-
 
 
                 //   redrawLine(); //added
@@ -228,15 +203,14 @@ String Longitude;
     }
 
 
-    public void onActivityResult(int request_code, int result_code, Intent i){
+    public void onActivityResult(int request_code, int result_code, Intent i) {
 
 
         if (request_code == MY_DATA_CHECK_CODE) {
             if (result_code == TextToSpeech.Engine.CHECK_VOICE_DATA_PASS) {
                 //the user has the necessary data - create the TTS
                 myTTS = new TextToSpeech(this, this);
-            }
-            else {
+            } else {
                 //no data - install it now
                 Intent installTTSIntent = new Intent();
                 installTTSIntent.setAction(TextToSpeech.Engine.ACTION_INSTALL_TTS_DATA);
@@ -246,111 +220,44 @@ String Longitude;
 
         super.onActivityResult(request_code, result_code, i);
 
-        switch (request_code){
+        switch (request_code) {
 
-            case 100: if (result_code == RESULT_OK && i != null){
-                ArrayList<String> result = i.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
-                resultText.setText(result.get(0));
-            }
+            case 100:
+                if (result_code == RESULT_OK && i != null) {
+                    ArrayList<String> result = i.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
+                    resultText.setText(result.get(0));
+                }
                 break;
         }
 
     }
 
     public boolean isNetworkOnline() {
-        boolean status=false;
-        try{
+        boolean status = false;
+        try {
             ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
             NetworkInfo netInfo = cm.getNetworkInfo(0);
-            if (netInfo != null && netInfo.getState()==NetworkInfo.State.CONNECTED) {
-                status= true;
-            }else {
+            if (netInfo != null && netInfo.getState() == NetworkInfo.State.CONNECTED) {
+                status = true;
+            } else {
                 netInfo = cm.getNetworkInfo(1);
-                if(netInfo!=null && netInfo.getState()== NetworkInfo.State.CONNECTED)
-                    status= true;
+                if (netInfo != null && netInfo.getState() == NetworkInfo.State.CONNECTED)
+                    status = true;
             }
-        }catch(Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             return false;
         }
         return status;
 
     }
-    public void onDirectionsClick(View v)  {
 
 
+    public void onBtnCycle(View v) {
 
-        mMap.clear();
-        //System.out.println("hello");
-
-        EditText start = (EditText)findViewById(R.id.startLocation);
-        EditText end = (EditText)findViewById(R.id.endLocation);
-        // TextView resultDirections = (TextView)findViewById(R.id.textViewDirectionsList);
-        String startingPos = start.getText().toString();
-        String finishingPos = end.getText().toString();
-        getDirections(startingPos, finishingPos, method);
-        String finalDirections = "<html>";
-//        for(String s : Directions)
-//            finalDirections = finalDirections + s + "<p>";
-//        finalDirections = finalDirections + "</html>";
-//        String result = Html.fromHtml(finalDirections).toString();
-//        resultDirections.setText(result);
-
-        //Directions.get(1);
-        String result = Html.fromHtml(Directions.get(1)).toString();
-        //  resultDirections.setText(result);
-
-
-    }
-
-    public void btnPreviousClick (View v){
-
-//        test = new LatLng
-//                (51.529030, -0.07469);
-        //   TextView resultDirections = (TextView)findViewById(R.id.textViewDirectionsList);
-        if(position > 0){
-            position--;
-            String result = Html.fromHtml(Directions.get(position)).toString();
-            // resultDirections.setText(result);
-            // show the data here
-        }
-    }
-
-    public void btnNextClick(View v) {
-
-//        test = new LatLng
-//                (51.5281664, -0.0745294);
-
-        //TextView resultDirections = (TextView)findViewById(R.id.textViewDirectionsList);
-
-
-        if (position < Directions.size() - 1){
-            position++;
-            String result = Html.fromHtml(Directions.get(position)).toString();
-            //  resultDirections.setText(result);
-            // show the data here
-        }
-
-    }
-
-
-    public void onBtnStart (View v){
-
-
-        String currentLocation = Double.toString(latitude) + "," + Double.toString(longitude);
-        EditText end = (EditText)findViewById(R.id.endLocation);
-        String finishingPos = end.getText().toString();
-        getDirections(currentLocation,finishingPos,method);
-
-
-    }
-
-    public void onBtnCycle(View v){
-
-        if(!isNetworkOnline()){
+        if (!isNetworkOnline()) {
             Toast.makeText(this, "No internet connection ", Toast.LENGTH_LONG).show();
-        }
-        else {
+        } else {
             circles.clear();
             Directions.clear();
             DirectionssPolylines.clear();
@@ -377,10 +284,10 @@ String Longitude;
         }
     }
 
-    public void onBtnDrive(View v){
-        if(!isNetworkOnline()){
+    public void onBtnDrive(View v) {
+        if (!isNetworkOnline()) {
             Toast.makeText(this, "No internet connection ", Toast.LENGTH_LONG).show();
-        }else {
+        } else {
 
             circles.clear();
             Directions.clear();
@@ -405,12 +312,11 @@ String Longitude;
         }
     }
 
-    public void onWalkBtn(View v){
+    public void onWalkBtn(View v) {
 
-        if(!isNetworkOnline()){
+        if (!isNetworkOnline()) {
             Toast.makeText(this, "No internet connection ", Toast.LENGTH_LONG).show();
-        }
-        else {
+        } else {
             circles.clear();
             Directions.clear();
             DirectionssPolylines.clear();
@@ -439,10 +345,7 @@ String Longitude;
 
 
     public void onClick(View v) {
-        //get the text entered
-        //   TextView enteredText = (TextView)findViewById(R.id.textViewDirectionsList);
-        //   String words = enteredText.getText().toString();
-        //   speakWords(words);
+
     }
 
     private void speakWords(String speech) {
@@ -455,10 +358,9 @@ String Longitude;
     public void onInit(int initStatus) {
         //check for successful instantiation
         if (initStatus == TextToSpeech.SUCCESS) {
-            if(myTTS.isLanguageAvailable(Locale.US)==TextToSpeech.LANG_AVAILABLE)
+            if (myTTS.isLanguageAvailable(Locale.US) == TextToSpeech.LANG_AVAILABLE)
                 myTTS.setLanguage(Locale.US);
-        }
-        else if (initStatus == TextToSpeech.ERROR) {
+        } else if (initStatus == TextToSpeech.ERROR) {
             Toast.makeText(this, "Sorry! Text To Speech failed...", Toast.LENGTH_LONG).show();
         }
     }
@@ -535,94 +437,84 @@ String Longitude;
             if (usr.equalsIgnoreCase("ok")) {
 
 
+                NodeList nodeList = doc.getElementsByTagName("route");
+                for (int i = 0; i < nodeList.getLength(); i++) {
+                    Node node = nodeList.item(i);
 
-
-            NodeList nodeList = doc.getElementsByTagName("route");
-            for (int i = 0; i < nodeList.getLength(); i++) {
-                Node node = nodeList.item(i);
-
-
-            }
-
-
-            NodeList nList = doc.getElementsByTagName("step");
-
-            //  System.out.println(nList.getLength());
-
-            for (int temp = 0; temp < nList.getLength(); temp++) {
-
-                Node nNode = nList.item(temp);
-
-                if (nNode.getNodeType() == Node.ELEMENT_NODE) {
-
-                    Element eElement = (Element) nNode;
-
-                    Directions.add(eElement
-                            .getElementsByTagName("html_instructions").item(0)
-                            .getTextContent());
-                    DirectionssPolylines.add(eElement
-                            .getElementsByTagName("points").item(0)
-                            .getTextContent());
 
                 }
 
-                for (int i = 0; i < DirectionssPolylines.size(); i++) {
 
-                    String polyline = "";
-                    polyline = DirectionssPolylines.get(i);
+                NodeList nList = doc.getElementsByTagName("step");
 
-                    list = decodePoly(polyline);
+                //  System.out.println(nList.getLength());
+
+                for (int temp = 0; temp < nList.getLength(); temp++) {
+
+                    Node nNode = nList.item(temp);
+
+                    if (nNode.getNodeType() == Node.ELEMENT_NODE) {
+
+                        Element eElement = (Element) nNode;
+
+                        Directions.add(eElement
+                                .getElementsByTagName("html_instructions").item(0)
+                                .getTextContent());
+                        DirectionssPolylines.add(eElement
+                                .getElementsByTagName("points").item(0)
+                                .getTextContent());
+
+                    }
+
+                    for (int i = 0; i < DirectionssPolylines.size(); i++) {
+
+                        String polyline = "";
+                        polyline = DirectionssPolylines.get(i);
+
+                        list = decodePoly(polyline);
+                    }
+
+
+                    System.out.println("list size = " + list.size());
+
+
+                    for (int j = 0; j < list.size(); j++) {
+                        LatLng posisi = new LatLng(list.get(j).latitude, list.get(j).longitude);
+
+                        options.add(posisi);
+
+
+                    }
+
+
+                    line = mMap.addPolyline(options);
+
+                    double lo = Double.parseDouble(Longitude);
+                    double la = Double.parseDouble(Latitude);
+
+                    LatLng startcam = new LatLng(list.get(0).latitude, list.get(0).longitude);
+                    LatLng begin = new LatLng(latitude, longitude);
+
+
+                    CameraPosition cameraPosition = new CameraPosition.Builder()
+                            .target(begin) // Sets the center of the map to
+                            .zoom(20)                   // Sets the zoom
+                            .bearing(0) // Sets the orientation of the camera to east
+                            .tilt(90)    // Sets the tilt of the camera
+                            .build();    // Creates a CameraPosition from the builder
+                    mMap.animateCamera(CameraUpdateFactory.newCameraPosition(
+                            cameraPosition));
+
+
+                    circles.add(mMap.addCircle(new CircleOptions()
+                            .center(startcam)
+                            .radius(30)
+                            .strokeColor(Color.RED)
+                            .fillColor(Color.TRANSPARENT)));
+
+
                 }
-
-
-                //  System.out.println("list = " + list);
-                System.out.println("list size = " + list.size());
-
-//
-                for (int j = 0; j < list.size(); j++) {
-                    LatLng posisi = new LatLng(list.get(j).latitude, list.get(j).longitude);
-                    // point1.add(posisi);
-                    options.add(posisi);
-
-                    // System.out.println(posisi);
-                    //  googleMap.addMarker(new MarkerOptions().position(posisi));
-                    // mMap.addMarker(new MarkerOptions().position(posisi).title("You are here"));
-                }
-
-
-                //   System.out.println(latlng.toString());
-                line = mMap.addPolyline(options);
-                //  mMap.addPolyline(polyLineOptions);
-                //     ArrayList<LatLng> points = null;
-                double lo = Double.parseDouble(Longitude);
-                double la = Double.parseDouble(Latitude);
-                //  LatLng startcam = new LatLng(latitude, longitude);
-                LatLng startcam = new LatLng(list.get(0).latitude, list.get(0).longitude);
-                LatLng begin = new LatLng(latitude, longitude);
-                //  mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(startcam, 16));
-
-
-                CameraPosition cameraPosition = new CameraPosition.Builder()
-                        .target(begin) // Sets the center of the map to
-                        .zoom(20)                   // Sets the zoom
-                        .bearing(0) // Sets the orientation of the camera to east
-                        .tilt(90)    // Sets the tilt of the camera
-                        .build();    // Creates a CameraPosition from the builder
-                mMap.animateCamera(CameraUpdateFactory.newCameraPosition(
-                        cameraPosition));
-
-
-                circles.add(mMap.addCircle(new CircleOptions()
-                        .center(startcam)
-                        .radius(30)
-                        .strokeColor(Color.RED)
-                        .fillColor(Color.TRANSPARENT)));
-
-
-            }
-        }
-
-            else{
+            } else {
                 Toast.makeText(this, "Enter valid address", Toast.LENGTH_LONG).show();
             }
 
@@ -633,21 +525,17 @@ String Longitude;
         }
 
 
-        if (Directions.isEmpty()){
+        if (Directions.isEmpty()) {
             Directions.add("No data returned");
         }
 
 
-        System.out.println("Directions" +Directions.size());
-        System.out.println("List" +list.size());
-        System.out.println("circles" +circles.size());
+        System.out.println("Directions" + Directions.size());
+        System.out.println("List" + list.size());
+        System.out.println("circles" + circles.size());
         // googleMap.addPolyline(polyLineOptions);
 
     }
-
-
-
-
 
 
     private List<LatLng> decodePoly(String encoded) {
@@ -683,13 +571,13 @@ String Longitude;
 
         return poly;
     }
+
     @Override
     public void onMapReady(GoogleMap googleMap) {
 
         mMap = googleMap;
 
     }
-
 
 
 }

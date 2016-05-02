@@ -29,7 +29,7 @@ public class MapHolder extends MainActivity implements OnMapReadyCallback {
     private ArrayAdapter<String> adapter;
     private ArrayList<String> list = new ArrayList<String>();
     private GoogleMap mMap;
-    List<LatLng> newList;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,14 +44,9 @@ public class MapHolder extends MainActivity implements OnMapReadyCallback {
         mapFragment.getMapAsync(this);
 
 
-
-        adapter=new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, getIntent().getExtras().getStringArrayList("instruct"));
-        ListView listView = (ListView)findViewById(R.id.listViewinstruct);
+        adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, getIntent().getExtras().getStringArrayList("instruct"));
+        ListView listView = (ListView) findViewById(R.id.listViewinstruct);
         listView.setAdapter(adapter);
-
-
-
-
 
 
     }
@@ -64,25 +59,23 @@ public class MapHolder extends MainActivity implements OnMapReadyCallback {
 
     }
 
-    public void polylines(){
+    public void polylines() {
 
 
-        list =  getIntent().getExtras().getStringArrayList("lines");
+        list = getIntent().getExtras().getStringArrayList("lines");
 
         System.out.println("map holder size" + list.size());
 
         for (int i = 0; i < list.size(); i++) {
 
-                        String polyline;
-                        polyline = list.get(i);
-                       decoderPoly(polyline);
+            String polyline;
+            polyline = list.get(i);
+            decoderPoly(polyline);
 
-                    }
+        }
 
 
     }
-
-
 
 
     private void decoderPoly(String encoded) {
@@ -117,7 +110,7 @@ public class MapHolder extends MainActivity implements OnMapReadyCallback {
                     (((double) lng / 1E5)));
 
 
-          poly.add(p);
+            poly.add(p);
             System.out.println("p =" + poly);
         }
         for (int j = 0; j < poly.size(); j++) {
@@ -130,23 +123,17 @@ public class MapHolder extends MainActivity implements OnMapReadyCallback {
         line = mMap.addPolyline(options);
 
 
-
         LatLng startcam = new LatLng(poly.get(0).latitude, poly.get(0).longitude);
-
-        //  mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(startcam, 16));
 
 
         CameraPosition cameraPosition = new CameraPosition.Builder()
                 .target(startcam) // Sets the center of the map to
                 .zoom(14)                   // Sets the zoom
                 .bearing(0) // Sets the orientation of the camera to east
-                .tilt(0)    // Sets the tilt of the camera to 30 degrees
+                .tilt(0)    // Sets the tilt of the camera
                 .build();    // Creates a CameraPosition from the builder
         mMap.animateCamera(CameraUpdateFactory.newCameraPosition(
                 cameraPosition));
-
-
-
 
 
     }

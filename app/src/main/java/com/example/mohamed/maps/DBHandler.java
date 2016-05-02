@@ -102,7 +102,7 @@ public class DBHandler extends SQLiteOpenHelper {
         String url ="";
 
         SQLiteDatabase db = getWritableDatabase();
-        // Cursor c=db.rawQuery("SELECT * FROM " + TABLE_FAVOURITES + " WHERE " + COLUMN_NAME + "='" + name+ "'", null);
+
         String selectQuery = "SELECT  * FROM " + TABLE_FAVOURITES + " WHERE "
                 + COLUMN_NAME + "='" + name + "'";
 
@@ -118,8 +118,6 @@ public class DBHandler extends SQLiteOpenHelper {
             url = c.getString(c.getColumnIndex(COLUMN_URL));
 
 
-
-            // list.add(namedb);
 
 
         }
@@ -142,7 +140,6 @@ public class DBHandler extends SQLiteOpenHelper {
 
 
         SQLiteDatabase db = getWritableDatabase();
-        // Cursor c=db.rawQuery("SELECT * FROM " + TABLE_FAVOURITES + " WHERE " + COLUMN_NAME + "='" + name+ "'", null);
         String selectQuery = "SELECT  * FROM " + TABLE_FAVOURITES + " WHERE "
                 + COLUMN_NAME + "='" + name + "'";
 
@@ -157,8 +154,6 @@ public class DBHandler extends SQLiteOpenHelper {
 
 
 
-
-            // list.add(namedb);
 
 
         }

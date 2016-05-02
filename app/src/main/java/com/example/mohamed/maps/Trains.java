@@ -241,11 +241,6 @@ public class Trains extends MainActivity {
 
 
                 try {
-//        JSONArray jsonArray = new JSONArray(result);
-//        for(int i =0;i<jsonArray.length();i++){
-//            JSONObject jo = jsonArray.getJSONObject(i);
-//            listItems.add(jo.getString("stops"));
-//        }
 
 
                     JSONObject mainObj = new JSONObject(result);

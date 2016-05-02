@@ -39,47 +39,40 @@ public class Status extends MainActivity {
         mDrawer.addView(contentView, 0);
 
 
-        final TabHost host = (TabHost)findViewById(R.id.tabHost);
+        final TabHost host = (TabHost) findViewById(R.id.tabHost);
 
 
         host.setup();
 
 
-        //Tab 1
+
         TabHost.TabSpec spec = host.newTabSpec("Now");
         spec.setContent(R.id.statusBakerloo);
         spec.setIndicator("Now");
         host.addTab(spec);
 
-//        //Tab 2
-//        spec = host.newTabSpec("This Weekend");
-//       spec.setContent(R.id.List2);
-//        spec.setIndicator("This Weekend");
-//        host.addTab(spec);
-
-
 
         getStatus();
 
 
-   //     final ListView lv = (ListView) findViewById(R.id.listViewStatus);
+
 
     }
 
 
     public boolean isNetworkOnline() {
-        boolean status=false;
-        try{
+        boolean status = false;
+        try {
             ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
             NetworkInfo netInfo = cm.getNetworkInfo(0);
-            if (netInfo != null && netInfo.getState()==NetworkInfo.State.CONNECTED) {
-                status= true;
-            }else {
+            if (netInfo != null && netInfo.getState() == NetworkInfo.State.CONNECTED) {
+                status = true;
+            } else {
                 netInfo = cm.getNetworkInfo(1);
-                if(netInfo!=null && netInfo.getState()== NetworkInfo.State.CONNECTED)
-                    status= true;
+                if (netInfo != null && netInfo.getState() == NetworkInfo.State.CONNECTED)
+                    status = true;
             }
-        }catch(Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             return false;
         }
@@ -189,7 +182,6 @@ public class Status extends MainActivity {
 
         }
     }
-
 
 
 }

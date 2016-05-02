@@ -15,7 +15,7 @@ import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-public class listViewHolder extends MainActivity {
+public class PlacesHolder extends MainActivity {
 
 
     TextView resultText;
@@ -32,24 +32,22 @@ public class listViewHolder extends MainActivity {
         View contentView = inflater.inflate(R.layout.activity_list_view_holder, null, false);
         mDrawer.addView(contentView, 0);
 
-        handler = new DBHandler(this,null,null,1);
+        handler = new DBHandler(this, null, null, 1);
 
         resultText = (TextView) findViewById(R.id.textView4);
         resultText1 = (TextView) findViewById(R.id.textView5);
         resultText2 = (TextView) findViewById(R.id.ratings);
-                    i = (ImageView) findViewById(R.id.image1);
+        i = (ImageView) findViewById(R.id.image1);
 
         String urlphoto = (getIntent().getExtras().getString("image"));
         System.out.println(urlphoto);
 
-        if(urlphoto != null ? urlphoto.equalsIgnoreCase("null") : false){
+        if (urlphoto != null ? urlphoto.equalsIgnoreCase("null") : false) {
 
             i.setImageResource(R.drawable.no_image);
-        }
-
-        else {
+        } else {
             try {
-          i = (ImageView) findViewById(R.id.image1);
+                i = (ImageView) findViewById(R.id.image1);
                 Bitmap bitmap = BitmapFactory.decodeStream((InputStream) new URL(urlphoto).getContent());
                 i.setImageBitmap(bitmap);
             } catch (MalformedURLException e) {
@@ -62,20 +60,19 @@ public class listViewHolder extends MainActivity {
         resultText.setText(getIntent().getExtras().getString("name"));
         resultText1.setText(getIntent().getExtras().getString("vicinity"));
         resultText2.setText(Double.toString(getIntent().getExtras().getDouble("ratings")));
-   //     resultText1.setText(getIntent().getExtras().getString("local"));
+        //     resultText1.setText(getIntent().getExtras().getString("local"));
 
 
     }
 
 
-    public void addToFavourites(View v){
+    public void addToFavourites(View v) {
 
 
         String name = getIntent().getExtras().getString("name");
-        if(handler.check(name)){
+        if (handler.check(name)) {
             Toast.makeText(this, "Already in favourites ", Toast.LENGTH_LONG).show();
-        }
-        else {
+        } else {
             String vicinity = getIntent().getExtras().getString("vicinity");
             Double ratings = getIntent().getExtras().getDouble("ratings");
             String urlPhoto = getIntent().getExtras().getString("image");

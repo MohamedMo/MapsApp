@@ -3,7 +3,7 @@ package com.example.mohamed.maps;
 /**
  * Created by Mohamed on 12/04/2016.
  */
-public class PlacesList {
+public class Place {
     private String name;
     private String vicinity;
     private double lat;
@@ -12,7 +12,7 @@ public class PlacesList {
     private Double ratings;
 
 
-    public PlacesList(){
+    public Place(){
 
     }
 

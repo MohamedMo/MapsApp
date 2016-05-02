@@ -24,7 +24,7 @@ import java.util.Locale;
 /**
  * Created by Mohamed on 25/01/2016.
  */
-public class GPS_Location extends MainActivity  {
+public class GPS_Location extends MainActivity {
 
     private double latitude = 0.0;
     private double longitude = 0.0;
@@ -46,26 +46,22 @@ public class GPS_Location extends MainActivity  {
             @Override
             public void onLocationChanged(Location location) {
 
-                //This goes up to 21
-             //   latLng = new LatLng(location.getLatitude(), location.getLongitude());
-                //  mMap.addMarker(new MarkerOptions().position(latLng).title("Marker"));
-                // mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoomLevel));
-                latitude = location.getLatitude();
-               longitude = location.getLongitude();
 
-                TextView longi = (TextView)findViewById(R.id.textViewLong);
-                TextView lati = (TextView)findViewById(R.id.textViewLat);
+                latitude = location.getLatitude();
+                longitude = location.getLongitude();
+
+                TextView longi = (TextView) findViewById(R.id.textViewLong);
+                TextView lati = (TextView) findViewById(R.id.textViewLat);
                 String doubleLong = Double.toString(longitude);
                 String doubleLat = Double.toString(latitude);
                 longi.setText(doubleLong);
                 lati.setText(doubleLat);
 
-                ProgressBar pb = ((ProgressBar)findViewById(R.id.pb1));
-                ProgressBar pb2 = ((ProgressBar)findViewById(R.id.pb2));
+                ProgressBar pb = ((ProgressBar) findViewById(R.id.pb1));
+                ProgressBar pb2 = ((ProgressBar) findViewById(R.id.pb2));
 
                 pb.setVisibility(View.GONE);
                 pb2.setVisibility(View.GONE);
-
 
 
                 String doub = Double.toString(longitude);
@@ -95,53 +91,20 @@ public class GPS_Location extends MainActivity  {
         };
 
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
+
             return;
         }
         manager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, listener);
     }
 
 
-//    @Override
-//    public void onLocationChanged(Location location) {
-//
-//
-//        latitude = location.getLatitude();
-//        longitude = location.getLongitude();
-//
-//        Log.i("Geo_Location", "Latitude: " + latitude + ", Longitude: " + longitude);
-//    }
-
-
-//
-//    public void onGPSBtnClick (View v){
-//
-//        TextView longi = (TextView)findViewById(R.id.textViewLong);
-//        TextView lati = (TextView)findViewById(R.id.textViewLat);
-//
-//        String doub = Double.toString(longitude);
-//        String doub2 = Double.toString(latitude);
-//
-//        longi.setText(doub);
-//        lati.setText(doub2);
-//getCompleteAddressString();
-//
-//
-//    }
-
     public void getCompleteAddressString() {
 
 
-        TextView addressText = (TextView)findViewById(R.id.gps_address);
-        TextView cityText = (TextView)findViewById(R.id.gps_city);
-        TextView postcodeText = (TextView)findViewById(R.id.gps_postal);
-        TextView countryText = (TextView)findViewById(R.id.gps_country);
+        TextView addressText = (TextView) findViewById(R.id.gps_address);
+        TextView cityText = (TextView) findViewById(R.id.gps_city);
+        TextView postcodeText = (TextView) findViewById(R.id.gps_postal);
+        TextView countryText = (TextView) findViewById(R.id.gps_country);
         String s = "ff";
         geocoder = new Geocoder(this, Locale.getDefault());
 
@@ -150,12 +113,11 @@ public class GPS_Location extends MainActivity  {
         } catch (IOException e) {
             e.printStackTrace();
         }
-//
+
         String Address = addresses.get(0).getAddressLine(0); // If any additional address line present than only, check with max available address lines by getMaxAddressLineIndex()
         String city = addresses.get(0).getLocality();
         String country = addresses.get(0).getCountryName();
         String postalCode = addresses.get(0).getPostalCode();
-
 
 
         addressText.setText(Address);
@@ -165,7 +127,6 @@ public class GPS_Location extends MainActivity  {
 
 
     }
-
 
 
 }

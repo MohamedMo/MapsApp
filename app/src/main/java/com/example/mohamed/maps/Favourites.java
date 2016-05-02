@@ -25,6 +25,8 @@ public class Favourites extends MainActivity {
     private static ArrayAdapter<String> adapter;
     private ArrayList<String> listItems = new ArrayList<String>();
     private ArrayList<String> list = new ArrayList<String>();
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -37,7 +39,7 @@ public class Favourites extends MainActivity {
         favouritelv = (ListView)
                 findViewById(R.id.listViewFavourites);
 
-        handler = new DBHandler(this, null ,null , 1);
+        handler = new DBHandler(this, null, null, 1);
 
         displayDB();
 
@@ -49,11 +51,9 @@ public class Favourites extends MainActivity {
                 ArrayList<String> lines = new ArrayList<String>();
 
 
-
-
                 String item = (String) favouritelv.getItemAtPosition(position);
                 ratings = handler.getRating(item);
-              list = handler.getList(item);
+                list = handler.getList(item);
 
                 final String name = list.get(0);
                 final String vicinity = list.get(1);
@@ -62,14 +62,13 @@ public class Favourites extends MainActivity {
 
 
                 System.out.println("name =" + name);
-                System.out.println("vicinity ="+  vicinity);
-                System.out.println("image " +  name);
-                Intent intent = new Intent(Favourites.this, listViewHolder.class);
+                System.out.println("vicinity =" + vicinity);
+                System.out.println("image " + name);
+                Intent intent = new Intent(Favourites.this, PlacesHolder.class);
                 intent.putExtra("name", name);
                 intent.putExtra("vicinity", vicinity);
                 intent.putExtra("image", image);
                 intent.putExtra("ratings", ratings);
-
 
 
                 startActivity(intent);
@@ -92,11 +91,9 @@ public class Favourites extends MainActivity {
     }
 
 
+    public void displayDB() {
 
-
-    public void displayDB (){
-
-        listItems= handler.databaseToString();
+        listItems = handler.databaseToString();
 
         adapter = new
                 ArrayAdapter<String>(
