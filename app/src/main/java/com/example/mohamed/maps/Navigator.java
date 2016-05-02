@@ -1,7 +1,9 @@
 package com.example.mohamed.maps;
 
 import android.Manifest;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
@@ -255,9 +257,8 @@ public class Navigator extends MainActivity implements OnMapReadyCallback, TextT
 
     public void onBtnCycle(View v) {
 
-        if (!isNetworkOnline()) {
-            Toast.makeText(this, "No internet connection ", Toast.LENGTH_LONG).show();
-        } else {
+
+
             circles.clear();
             Directions.clear();
             DirectionssPolylines.clear();
@@ -277,17 +278,56 @@ public class Navigator extends MainActivity implements OnMapReadyCallback, TextT
             method = "BICYCLING";
 
             EditText end = (EditText) findViewById(R.id.endLocation);
-            // TextView resultDirections = (TextView)findViewById(R.id.textViewDirectionsList);
+            if (end.getText().toString().matches("")) {
+                Toast.makeText(this, "You did not enter a destination", Toast.LENGTH_SHORT).show();
 
-            String finishingPos = end.getText().toString();
-            getDirections(latlng, finishingPos, method);
+            }
+            else {
+                // TextView resultDirections = (TextView)findViewById(R.id.textViewDirectionsList);
+
+                String finishingPos = end.getText().toString();
+                getDirections(latlng, finishingPos, method);
+            }
+        
+    }
+
+
+    public boolean isGPSOn(){
+        boolean status = false;
+        LocationManager manager = (LocationManager) this.getSystemService((Context.LOCATION_SERVICE));
+
+
+        if (manager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+
+            status = true;
+
+        } else {
+            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
+            alertDialogBuilder.setMessage("GPS is disabled! Please enable")
+                    .setCancelable(false)
+                    .setPositiveButton("Go to Settings",
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+                                    Intent callGPSSettingIntent = new Intent(
+                                            android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                                    startActivity(callGPSSettingIntent);
+                                }
+                            });
+            alertDialogBuilder.setNegativeButton("Cancel",
+                    new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            dialog.cancel();
+                        }
+                    });
+            AlertDialog alert = alertDialogBuilder.create();
+            status = false;
+            alert.show();
         }
+        return status;
     }
 
     public void onBtnDrive(View v) {
-        if (!isNetworkOnline()) {
-            Toast.makeText(this, "No internet connection ", Toast.LENGTH_LONG).show();
-        } else {
+
 
             circles.clear();
             Directions.clear();
@@ -305,18 +345,22 @@ public class Navigator extends MainActivity implements OnMapReadyCallback, TextT
             method = "DRIVING";
 
             EditText end = (EditText) findViewById(R.id.endLocation);
-            // TextView resultDirections = (TextView)findViewById(R.id.textViewDirectionsList);
+            if (end.getText().toString().matches("")) {
+                Toast.makeText(this, "You did not enter a destination", Toast.LENGTH_SHORT).show();
 
-            String finishingPos = end.getText().toString();
-            getDirections(latlng, finishingPos, method);
-        }
+            }
+            else {
+                // TextView resultDirections = (TextView)findViewById(R.id.textViewDirectionsList);
+
+                String finishingPos = end.getText().toString();
+                getDirections(latlng, finishingPos, method);
+            }
+
     }
 
     public void onWalkBtn(View v) {
 
-        if (!isNetworkOnline()) {
-            Toast.makeText(this, "No internet connection ", Toast.LENGTH_LONG).show();
-        } else {
+
             circles.clear();
             Directions.clear();
             DirectionssPolylines.clear();
@@ -336,11 +380,17 @@ public class Navigator extends MainActivity implements OnMapReadyCallback, TextT
             method = "WALKING";
 
             EditText end = (EditText) findViewById(R.id.endLocation);
-            // TextView resultDirections = (TextView)findViewById(R.id.textViewDirectionsList);
+            if (end.getText().toString().matches("")) {
+                Toast.makeText(this, "You did not enter a destination", Toast.LENGTH_SHORT).show();
 
-            String finishingPos = end.getText().toString();
-            getDirections(latlng, finishingPos, method);
-        }
+            }
+            else {
+                // TextView resultDirections = (TextView)findViewById(R.id.textViewDirectionsList);
+
+                String finishingPos = end.getText().toString();
+                getDirections(latlng, finishingPos, method);
+            }
+
     }
 
 
@@ -368,171 +418,180 @@ public class Navigator extends MainActivity implements OnMapReadyCallback, TextT
     public void getDirections(String start, String end, String method) {
 
 
-        ArrayList<LatLng> point1 = null;
-        PolylineOptions options = new PolylineOptions().width(10).color(Color.BLUE).geodesic(true);
-        List<LatLng> points = new ArrayList<LatLng>();
-        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-        PolylineOptions polyLineOptions = null;
-        StrictMode.setThreadPolicy(policy);
-        Directions = new ArrayList<String>();
-        try {
-            start = start.replaceAll("\\s", "");
-            end = end.replaceAll("\\s", "");
-            method = method.replaceAll("\\s", "");
-        } catch (Exception e) {
+        if (!isNetworkOnline()) {
+            Toast.makeText(this, "No internet connection ", Toast.LENGTH_LONG).show();
 
         }
-
-        StartingLocation = start;
-        EndingLocation = end;
-        TravellingMethod = method.toLowerCase();
-
-        URL = String
-                .format("https://maps.googleapis.com/maps/api/directions/xml?origin=%s&destination=%s&mode=%s&key=%s",
-                        StartingLocation, EndingLocation, TravellingMethod,
-                        GoogleAPIKey);
-
-        System.out.println(URL);
-        File dir = new File(this.getFilesDir() + "/Users/Mohamed/AndroidStudioProjects");
-        dir.mkdirs(); //create folders where write files
-        final File xmlFile = new File(dir, "DirectionsList.xml");
-
-        //  File xmlFile = new File("DirectionsList.xml");
-
-        try {
-            java.net.URL url = new URL(URL);
-            URLConnection con = url.openConnection();
-            InputStream is = con.getInputStream();
-
-            BufferedReader br = new BufferedReader(new InputStreamReader(is));
-
-            PrintWriter out = new PrintWriter(xmlFile);
-
-            String line = null;
-
-            while ((line = br.readLine()) != null) {
-                out.println(line);
-            }
-
-            out.close();
-            br.close();
-            is.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-            Log.d(TAG, "error url", e);
-        }
-
-        DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
-        try {
-            DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
-            Document doc = dBuilder.parse(xmlFile);
-            doc.getDocumentElement().normalize();
-            System.out.println("Root element :"
-                    + doc.getDocumentElement().getNodeName());
-
-
-            String usr = doc.getElementsByTagName("status").item(0).getTextContent();
-
-
-            if (usr.equalsIgnoreCase("ok")) {
-
-
-                NodeList nodeList = doc.getElementsByTagName("route");
-                for (int i = 0; i < nodeList.getLength(); i++) {
-                    Node node = nodeList.item(i);
-
-
-                }
-
-
-                NodeList nList = doc.getElementsByTagName("step");
-
-                //  System.out.println(nList.getLength());
-
-                for (int temp = 0; temp < nList.getLength(); temp++) {
-
-                    Node nNode = nList.item(temp);
-
-                    if (nNode.getNodeType() == Node.ELEMENT_NODE) {
-
-                        Element eElement = (Element) nNode;
-
-                        Directions.add(eElement
-                                .getElementsByTagName("html_instructions").item(0)
-                                .getTextContent());
-                        DirectionssPolylines.add(eElement
-                                .getElementsByTagName("points").item(0)
-                                .getTextContent());
-
-                    }
-
-                    for (int i = 0; i < DirectionssPolylines.size(); i++) {
-
-                        String polyline = "";
-                        polyline = DirectionssPolylines.get(i);
-
-                        list = decodePoly(polyline);
-                    }
-
-
-                    System.out.println("list size = " + list.size());
-
-
-                    for (int j = 0; j < list.size(); j++) {
-                        LatLng posisi = new LatLng(list.get(j).latitude, list.get(j).longitude);
-
-                        options.add(posisi);
-
-
-                    }
-
-
-                    line = mMap.addPolyline(options);
-
-                    double lo = Double.parseDouble(Longitude);
-                    double la = Double.parseDouble(Latitude);
-
-                    LatLng startcam = new LatLng(list.get(0).latitude, list.get(0).longitude);
-                    LatLng begin = new LatLng(latitude, longitude);
-
-
-                    CameraPosition cameraPosition = new CameraPosition.Builder()
-                            .target(begin) // Sets the center of the map to
-                            .zoom(20)                   // Sets the zoom
-                            .bearing(0) // Sets the orientation of the camera to east
-                            .tilt(90)    // Sets the tilt of the camera
-                            .build();    // Creates a CameraPosition from the builder
-                    mMap.animateCamera(CameraUpdateFactory.newCameraPosition(
-                            cameraPosition));
-
-
-                    circles.add(mMap.addCircle(new CircleOptions()
-                            .center(startcam)
-                            .radius(30)
-                            .strokeColor(Color.RED)
-                            .fillColor(Color.TRANSPARENT)));
-
-
-                }
+        else {
+            if (!isGPSOn()) {
+                Toast.makeText(this, "Please turn on GPS ", Toast.LENGTH_LONG).show();
             } else {
-                Toast.makeText(this, "Enter valid address", Toast.LENGTH_LONG).show();
+
+                ArrayList<LatLng> point1 = null;
+                PolylineOptions options = new PolylineOptions().width(10).color(Color.BLUE).geodesic(true);
+                List<LatLng> points = new ArrayList<LatLng>();
+                StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+                PolylineOptions polyLineOptions = null;
+                StrictMode.setThreadPolicy(policy);
+                Directions = new ArrayList<String>();
+                try {
+                    start = start.replaceAll("\\s", "");
+                    end = end.replaceAll("\\s", "");
+                    method = method.replaceAll("\\s", "");
+                } catch (Exception e) {
+
+                }
+
+                StartingLocation = start;
+                EndingLocation = end;
+                TravellingMethod = method.toLowerCase();
+
+                URL = String
+                        .format("https://maps.googleapis.com/maps/api/directions/xml?origin=%s&destination=%s&mode=%s&key=%s",
+                                StartingLocation, EndingLocation, TravellingMethod,
+                                GoogleAPIKey);
+
+                System.out.println(URL);
+                File dir = new File(this.getFilesDir() + "/Users/Mohamed/AndroidStudioProjects");
+                dir.mkdirs(); //create folders where write files
+                final File xmlFile = new File(dir, "DirectionsList.xml");
+
+                //  File xmlFile = new File("DirectionsList.xml");
+
+                try {
+                    java.net.URL url = new URL(URL);
+                    URLConnection con = url.openConnection();
+                    InputStream is = con.getInputStream();
+
+                    BufferedReader br = new BufferedReader(new InputStreamReader(is));
+
+                    PrintWriter out = new PrintWriter(xmlFile);
+
+                    String line = null;
+
+                    while ((line = br.readLine()) != null) {
+                        out.println(line);
+                    }
+
+                    out.close();
+                    br.close();
+                    is.close();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    Log.d(TAG, "error url", e);
+                }
+
+                DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+                try {
+                    DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+                    Document doc = dBuilder.parse(xmlFile);
+                    doc.getDocumentElement().normalize();
+                    System.out.println("Root element :"
+                            + doc.getDocumentElement().getNodeName());
+
+
+                    String usr = doc.getElementsByTagName("status").item(0).getTextContent();
+
+
+                    if (usr.equalsIgnoreCase("ok")) {
+
+
+                        NodeList nodeList = doc.getElementsByTagName("route");
+                        for (int i = 0; i < nodeList.getLength(); i++) {
+                            Node node = nodeList.item(i);
+
+
+                        }
+
+
+                        NodeList nList = doc.getElementsByTagName("step");
+
+                        //  System.out.println(nList.getLength());
+
+                        for (int temp = 0; temp < nList.getLength(); temp++) {
+
+                            Node nNode = nList.item(temp);
+
+                            if (nNode.getNodeType() == Node.ELEMENT_NODE) {
+
+                                Element eElement = (Element) nNode;
+
+                                Directions.add(eElement
+                                        .getElementsByTagName("html_instructions").item(0)
+                                        .getTextContent());
+                                DirectionssPolylines.add(eElement
+                                        .getElementsByTagName("points").item(0)
+                                        .getTextContent());
+
+                            }
+
+                            for (int i = 0; i < DirectionssPolylines.size(); i++) {
+
+                                String polyline = "";
+                                polyline = DirectionssPolylines.get(i);
+
+                                list = decodePoly(polyline);
+                            }
+
+
+                            System.out.println("list size = " + list.size());
+
+
+                            for (int j = 0; j < list.size(); j++) {
+                                LatLng posisi = new LatLng(list.get(j).latitude, list.get(j).longitude);
+
+                                options.add(posisi);
+
+
+                            }
+
+
+                            line = mMap.addPolyline(options);
+
+                            double lo = Double.parseDouble(Longitude);
+                            double la = Double.parseDouble(Latitude);
+
+                            LatLng startcam = new LatLng(list.get(0).latitude, list.get(0).longitude);
+                            LatLng begin = new LatLng(latitude, longitude);
+
+
+                            CameraPosition cameraPosition = new CameraPosition.Builder()
+                                    .target(begin) // Sets the center of the map to
+                                    .zoom(20)                   // Sets the zoom
+                                    .bearing(0) // Sets the orientation of the camera to east
+                                    .tilt(90)    // Sets the tilt of the camera
+                                    .build();    // Creates a CameraPosition from the builder
+                            mMap.animateCamera(CameraUpdateFactory.newCameraPosition(
+                                    cameraPosition));
+
+
+                            circles.add(mMap.addCircle(new CircleOptions()
+                                    .center(startcam)
+                                    .radius(30)
+                                    .strokeColor(Color.RED)
+                                    .fillColor(Color.TRANSPARENT)));
+
+
+                        }
+                    } else {
+                        Toast.makeText(this, "Enter valid address", Toast.LENGTH_LONG).show();
+                    }
+
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+
+                }
+
             }
-
-
-        } catch (Exception e) {
-            e.printStackTrace();
-
+            if (Directions.isEmpty()) {
+                Directions.add("No data returned");
+            }
         }
 
-
-        if (Directions.isEmpty()) {
-            Directions.add("No data returned");
-        }
-
-
-        System.out.println("Directions" + Directions.size());
-        System.out.println("List" + list.size());
-        System.out.println("circles" + circles.size());
+      //  System.out.println("Directions" + Directions.size());
+       // System.out.println("List" + list.size());
+       // System.out.println("circles" + circles.size());
         // googleMap.addPolyline(polyLineOptions);
 
     }

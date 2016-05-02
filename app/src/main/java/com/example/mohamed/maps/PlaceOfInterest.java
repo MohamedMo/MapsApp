@@ -280,6 +280,10 @@ public class PlaceOfInterest extends MainActivity implements OnMapReadyCallback,
 
 
     public void getNear(String type) {
+        if (!isGPSOn()) {
+            Toast.makeText(this, "Turn on GPS ", Toast.LENGTH_LONG).show();
+        }
+
         if (!isNetworkOnline()) {
             Toast.makeText(this, "No internet connection ", Toast.LENGTH_LONG).show();
         } else {
