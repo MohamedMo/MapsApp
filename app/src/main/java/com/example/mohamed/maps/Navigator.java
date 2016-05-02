@@ -288,7 +288,7 @@ public class Navigator extends MainActivity implements OnMapReadyCallback, TextT
                 String finishingPos = end.getText().toString();
                 getDirections(latlng, finishingPos, method);
             }
-        
+
     }
 
 
